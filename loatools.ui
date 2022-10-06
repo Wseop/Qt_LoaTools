@@ -13,6 +13,51 @@
   <property name="windowTitle">
    <string>LoaTools</string>
   </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <family>나눔스퀘어_ac Light</family>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>레이드</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="pbMeteorTimer">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어_ac ExtraBold</family>
+          <pointsize>20</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>메테오 타이머</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pbAuctionCalc">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어_ac ExtraBold</family>
+          <pointsize>20</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>경매 계산기</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

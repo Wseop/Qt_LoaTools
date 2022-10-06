@@ -17,5 +17,13 @@ public:
 
 private:
     Ui::LoaTools *ui;
+    class MeteorTimer* mMeteorTimer;
+
+private:
+    void initConnect();
+
+private slots:
+    void slotOpenMeteorTimer();
+    void slotOpenAuctionCalc();
 };
 #endif // LOATOOLS_H
