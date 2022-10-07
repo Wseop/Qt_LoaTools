@@ -1,6 +1,7 @@
 #include "loatools.h"
 #include "ui_loatools.h"
 #include "MeteorTimer.h"
+#include "AuctionCalc.h"
 
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
@@ -32,4 +33,9 @@ void LoaTools::slotOpenMeteorTimer()
 }
 
 void LoaTools::slotOpenAuctionCalc()
-{}
+{
+    mAuctionCalc = new AuctionCalc(this);
+    mAuctionCalc->show();
+    this->setFixedWidth(400);
+    this->setFixedHeight(300);
+}

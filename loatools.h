@@ -18,6 +18,7 @@ public:
 private:
     Ui::LoaTools *ui;
     class MeteorTimer* mMeteorTimer;
+    class AuctionCalc* mAuctionCalc;
 
 private:
     void initConnect();

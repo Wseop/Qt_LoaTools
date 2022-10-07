@@ -20,7 +20,6 @@ public:
 
 private:
     Ui::MeteorTimer *ui;
-
     QTimer* mTimer;
     int mCount;
 

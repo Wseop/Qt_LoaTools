@@ -19,6 +19,7 @@
      <property name="font">
       <font>
        <family>나눔스퀘어_ac Light</family>
+       <pointsize>10</pointsize>
        <bold>false</bold>
       </font>
      </property>
@@ -50,7 +51,7 @@
          </font>
         </property>
         <property name="text">
-         <string>경매 계산기</string>
+         <string>경매 손익 계산</string>
         </property>
        </widget>
       </item>
