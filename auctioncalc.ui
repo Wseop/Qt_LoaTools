@@ -69,7 +69,7 @@
         </property>
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -86,7 +86,7 @@
        <widget class="QLineEdit" name="lePrice">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -100,7 +100,7 @@
        <widget class="QPushButton" name="pbCalc">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 ExtraBold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -117,7 +117,7 @@
     <widget class="QGroupBox" name="groupBox_2">
      <property name="font">
       <font>
-       <family>나눔스퀘어_ac Bold</family>
+       <family>나눔스퀘어 네오 Bold</family>
        <pointsize>10</pointsize>
        <bold>true</bold>
       </font>
@@ -133,7 +133,7 @@
        <widget class="QLabel" name="lbP4">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -150,7 +150,7 @@
        <widget class="QLabel" name="lbP8">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -167,7 +167,7 @@
        <widget class="QLabel" name="lbDivideN">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -184,7 +184,7 @@
        <widget class="QLabel" name="lbBid">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>
@@ -206,6 +206,13 @@
       </item>
       <item row="1" column="1">
        <widget class="QLabel" name="lbDivideN4">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어 네오 Bold</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -222,6 +229,13 @@
       </item>
       <item row="2" column="1">
        <widget class="QLabel" name="lbBid4">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어 네오 Bold</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -238,6 +252,13 @@
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="lbDivideN8">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어 네오 Bold</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -254,6 +275,13 @@
       </item>
       <item row="2" column="2">
        <widget class="QLabel" name="lbBid8">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어 네오 Bold</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -288,7 +316,7 @@
        <widget class="QLabel" name="label_3">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac Bold</family>
+          <family>나눔스퀘어 네오 Bold</family>
           <pointsize>10</pointsize>
           <bold>true</bold>
          </font>

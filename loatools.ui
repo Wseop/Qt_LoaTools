@@ -18,7 +18,7 @@
     <widget class="QGroupBox" name="groupBox">
      <property name="font">
       <font>
-       <family>나눔스퀘어_ac Light</family>
+       <family>나눔스퀘어 네오 Regular</family>
        <pointsize>10</pointsize>
        <bold>false</bold>
       </font>
@@ -31,7 +31,7 @@
        <widget class="QPushButton" name="pbMeteorTimer">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac ExtraBold</family>
+          <family>나눔스퀘어 네오 ExtraBold</family>
           <pointsize>20</pointsize>
           <bold>true</bold>
          </font>
@@ -45,7 +45,7 @@
        <widget class="QPushButton" name="pbAuctionCalc">
         <property name="font">
          <font>
-          <family>나눔스퀘어_ac ExtraBold</family>
+          <family>나눔스퀘어 네오 ExtraBold</family>
           <pointsize>20</pointsize>
           <bold>true</bold>
          </font>
