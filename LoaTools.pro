@@ -9,20 +9,20 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AuctionCalc.cpp \
-    MeteorTimer.cpp \
+    AuctionCalc/AuctionCalc.cpp \
+    MeteorTimer/MeteorTimer.cpp \
     main.cpp \
     loatools.cpp
 
 HEADERS += \
-    AuctionCalc.h \
-    MeteorTimer.h \
+    AuctionCalc/AuctionCalc.h \
+    MeteorTimer/MeteorTimer.h \
     loatools.h
 
 FORMS += \
-    auctioncalc.ui \
+    AuctionCalc/auctioncalc.ui \
+    MeteorTimer/meteortimer.ui \
     loatools.ui \
-    meteortimer.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

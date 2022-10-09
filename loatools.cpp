@@ -1,7 +1,7 @@
 #include "loatools.h"
 #include "ui_loatools.h"
-#include "MeteorTimer.h"
-#include "AuctionCalc.h"
+#include "MeteorTimer/MeteorTimer.h"
+#include "AuctionCalc/AuctionCalc.h"
 
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
