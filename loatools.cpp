@@ -2,6 +2,7 @@
 #include "ui_loatools.h"
 #include "MeteorTimer/MeteorTimer.h"
 #include "AuctionCalc/AuctionCalc.h"
+#include "EngraveSimulator/EngraveSimulator.h"
 
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
@@ -22,11 +23,13 @@ void LoaTools::initConnect()
 {
     connect(ui->pbMeteorTimer, SIGNAL(pressed()), this, SLOT(slotOpenMeteorTimer()));
     connect(ui->pbAuctionCalc, SIGNAL(pressed()), this, SLOT(slotOpenAuctionCalc()));
+    connect(ui->pbEngrave, SIGNAL(pressed()), this, SLOT(slotOpenEngraveSimulator()));
 }
 
 void LoaTools::slotOpenMeteorTimer()
 {
-    mMeteorTimer = new MeteorTimer(this);
+    if (mMeteorTimer == nullptr)
+        mMeteorTimer = new MeteorTimer(this);
     mMeteorTimer->show();
     this->setFixedWidth(400);
     this->setFixedHeight(300);
@@ -34,8 +37,18 @@ void LoaTools::slotOpenMeteorTimer()
 
 void LoaTools::slotOpenAuctionCalc()
 {
-    mAuctionCalc = new AuctionCalc(this);
+    if (mAuctionCalc == nullptr)
+        mAuctionCalc = new AuctionCalc(this);
     mAuctionCalc->show();
-    this->setFixedWidth(400);
+    this->setFixedWidth(411);
     this->setFixedHeight(300);
+}
+
+void LoaTools::slotOpenEngraveSimulator()
+{
+    if (mEngrave == nullptr)
+        mEngrave = new EngraveSimulator(this);
+    mEngrave->show();
+    this->setFixedWidth(865);
+    this->setFixedHeight(570);
 }

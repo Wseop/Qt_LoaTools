@@ -10,17 +10,20 @@ CONFIG += c++17
 
 SOURCES += \
     AuctionCalc/AuctionCalc.cpp \
+    EngraveSimulator/EngraveSimulator.cpp \
     MeteorTimer/MeteorTimer.cpp \
     main.cpp \
     loatools.cpp
 
 HEADERS += \
     AuctionCalc/AuctionCalc.h \
+    EngraveSimulator/EngraveSimulator.h \
     MeteorTimer/MeteorTimer.h \
     loatools.h
 
 FORMS += \
     AuctionCalc/auctioncalc.ui \
+    EngraveSimulator/engravesimulator.ui \
     MeteorTimer/meteortimer.ui \
     loatools.ui \
 

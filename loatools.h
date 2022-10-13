@@ -17,8 +17,9 @@ public:
 
 private:
     Ui::LoaTools *ui;
-    class MeteorTimer* mMeteorTimer;
-    class AuctionCalc* mAuctionCalc;
+    class MeteorTimer* mMeteorTimer = nullptr;
+    class AuctionCalc* mAuctionCalc = nullptr;
+    class EngraveSimulator* mEngrave = nullptr;
 
 private:
     void initConnect();
@@ -26,5 +27,6 @@ private:
 private slots:
     void slotOpenMeteorTimer();
     void slotOpenAuctionCalc();
+    void slotOpenEngraveSimulator();
 };
 #endif // LOATOOLS_H

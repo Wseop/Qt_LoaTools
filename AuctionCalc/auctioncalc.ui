@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>411</width>
     <height>300</height>
    </rect>
   </property>
@@ -317,7 +317,7 @@
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 Bold</family>
-          <pointsize>10</pointsize>
+          <pointsize>9</pointsize>
           <bold>true</bold>
          </font>
         </property>
