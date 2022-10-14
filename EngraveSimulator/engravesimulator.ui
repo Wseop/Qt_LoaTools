@@ -786,7 +786,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QLabel" name="lbNameAtt">
+         <widget class="QLabel" name="lbPixAtt">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
@@ -795,7 +795,7 @@
            </font>
           </property>
           <property name="text">
-           <string>공격력 감소</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -803,16 +803,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbValueAtt">
+         <widget class="QLabel" name="lbNameAtt">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>( 0 / 15 )</string>
+           <string>공격력 감소</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -829,7 +829,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Lv. 0</string>
+           <string>Lv. 0  ( 0 / 15 )</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -841,7 +841,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QLabel" name="lbNameAttSpd">
+         <widget class="QLabel" name="lbPixAttSpd">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
@@ -850,7 +850,7 @@
            </font>
           </property>
           <property name="text">
-           <string>공격속도 감소</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -858,16 +858,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbValueAttSpd">
+         <widget class="QLabel" name="lbNameAttSpd">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>( 0 / 15 )</string>
+           <string>공격속도 감소</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -884,7 +884,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Lv. 0</string>
+           <string>Lv. 0  ( 0 / 15 )</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -896,7 +896,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QLabel" name="lbNameDef">
+         <widget class="QLabel" name="lbPixDef">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
@@ -905,7 +905,7 @@
            </font>
           </property>
           <property name="text">
-           <string>방어력 감소</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -913,16 +913,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbValueDef">
+         <widget class="QLabel" name="lbNameDef">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>( 0 / 15 )</string>
+           <string>방어력 감소</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -939,7 +939,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Lv. 0</string>
+           <string>Lv. 0  ( 0 / 15 )</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -951,7 +951,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="lbNameSpd">
+         <widget class="QLabel" name="lbPixSpd">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
@@ -960,7 +960,7 @@
            </font>
           </property>
           <property name="text">
-           <string>이동속도 감소</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -968,16 +968,16 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbValueSpd">
+         <widget class="QLabel" name="lbNameSpd">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>( 0 / 15 )</string>
+           <string>이동속도 감소</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -994,7 +994,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Lv. 0</string>
+           <string>Lv. 0  ( 0 / 15 )</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>

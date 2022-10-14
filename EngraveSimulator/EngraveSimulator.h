@@ -25,7 +25,9 @@ private:
     void initConnect();
 
     bool isValidEngrave(QString engrave);
+    bool validateAccValue();
     void addEngraveLayout(QString engrave, int value);
+    void clearEngraveLayout();
 
 private:
     const int MAX_EQUIP = 12;
@@ -58,7 +60,7 @@ private:
 
 private slots:
     void slotHome();
-    void slotClearAll();
+    void slotClearInput();
     void slotUpdateResult();
 };
 

@@ -158,12 +158,22 @@ void EngraveSimulator::initUI()
         mPenaltySPBMap[index]->setMaximum(MAX_ACC_PENALTY);
     }
     mPenaltySPBMap[5]->setMaximum(MAX_STONE);
+
+    // Penalty UI - Pixmap 초기화
+    QPixmap att(":/image/resources/engraves/penalty_att.png");
+    QPixmap attSpd(":/image/resources/engraves/penalty_attspd.png");
+    QPixmap def(":/image/resources/engraves/penalty_def.png");
+    QPixmap spd(":/image/resources/engraves/penalty_spd.png");
+    ui->lbPixAtt->setPixmap(att.scaled(45, 45));
+    ui->lbPixAttSpd->setPixmap(attSpd.scaled(45, 45));
+    ui->lbPixDef->setPixmap(def.scaled(45, 45));
+    ui->lbPixSpd->setPixmap(spd.scaled(45, 45));
 }
 
 void EngraveSimulator::initConnect()
 {
     connect(ui->pbHome, SIGNAL(pressed()), this, SLOT(slotHome()));
-    connect(ui->pbClearAll, SIGNAL(pressed()), this, SLOT(slotClearAll()));
+    connect(ui->pbClearAll, SIGNAL(pressed()), this, SLOT(slotClearInput()));
     for (int i = 0; i < mEngraveSPBMap.size(); i++)
     {
         connect(mEngraveSPBMap[i], SIGNAL(valueChanged(int)), this, SLOT(slotUpdateResult()));
@@ -183,37 +193,88 @@ bool EngraveSimulator::isValidEngrave(QString engrave)
         return false;
 }
 
+bool EngraveSimulator::validateAccValue()
+{
+    const int MAX_SUM = 10;
+    int value1, value2;
+
+    // 목걸이 수치 검증
+    value1 = mEngraveSPBMap[0]->value();
+    value2 = mEngraveSPBMap[1]->value();
+    if (value1 + value2 >= MAX_SUM)
+        return false;
+
+    // 귀걸이1 수치 검증
+    value1 = mEngraveSPBMap[2]->value();
+    value2 = mEngraveSPBMap[3]->value();
+    if (value1 + value2 >= MAX_SUM)
+        return false;
+
+    // 귀걸이2 수치 검증
+    value1 = mEngraveSPBMap[4]->value();
+    value2 = mEngraveSPBMap[5]->value();
+    if (value1 + value2 >= MAX_SUM)
+        return false;
+
+    // 반지1 수치 검증
+    value1 = mEngraveSPBMap[6]->value();
+    value2 = mEngraveSPBMap[7]->value();
+    if (value1 + value2 >= MAX_SUM)
+        return false;
+
+    // 반지2 수치 검증
+    value1 = mEngraveSPBMap[8]->value();
+    value2 = mEngraveSPBMap[9]->value();
+    if (value1 + value2 >= MAX_SUM)
+        return false;
+
+    return true;
+}
+
 void EngraveSimulator::addEngraveLayout(QString engrave, int value)
 {
     QVBoxLayout* layout = new QVBoxLayout();
+    QLabel* lbPixmap = new QLabel();
     QLabel* lbName = new QLabel();
-    QLabel* lbValue = new QLabel();
     QLabel* lbLevel = new QLabel();
     int level = value / 5;
+    int pixmapIdx = mEngraveList.indexOf(engrave);
+    QString pixPath = QString(":/image/resources/engraves/%1.png").arg(pixmapIdx);
+    QPixmap pixmap(pixPath);
 
+    lbPixmap->setPixmap(pixmap.scaled(45, 45));
+    lbPixmap->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    lbValue->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     lbName->setFont(QFont("나눔스퀘어 네오 Bold", 12, QFont::Bold));
-    lbValue->setFont(QFont("나눔스퀘어 네오 Bold", 10, QFont::Bold));
     lbLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10, QFont::Bold));
     if (level >= 1)
         lbLevel->setStyleSheet("QLabel { color : blue }");
 
     lbName->setText(engrave);
-    lbValue->setText(QString("(%1 / 15)").arg(value));
-    lbLevel->setText(QString("Lv. %1").arg(level));
+    lbLevel->setText(QString("Lv. %1 ( %2 / 15 )").arg(level).arg(value));
+    layout->addWidget(lbPixmap);
     layout->addWidget(lbName);
-    layout->addWidget(lbValue);
     layout->addWidget(lbLevel);
 
     mEngraveLayout->addLayout(layout);
 
+    mLabelList.append(lbPixmap);
     mLabelList.append(lbName);
-    mLabelList.append(lbValue);
     mLabelList.append(lbLevel);
     mVBoxLayoutList.append(layout);
+}
+
+void EngraveSimulator::clearEngraveLayout()
+{
+    // 결과 layout에 할당된 ui memory 해제
+    for (QLabel* label : mLabelList)
+        delete label;
+    mLabelList.clear();
+    for (QVBoxLayout* layout : mVBoxLayoutList)
+        delete layout;
+    mVBoxLayoutList.clear();
 }
 
 void EngraveSimulator::slotHome()
@@ -225,7 +286,7 @@ void EngraveSimulator::slotHome()
     this->close();
 }
 
-void EngraveSimulator::slotClearAll()
+void EngraveSimulator::slotClearInput()
 {
     // 모든 입력 값 초기화
     for (int i = 0; i < mEngraveLEMap.size(); i++)
@@ -251,17 +312,18 @@ void EngraveSimulator::slotClearAll()
 
 void EngraveSimulator::slotUpdateResult()
 {
-    // 기존값 초기화
+    // 결과값 초기화
     mEngraveValueMap.clear();
     mPenaltyValueMap.clear();
 
-    // 결과 layout에 할당된 ui memory 해제
-    for (QLabel* label : mLabelList)
-        delete label;
-    mLabelList.clear();
-    for (QVBoxLayout* layout : mVBoxLayoutList)
-        delete layout;
-    mVBoxLayoutList.clear();
+    // 입력값 검증
+    if (!validateAccValue())
+    {
+        QMessageBox msgBox;
+        msgBox.setText("불가능한 각인값입니다. 악세사리 각인값을 확인하세요.");
+        msgBox.exec();
+        return;
+    }
 
     // 입력값 조회 및 update
     QStringList engraveList;
@@ -286,6 +348,8 @@ void EngraveSimulator::slotUpdateResult()
         }
     }
 
+    clearEngraveLayout();
+
     // Lv. 내림차순으로 layout에 추가
     for (int level = 3; level >= 0; level--)
     {
@@ -307,8 +371,7 @@ void EngraveSimulator::slotUpdateResult()
         int level = value / 5;
         if (penalty == "공격력 감소")
         {
-            ui->lbValueAtt->setText(QString("( %1 / 15 )").arg(value));
-            ui->lbLvAtt->setText(QString("Lv. %1").arg(level));
+            ui->lbLvAtt->setText(QString("Lv. %1 ( %2 / 15 )").arg(level).arg(value));
             if (level >= 1)
                 ui->lbLvAtt->setStyleSheet("QLabel { color : red }");
             else
@@ -316,8 +379,7 @@ void EngraveSimulator::slotUpdateResult()
         }
         else if (penalty == "공격속도 감소")
         {
-            ui->lbValueAttSpd->setText(QString("( %1 / 15 )").arg(mPenaltyValueMap[penalty]));
-            ui->lbLvAttSpd->setText(QString("Lv. %1").arg(level));
+            ui->lbLvAttSpd->setText(QString("Lv. %1 ( %2 / 15 )").arg(level).arg(value));
             if (level >= 1)
                 ui->lbLvAttSpd->setStyleSheet("QLabel { color : red }");
             else
@@ -325,8 +387,7 @@ void EngraveSimulator::slotUpdateResult()
         }
         else if (penalty == "방어력 감소")
         {
-            ui->lbValueDef->setText(QString("( %1 / 15 )").arg(mPenaltyValueMap[penalty]));
-            ui->lbLvDef->setText(QString("Lv. %1").arg(level));
+            ui->lbLvDef->setText(QString("Lv. %1 ( %2 / 15 )").arg(level).arg(value));
             if (level >= 1)
                 ui->lbLvDef->setStyleSheet("QLabel { color : red }");
             else
@@ -334,8 +395,7 @@ void EngraveSimulator::slotUpdateResult()
         }
         else if (penalty == "이동속도 감소")
         {
-            ui->lbValueSpd->setText(QString("( %1 / 15 )").arg(mPenaltyValueMap[penalty]));
-            ui->lbLvSpd->setText(QString("Lv. %1").arg(level));
+            ui->lbLvSpd->setText(QString("Lv. %1 ( %2 / 15 )").arg(level).arg(value));
             if (level >= 1)
                 ui->lbLvSpd->setStyleSheet("QLabel { color : red }");
             else
