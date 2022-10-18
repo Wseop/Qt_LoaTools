@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ SOURCES += \
     AuctionCalc/AuctionCalc.cpp \
     EngraveSimulator/EngraveSimulator.cpp \
     MeteorTimer/MeteorTimer.cpp \
+    Profile/Profile.cpp \
     main.cpp \
     loatools.cpp
 
@@ -19,12 +20,14 @@ HEADERS += \
     AuctionCalc/AuctionCalc.h \
     EngraveSimulator/EngraveSimulator.h \
     MeteorTimer/MeteorTimer.h \
+    Profile/Profile.h \
     loatools.h
 
 FORMS += \
     AuctionCalc/auctioncalc.ui \
     EngraveSimulator/engravesimulator.ui \
     MeteorTimer/meteortimer.ui \
+    Profile/profile.ui \
     loatools.ui \
 
 # Default rules for deployment.

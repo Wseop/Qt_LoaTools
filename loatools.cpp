@@ -3,6 +3,7 @@
 #include "MeteorTimer/MeteorTimer.h"
 #include "AuctionCalc/AuctionCalc.h"
 #include "EngraveSimulator/EngraveSimulator.h"
+#include "Profile/Profile.h"
 
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
@@ -24,6 +25,7 @@ void LoaTools::initConnect()
     connect(ui->pbMeteorTimer, SIGNAL(pressed()), this, SLOT(slotOpenMeteorTimer()));
     connect(ui->pbAuctionCalc, SIGNAL(pressed()), this, SLOT(slotOpenAuctionCalc()));
     connect(ui->pbEngrave, SIGNAL(pressed()), this, SLOT(slotOpenEngraveSimulator()));
+    connect(ui->pbProfile, SIGNAL(pressed()), this, SLOT(slotOpenProfile()));
 }
 
 void LoaTools::slotOpenMeteorTimer()
@@ -51,4 +53,12 @@ void LoaTools::slotOpenEngraveSimulator()
     mEngrave->show();
     this->setFixedWidth(865);
     this->setFixedHeight(570);
+}
+
+void LoaTools::slotOpenProfile()
+{
+    if (mProfile == nullptr)
+        mProfile = new Profile(this);
+    mProfile->show();
+
 }

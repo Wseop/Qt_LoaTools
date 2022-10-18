@@ -20,6 +20,7 @@ private:
     class MeteorTimer* mMeteorTimer = nullptr;
     class AuctionCalc* mAuctionCalc = nullptr;
     class EngraveSimulator* mEngrave = nullptr;
+    class Profile* mProfile = nullptr;
 
 private:
     void initConnect();
@@ -28,5 +29,6 @@ private slots:
     void slotOpenMeteorTimer();
     void slotOpenAuctionCalc();
     void slotOpenEngraveSimulator();
+    void slotOpenProfile();
 };
 #endif // LOATOOLS_H

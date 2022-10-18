@@ -70,7 +70,7 @@
       <string>캐릭터</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
+      <item row="0" column="1">
        <widget class="QPushButton" name="pbEngrave">
         <property name="font">
          <font>
@@ -81,6 +81,20 @@
         </property>
         <property name="text">
          <string>각인 시뮬레이터</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="pbProfile">
+        <property name="font">
+         <font>
+          <family>나눔스퀘어 네오 ExtraBold</family>
+          <pointsize>20</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>캐릭터 조회</string>
         </property>
        </widget>
       </item>
