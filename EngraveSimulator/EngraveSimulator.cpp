@@ -164,10 +164,10 @@ void EngraveSimulator::initUI()
     QPixmap attSpd(":/image/resources/engraves/penalty_attspd.png");
     QPixmap def(":/image/resources/engraves/penalty_def.png");
     QPixmap spd(":/image/resources/engraves/penalty_spd.png");
-    ui->lbPixAtt->setPixmap(att.scaled(45, 45));
-    ui->lbPixAttSpd->setPixmap(attSpd.scaled(45, 45));
-    ui->lbPixDef->setPixmap(def.scaled(45, 45));
-    ui->lbPixSpd->setPixmap(spd.scaled(45, 45));
+    ui->lbPixAtt->setPixmap(att.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->lbPixAttSpd->setPixmap(attSpd.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->lbPixDef->setPixmap(def.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->lbPixSpd->setPixmap(spd.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 }
 
 void EngraveSimulator::initConnect()
@@ -242,7 +242,7 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     QString pixPath = QString(":/image/resources/engraves/%1.png").arg(pixmapIdx);
     QPixmap pixmap(pixPath);
 
-    lbPixmap->setPixmap(pixmap.scaled(45, 45));
+    lbPixmap->setPixmap(pixmap.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     lbPixmap->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -403,27 +403,3 @@ void EngraveSimulator::slotUpdateResult()
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
