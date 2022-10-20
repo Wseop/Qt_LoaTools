@@ -9,6 +9,8 @@ AuctionCalc::AuctionCalc(QWidget *parent) :
     mIntValidator(new QIntValidator())
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/resources/Home.ico"));
+    this->setWindowTitle("경매 계산기");
 
     initUI();
     initConnect();
@@ -21,9 +23,6 @@ AuctionCalc::~AuctionCalc()
 
 void AuctionCalc::initUI()
 {
-    ui->pbHome->setIcon(QIcon(":resources/Home.ico"));
-    ui->pbHome->setIconSize(QSize(30, 30));
-
     ui->groupBoxPrice->setFixedHeight(45);
     ui->groupBoxDesc->setFixedHeight(45);
 
@@ -45,19 +44,9 @@ void AuctionCalc::initUI()
 
 void AuctionCalc::initConnect()
 {
-    connect(ui->pbHome, SIGNAL(pressed()), this, SLOT(slotHome()));
     // EnterKey 연결
     connect(ui->lePrice, SIGNAL(returnPressed()), this, SLOT(slotCalc()));
     connect(ui->pbCalc, SIGNAL(pressed()), this, SLOT(slotCalc()));
-}
-
-void AuctionCalc::slotHome()
-{
-    QWidget* parent = static_cast<QWidget*>(this->parent());
-    parent->setFixedWidth(800);
-    parent->setFixedHeight(600);
-
-    this->close();
 }
 
 void AuctionCalc::slotCalc()

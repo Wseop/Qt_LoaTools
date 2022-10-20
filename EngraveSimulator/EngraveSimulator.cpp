@@ -13,6 +13,8 @@ EngraveSimulator::EngraveSimulator(QWidget *parent) :
     mEngraveLayout(new QHBoxLayout())
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/resources/Home.ico"));
+    this->setWindowTitle("각인 계산기");
 
     loadEngraveList();
 
@@ -102,8 +104,6 @@ void EngraveSimulator::initUI()
     ui->groupEngrave->setLayout(mEngraveLayout);
 
     // PushButton
-    ui->pbHome->setIcon(QIcon(":resources/Home.ico"));
-    ui->pbHome->setIconSize(QSize(30, 30));
     ui->pbClearAll->setStyleSheet("QPushButton { color : red }");
 
     // Label
@@ -172,7 +172,6 @@ void EngraveSimulator::initUI()
 
 void EngraveSimulator::initConnect()
 {
-    connect(ui->pbHome, SIGNAL(pressed()), this, SLOT(slotHome()));
     connect(ui->pbClearAll, SIGNAL(pressed()), this, SLOT(slotClearInput()));
     for (int i = 0; i < mEngraveSPBMap.size(); i++)
     {
@@ -275,15 +274,6 @@ void EngraveSimulator::clearEngraveLayout()
     for (QVBoxLayout* layout : mVBoxLayoutList)
         delete layout;
     mVBoxLayoutList.clear();
-}
-
-void EngraveSimulator::slotHome()
-{
-    QWidget* parent = static_cast<QWidget*>(this->parent());
-    parent->setFixedWidth(800);
-    parent->setFixedHeight(600);
-
-    this->close();
 }
 
 void EngraveSimulator::slotClearInput()

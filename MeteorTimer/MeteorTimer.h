@@ -27,7 +27,6 @@ private:
     void initConnect();
 
 private slots:
-    void slotHome();
     void slotStartTimer();
     void slotResetTimer();
     void slotUpdateTimer();

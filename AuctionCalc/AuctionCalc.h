@@ -29,7 +29,6 @@ private:
     class QIntValidator* mIntValidator;
 
 private slots:
-    void slotHome();
     void slotCalc();
 };
 

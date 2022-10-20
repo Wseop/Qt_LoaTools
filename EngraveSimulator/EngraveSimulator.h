@@ -59,7 +59,6 @@ private:
     QList<class QVBoxLayout*> mVBoxLayoutList;
 
 private slots:
-    void slotHome();
     void slotClearInput();
     void slotUpdateResult();
 };
