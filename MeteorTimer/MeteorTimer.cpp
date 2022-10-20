@@ -63,16 +63,3 @@ void MeteorTimer::slotUpdateTimer()
         slotResetTimer();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,10 +2,31 @@
 #define PROFILE_H
 
 #include <QWidget>
+#include <QRegularExpression>
 
 namespace Ui {
 class Profile;
 }
+
+const QString PROFILE_PATH = "https://lostark.game.onstove.com/Profile/Character";
+const QString CDN_PATH = "https://cdn-lostark.game.onstove.com";
+
+enum class Part
+{
+    WEAPON = 0,
+    HEAD,
+    TOP,
+    BOTTOM,
+    HAND,
+    SHOULDER,
+    NECK,
+    EAR1,
+    EAR2,
+    RING1,
+    RING2,
+    STONE,
+    BRACELET = 26
+};
 
 class Profile : public QWidget
 {
@@ -16,19 +37,42 @@ public:
     ~Profile();
 
 private:
+    void initMap();
     void initUI();
     void initConnect();
 
+    QVariant getValueFromJson(const QJsonObject& src, QStringList keys);
+
+    void parseEquip();
+    void parseEngrave();
+    void parseSkill();
+    void parseCard();
+
+    void requestIcon(QString iconPath);
+    void setQualityColor(Part part, int quality);
+    void setNameColor(Part part, int grade);
+    int getItemGrade(const QJsonObject& obj);
+
 private:
     Ui::Profile *ui;
-    class QNetworkAccessManager* mNetworkManager;
-    class QNetworkReply* mNetworkReply;
+    class QNetworkAccessManager* mNetworkProfile = nullptr;
+    class QNetworkAccessManager* mNetworkIcon = nullptr;
     class QJsonObject* mProfile = nullptr;
+
+    QRegularExpression mHtmlTag;
+
+    QMap<Part, class QLabel*> mPartIcon;
+    QMap<QString, Part> mPathPart;
+    QMap<Part, class QProgressBar*> mPartQual;
+    QMap<Part, class QLabel*> mPartName;
+    QMap<Part, class QLabel*> mPartLevel;
+    QMap<Part, class QLabel*> mPartSet;
 
 private slots:
     void slotHome();
     void slotProfileRequest();
-    void slotExtractProfile();
+    void slotExtractProfile(class QNetworkReply* reply);
+    void slotSetIcon(class QNetworkReply* reply);
 };
 
 #endif // PROFILE_H

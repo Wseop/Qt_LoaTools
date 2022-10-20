@@ -31,34 +31,30 @@ void LoaTools::initConnect()
 void LoaTools::slotOpenMeteorTimer()
 {
     if (mMeteorTimer == nullptr)
-        mMeteorTimer = new MeteorTimer(this);
+        mMeteorTimer = new MeteorTimer();
     mMeteorTimer->show();
-    this->setFixedWidth(400);
-    this->setFixedHeight(300);
+    this->setFixedSize(400, 300);
 }
 
 void LoaTools::slotOpenAuctionCalc()
 {
     if (mAuctionCalc == nullptr)
-        mAuctionCalc = new AuctionCalc(this);
+        mAuctionCalc = new AuctionCalc();
     mAuctionCalc->show();
-    this->setFixedWidth(411);
-    this->setFixedHeight(300);
+    this->setFixedSize(411, 300);
 }
 
 void LoaTools::slotOpenEngraveSimulator()
 {
     if (mEngrave == nullptr)
-        mEngrave = new EngraveSimulator(this);
+        mEngrave = new EngraveSimulator();
     mEngrave->show();
-    this->setFixedWidth(865);
-    this->setFixedHeight(570);
+    this->setFixedSize(865, 570);
 }
 
 void LoaTools::slotOpenProfile()
 {
     if (mProfile == nullptr)
-        mProfile = new Profile(this);
+        mProfile = new Profile();
     mProfile->show();
-
 }
