@@ -21,7 +21,8 @@ Profile::Profile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Profile),
     mNetworkProfile(new QNetworkAccessManager()),
-    mNetworkIcon(new QNetworkAccessManager()),
+    mNetworkIcon1(new QNetworkAccessManager()),
+    mNetworkIcon2(new QNetworkAccessManager()),
     mHtmlTag("<[^>]*>")
 {
     ui->setupUi(this);
@@ -46,6 +47,13 @@ void Profile::initMap()
     mPartIcon[Part::BOTTOM] = ui->lbIconBottom;
     mPartIcon[Part::HAND] = ui->lbIconHand;
     mPartIcon[Part::SHOULDER] = ui->lbIconShoulder;
+    mPartIcon[Part::NECK] = ui->lbIconNeck;
+    mPartIcon[Part::EAR1] = ui->lbIconEar1;
+    mPartIcon[Part::EAR2] = ui->lbIconEar2;
+    mPartIcon[Part::RING1] = ui->lbIconRing1;
+    mPartIcon[Part::RING2] = ui->lbIconRing2;
+    mPartIcon[Part::STONE] = ui->lbIconStone;
+    mPartIcon[Part::BRACELET] = ui->lbIconBracelet;
 
     mPartQual[Part::WEAPON] = ui->barQualWeapon;
     mPartQual[Part::HEAD] = ui->barQualHead;
@@ -53,6 +61,11 @@ void Profile::initMap()
     mPartQual[Part::BOTTOM] = ui->barQualBottom;
     mPartQual[Part::HAND] = ui->barQualHand;
     mPartQual[Part::SHOULDER] = ui->barQualShoulder;
+    mPartQual[Part::NECK] = ui->barQualNeck;
+    mPartQual[Part::EAR1] = ui->barQualEar1;
+    mPartQual[Part::EAR2] = ui->barQualEar2;
+    mPartQual[Part::RING1] = ui->barQualRing1;
+    mPartQual[Part::RING2] = ui->barQualRing2;
 
     mPartName[Part::WEAPON] = ui->lbNameWeapon;
     mPartName[Part::HEAD] = ui->lbNameHead;
@@ -60,6 +73,13 @@ void Profile::initMap()
     mPartName[Part::BOTTOM] = ui->lbNameBottom;
     mPartName[Part::HAND] = ui->lbNameHand;
     mPartName[Part::SHOULDER] = ui->lbNameShoulder;
+    mPartName[Part::NECK] = ui->lbNameNeck;
+    mPartName[Part::EAR1] = ui->lbNameEar1;
+    mPartName[Part::EAR2] = ui->lbNameEar2;
+    mPartName[Part::RING1] = ui->lbNameRing1;
+    mPartName[Part::RING2] = ui->lbNameRing2;
+    mPartName[Part::STONE] = ui->lbNameStone;
+    mPartName[Part::BRACELET] = ui->lbNameBracelet;
 
     mPartLevel[Part::WEAPON] = ui->lbLevelWeapon;
     mPartLevel[Part::HEAD] = ui->lbLevelHead;
@@ -74,19 +94,25 @@ void Profile::initMap()
     mPartSet[Part::BOTTOM] = ui->lbSetBottom;
     mPartSet[Part::HAND] = ui->lbSetHand;
     mPartSet[Part::SHOULDER] = ui->lbSetShoulder;
+
+    mPartAttr[Part::NECK] = ui->lbAttrNeck;
+    mPartAttr[Part::EAR1] = ui->lbAttrEar1;
+    mPartAttr[Part::EAR2] = ui->lbAttrEar2;
+    mPartAttr[Part::RING1] = ui->lbAttrRing1;
+    mPartAttr[Part::RING2] = ui->lbAttrRing2;
+    mPartAttr[Part::BRACELET] = ui->lbEffectBracelet;
+
+    mPartEngrave[Part::NECK] = ui->lbEngraveNeck;
+    mPartEngrave[Part::EAR1] = ui->lbEngraveEar1;
+    mPartEngrave[Part::EAR2] = ui->lbEngraveEar2;
+    mPartEngrave[Part::RING1] = ui->lbEngraveRing1;
+    mPartEngrave[Part::RING2] = ui->lbEngraveRing2;
+    mPartEngrave[Part::STONE] = ui->lbEngraveStone;
 }
 
 void Profile::initUI()
 {
-    ui->tabProfile->setFixedHeight(650);
-
-    ui->groupBoxSearch->setFixedHeight(60);
-    ui->groupWeapon->setFixedHeight(100);
-    ui->groupHead->setFixedHeight(100);
-    ui->groupShoulder->setFixedHeight(100);
-    ui->groupTop->setFixedHeight(100);
-    ui->groupBottom->setFixedHeight(100);
-    ui->groupHand->setFixedHeight(100);
+    ui->tabProfile->hide();
 
     ui->barQualWeapon->setFixedSize(50, 15);
     ui->barQualHead->setFixedSize(50, 15);
@@ -94,6 +120,11 @@ void Profile::initUI()
     ui->barQualTop->setFixedSize(50, 15);
     ui->barQualBottom->setFixedSize(50, 15);
     ui->barQualHand->setFixedSize(50, 15);
+    ui->barQualNeck->setFixedSize(50, 15);
+    ui->barQualEar1->setFixedSize(50, 15);
+    ui->barQualEar2->setFixedSize(50, 15);
+    ui->barQualRing1->setFixedSize(50, 15);
+    ui->barQualRing2->setFixedSize(50, 15);
 
     ui->tabEquip->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabSkill->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
@@ -105,7 +136,8 @@ void Profile::initConnect()
     connect(ui->pbSearch, SIGNAL(pressed()), this, SLOT(slotProfileRequest()));
     connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(slotProfileRequest()));
     connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
-    connect(mNetworkIcon, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIcon(QNetworkReply*)));
+    connect(mNetworkIcon1, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIcon(QNetworkReply*)));
+    connect(mNetworkIcon2, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIcon(QNetworkReply*)));
 }
 
 // 중첩구조인 json 객체로부터 최종 value를 추출
@@ -123,7 +155,7 @@ QVariant Profile::getValueFromJson(const QJsonObject& src, QStringList keys)
 // 장비 정보 추출 (무기, 방어구, 악세, 보석)
 void Profile::parseEquip()
 {
-    mPathPart.clear();
+    mPathParts.clear();
 
     // Equip key의 값으로 Equip(장비류)와 보석 정보가 들어있음
     QJsonObject equip(mProfile->find("Equip")->toObject());
@@ -146,6 +178,21 @@ void Profile::parseEquip()
     }
 
     // 장비 정보 추출
+    QStringList nameKeys;
+    nameKeys << "Element_000" << "value";
+    QStringList iconKeys;
+    iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
+    QStringList qualKeys;
+    qualKeys << "Element_001" << "value" << "qualityValue";
+    QStringList engraveKeys;
+    engraveKeys << "Element_006" << "value" << "Element_001";
+    QStringList levelKeys;
+    levelKeys << "Element_001" << "value" << "leftStr2";
+    QStringList setKeys;
+    setKeys << "Element_008" << "value" << "Element_001";
+    QStringList attrKeys;
+    attrKeys << "Element_005" << "value" << "Element_001";
+
     for (const QString& key : equipKeys)
     {
         if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
@@ -156,17 +203,6 @@ void Profile::parseEquip()
             key.endsWith("0" + QString::number(static_cast<int>(Part::SHOULDER))))
         {
             const QJsonObject& obj = equip.find(key)->toObject();
-
-            QStringList nameKeys;
-            nameKeys << "Element_000" << "value";
-            QStringList levelKeys;
-            levelKeys << "Element_001" << "value" << "leftStr2";
-            QStringList qualKeys;
-            qualKeys << "Element_001" << "value" << "qualityValue";
-            QStringList setKeys;
-            setKeys << "Element_008" << "value" << "Element_001";
-            QStringList iconKeys;
-            iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
 
             QString name = getValueFromJson(obj, nameKeys).toString();
             QString level = getValueFromJson(obj, levelKeys).toString();
@@ -181,8 +217,8 @@ void Profile::parseEquip()
             // update ui
             Part part = static_cast<Part>(key.last(3).toInt());
 
-            mPathPart[iconPath] = part;
-            requestIcon(iconPath);
+            mPathParts[iconPath].append(part);
+            requestIcon(mNetworkIcon1, iconPath);
 
             mPartQual[part]->setValue(quality);
             setQualityColor(part, quality);
@@ -200,15 +236,81 @@ void Profile::parseEquip()
                  key.endsWith("0" + QString::number(static_cast<int>(Part::RING1))) ||
                  key.endsWith("0" + QString::number(static_cast<int>(Part::RING2))))
         {
+            const QJsonObject& obj = equip.find(key)->toObject();
 
+            QString name = getValueFromJson(obj, nameKeys).toString();
+            int quality = getValueFromJson(obj, qualKeys).toInt();
+            QString attr = getValueFromJson(obj, attrKeys).toString();
+            QString engrave = getValueFromJson(obj, engraveKeys).toString();
+            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
+
+            name = name.remove(mHtmlTag);
+            engrave = engrave.replace("#FFFFAC", "#B9B919");
+
+            // update ui
+            Part part = static_cast<Part>(key.last(3).toInt());
+
+            mPathParts[iconPath].append(part);
+            requestIcon(mNetworkIcon2, iconPath);
+
+            mPartName[part]->setText(name);
+            setNameColor(part, getItemGrade(obj));
+
+            mPartQual[part]->setValue(quality);
+            setQualityColor(part, quality);
+
+            mPartAttr[part]->setText(attr);
+            mPartEngrave[part]->setText(engrave);
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::STONE))))
         {
+            const QJsonObject& obj = equip.find(key)->toObject();
 
+            QString name = getValueFromJson(obj, nameKeys).toString();
+            QString engrave = getValueFromJson(obj, engraveKeys).toString();
+            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
+
+            name = name.remove(mHtmlTag);
+            engrave = engrave.replace("#FFFFAC", "#B9B919");
+
+            // update ui
+            Part part = static_cast<Part>(key.last(3).toInt());
+
+            mPathParts[iconPath].append(part);
+            requestIcon(mNetworkIcon1, iconPath);
+
+            mPartName[part]->setText(name);
+            setNameColor(part, getItemGrade(obj));
+
+            mPartEngrave[part]->setText(engrave);
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::BRACELET))))
         {
+            const QJsonObject& obj = equip.find(key)->toObject();
 
+            QStringList braceletEffectKeys;
+            braceletEffectKeys << "Element_004" << "value" << "Element_001";
+
+            QString name = getValueFromJson(obj, nameKeys).toString();
+            QString effect = getValueFromJson(obj, braceletEffectKeys).toString();
+            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
+
+            name = name.remove(mHtmlTag);
+            effect = effect.remove(QRegularExpression("<img[^>]*>"));
+            effect = effect.replace("</img>", "-");
+            effect = effect.replace("#F9F7D0", "#B9B919", Qt::CaseInsensitive);
+            effect = effect.replace("#99FF99", "#0ADC64", Qt::CaseInsensitive);
+
+            // update ui
+            Part part = static_cast<Part>(key.last(3).toInt());
+
+            mPathParts[iconPath].append(part);
+            requestIcon(mNetworkIcon2, iconPath);
+
+            mPartName[part]->setText(name);
+            setNameColor(part, getItemGrade(obj));
+
+            mPartAttr[part]->setText(effect);
         }
     }
 }
@@ -222,10 +324,10 @@ void Profile::parseSkill()
 void Profile::parseCard()
 {}
 
-void Profile::requestIcon(QString iconPath)
+void Profile::requestIcon(QNetworkAccessManager* networkManager, QString iconPath)
 {
     QNetworkRequest request((QUrl(CDN_PATH + iconPath)));
-    mNetworkIcon->get(request);
+    networkManager->get(request);
 }
 
 void Profile::setQualityColor(Part part, int quality)
@@ -258,9 +360,9 @@ void Profile::setNameColor(Part part, int grade)
     else if (grade == 1)
         color = "rgb(210, 166, 106)";
 
-    QString style = QString("QLabel { color: %1; font-size: 10 }").arg(color);
+    QString style = QString("QLabel { color: %1 }").arg(color);
     mPartName[part]->setStyleSheet(style);
-    mPartName[part]->setFont(QFont("나눔스퀘어 네오 ExtraBold"));
+    mPartName[part]->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
 }
 
 // 유물등급 : 0, 고대등급 : 1
@@ -276,15 +378,6 @@ int Profile::getItemGrade(const QJsonObject& obj)
         return 1;
     else
         return -1;
-}
-
-void Profile::slotHome()
-{
-    QWidget* parent = static_cast<QWidget*>(this->parent());
-    parent->setFixedWidth(800);
-    parent->setFixedHeight(600);
-
-    this->close();
 }
 
 void Profile::slotProfileRequest()
@@ -319,6 +412,8 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
     }
     else
     {
+        ui->tabProfile->show();
+
         // Profile의 시작 index와 Profile의 크기 계산
         profileIndex += profileStart.size();
         profileSize = responseData.indexOf(profileEnd) - profileIndex + 1;
@@ -348,10 +443,14 @@ void Profile::slotSetIcon(QNetworkReply* reply)
     }
 
     // 해당하는 Label에 아이콘 추가
-    Part part = mPathPart[reply->url().path()];
-    QLabel* iconLabel = mPartIcon[part];
+    QString path = reply->url().path();
+    QList<Part> parts = mPathParts[path];
+    for (Part& part : parts)
+    {
+        QLabel* iconLabel = mPartIcon[part];
 
-    iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    iconLabel->setFixedSize(50, 50);
-    iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
+        iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        iconLabel->setFixedSize(50, 50);
+        iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
+    }
 }

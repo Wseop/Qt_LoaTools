@@ -48,7 +48,7 @@ private:
     void parseSkill();
     void parseCard();
 
-    void requestIcon(QString iconPath);
+    void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
     void setQualityColor(Part part, int quality);
     void setNameColor(Part part, int grade);
     int getItemGrade(const QJsonObject& obj);
@@ -56,20 +56,22 @@ private:
 private:
     Ui::Profile *ui;
     class QNetworkAccessManager* mNetworkProfile = nullptr;
-    class QNetworkAccessManager* mNetworkIcon = nullptr;
+    class QNetworkAccessManager* mNetworkIcon1 = nullptr;
+    class QNetworkAccessManager* mNetworkIcon2 = nullptr;
     class QJsonObject* mProfile = nullptr;
 
     QRegularExpression mHtmlTag;
 
     QMap<Part, class QLabel*> mPartIcon;
-    QMap<QString, Part> mPathPart;
+    QMap<QString, QList<Part>> mPathParts;
     QMap<Part, class QProgressBar*> mPartQual;
     QMap<Part, class QLabel*> mPartName;
     QMap<Part, class QLabel*> mPartLevel;
     QMap<Part, class QLabel*> mPartSet;
+    QMap<Part, class QLabel*> mPartAttr;
+    QMap<Part, class QLabel*> mPartEngrave;
 
 private slots:
-    void slotHome();
     void slotProfileRequest();
     void slotExtractProfile(class QNetworkReply* reply);
     void slotSetIcon(class QNetworkReply* reply);
