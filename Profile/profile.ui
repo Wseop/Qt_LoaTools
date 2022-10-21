@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
+    <width>1167</width>
     <height>760</height>
    </rect>
   </property>
@@ -20,10 +20,13 @@
    <property name="spacing">
     <number>6</number>
    </property>
-   <item>
+   <item alignment="Qt::AlignHCenter|Qt::AlignTop">
     <widget class="QGroupBox" name="groupBoxSearch">
      <property name="title">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="bottomMargin">
@@ -69,10 +72,28 @@
        <string>장비</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>6</number>
+         </property>
          <item>
           <widget class="QGroupBox" name="groupWeapon">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -171,6 +192,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupHead">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -260,6 +287,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupShoulder">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -349,6 +382,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupTop">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -438,6 +477,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupBottom">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -527,6 +572,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupHand">
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -620,6 +671,12 @@
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
           <widget class="QGroupBox" name="groupNeck">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -728,6 +785,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupEar1">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -836,6 +899,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupEar2">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -944,6 +1013,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupRing1">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -1052,6 +1127,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="groupRing2">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -1159,7 +1240,13 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="groupBox_14">
+          <widget class="QGroupBox" name="groupStone">
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>150</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -1210,8 +1297,12 @@
            </layout>
           </widget>
          </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_32">
          <item>
-          <widget class="QGroupBox" name="groupBox_9">
+          <widget class="QGroupBox" name="groupBracelet">
            <property name="font">
             <font>
              <family>나눔스퀘어 네오 Regular</family>
@@ -1222,27 +1313,27 @@
            <property name="title">
             <string>팔찌</string>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
+           <layout class="QVBoxLayout" name="verticalLayout_33">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_28">
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
               <item>
                <widget class="QLabel" name="lbIconBracelet">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>icon bracelet</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbNameBracelet">
+                <property name="text">
+                 <string>name bracelet</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_29">
-              <item>
-               <widget class="QLabel" name="lbNameBracelet">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-               </widget>
-              </item>
+             <layout class="QVBoxLayout" name="verticalLayout_28">
               <item>
                <widget class="QLabel" name="lbEffectBracelet">
                 <property name="font">
@@ -1253,7 +1344,10 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>effect bracelet</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1263,6 +1357,835 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupJewel">
+         <property name="maximumSize">
+          <size>
+           <width>450</width>
+           <height>900</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>나눔스퀘어 네오 Regular</family>
+           <pointsize>10</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="title">
+          <string>보석</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_31">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_27">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_58">
+              <item>
+               <widget class="QLabel" name="lbIconGem0">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem0">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_57">
+              <item>
+               <widget class="QLabel" name="lbNameGem0">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem0">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_36">
+              <item>
+               <widget class="QLabel" name="lbIconGem1">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem1">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_37">
+              <item>
+               <widget class="QLabel" name="lbNameGem1">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem1">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_26">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_41">
+              <item>
+               <widget class="QLabel" name="lbIconGem2">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem2">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_40">
+              <item>
+               <widget class="QLabel" name="lbNameGem2">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem2">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_22">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_43">
+              <item>
+               <widget class="QLabel" name="lbIconGem3">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem3">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_42">
+              <item>
+               <widget class="QLabel" name="lbNameGem3">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem3">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_25">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_56">
+              <item>
+               <widget class="QLabel" name="lbIconGem4">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem4">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_55">
+              <item>
+               <widget class="QLabel" name="lbNameGem4">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem4">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_24">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_54">
+              <item>
+               <widget class="QLabel" name="lbIconGem5">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem5">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_53">
+              <item>
+               <widget class="QLabel" name="lbNameGem5">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem5">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_23">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_52">
+              <item>
+               <widget class="QLabel" name="lbIconGem6">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem6">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_51">
+              <item>
+               <widget class="QLabel" name="lbNameGem6">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem6">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_50">
+              <item>
+               <widget class="QLabel" name="lbIconGem7">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem7">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_49">
+              <item>
+               <widget class="QLabel" name="lbNameGem7">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem7">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_20">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_48">
+              <item>
+               <widget class="QLabel" name="lbIconGem8">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem8">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_47">
+              <item>
+               <widget class="QLabel" name="lbNameGem8">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem8">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_9">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_19">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_46">
+              <item>
+               <widget class="QLabel" name="lbIconGem9">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem9">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_45">
+              <item>
+               <widget class="QLabel" name="lbNameGem9">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem9">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_44">
+              <item>
+               <widget class="QLabel" name="lbIconGem10">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbLevelGem10">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_30">
+              <item>
+               <widget class="QLabel" name="lbNameGem10">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbAttrGem10">
+                <property name="font">
+                 <font>
+                  <family>나눔스퀘어 네오 Bold</family>
+                  <pointsize>10</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>

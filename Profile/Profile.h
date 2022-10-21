@@ -48,20 +48,26 @@ private:
     void parseSkill();
     void parseCard();
 
+    void updateEquip(QJsonObject& equip, QStringList& keys);
+    void updateGem(QJsonObject& equip, QStringList& keys);
+
     void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
     void setQualityColor(Part part, int quality);
-    void setNameColor(Part part, int grade);
+    void setNameColor(class QLabel* label, int grade);
     int getItemGrade(const QJsonObject& obj);
+
+    void clearAll();
 
 private:
     Ui::Profile *ui;
     class QNetworkAccessManager* mNetworkProfile = nullptr;
-    class QNetworkAccessManager* mNetworkIcon1 = nullptr;
-    class QNetworkAccessManager* mNetworkIcon2 = nullptr;
+    class QNetworkAccessManager* mNetworkIconEquip = nullptr;
+    class QNetworkAccessManager* mNetworkIconGem = nullptr;
     class QJsonObject* mProfile = nullptr;
 
     QRegularExpression mHtmlTag;
 
+    // Part Map
     QMap<Part, class QLabel*> mPartIcon;
     QMap<QString, QList<Part>> mPathParts;
     QMap<Part, class QProgressBar*> mPartQual;
@@ -71,10 +77,18 @@ private:
     QMap<Part, class QLabel*> mPartAttr;
     QMap<Part, class QLabel*> mPartEngrave;
 
+    // Gem Map
+    QList<class QLabel*> mGemIcons;
+    QMap<QString, QList<int>> mGemPathIndex;
+    QList<class QLabel*> mGemLevels;
+    QList<class QLabel*> mGemNames;
+    QList<class QLabel*> mGemAttrs;
+
 private slots:
     void slotProfileRequest();
     void slotExtractProfile(class QNetworkReply* reply);
-    void slotSetIcon(class QNetworkReply* reply);
+    void slotSetIconEquip(class QNetworkReply* reply);
+    void slotSetIconGem(class QNetworkReply* reply);
 };
 
 #endif // PROFILE_H

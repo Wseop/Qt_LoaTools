@@ -21,13 +21,14 @@ Profile::Profile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Profile),
     mNetworkProfile(new QNetworkAccessManager()),
-    mNetworkIcon1(new QNetworkAccessManager()),
-    mNetworkIcon2(new QNetworkAccessManager()),
+    mNetworkIconEquip(new QNetworkAccessManager()),
+    mNetworkIconGem(new QNetworkAccessManager()),
     mHtmlTag("<[^>]*>")
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
     this->setWindowTitle("캐릭터 조회");
+    this->showMaximized();
 
     initMap();
     initUI();
@@ -108,11 +109,41 @@ void Profile::initMap()
     mPartEngrave[Part::RING1] = ui->lbEngraveRing1;
     mPartEngrave[Part::RING2] = ui->lbEngraveRing2;
     mPartEngrave[Part::STONE] = ui->lbEngraveStone;
+
+    mGemIcons.append(ui->lbIconGem0);    mGemIcons.append(ui->lbIconGem1);
+    mGemIcons.append(ui->lbIconGem2);    mGemIcons.append(ui->lbIconGem3);
+    mGemIcons.append(ui->lbIconGem4);    mGemIcons.append(ui->lbIconGem5);
+    mGemIcons.append(ui->lbIconGem6);    mGemIcons.append(ui->lbIconGem7);
+    mGemIcons.append(ui->lbIconGem8);    mGemIcons.append(ui->lbIconGem9);
+    mGemIcons.append(ui->lbIconGem10);
+
+    mGemLevels.append(ui->lbLevelGem0);    mGemLevels.append(ui->lbLevelGem1);
+    mGemLevels.append(ui->lbLevelGem2);    mGemLevels.append(ui->lbLevelGem3);
+    mGemLevels.append(ui->lbLevelGem4);    mGemLevels.append(ui->lbLevelGem5);
+    mGemLevels.append(ui->lbLevelGem6);    mGemLevels.append(ui->lbLevelGem7);
+    mGemLevels.append(ui->lbLevelGem8);    mGemLevels.append(ui->lbLevelGem9);
+    mGemLevels.append(ui->lbLevelGem10);
+
+    mGemNames.append(ui->lbNameGem0);    mGemNames.append(ui->lbNameGem1);
+    mGemNames.append(ui->lbNameGem2);    mGemNames.append(ui->lbNameGem3);
+    mGemNames.append(ui->lbNameGem4);    mGemNames.append(ui->lbNameGem5);
+    mGemNames.append(ui->lbNameGem6);    mGemNames.append(ui->lbNameGem7);
+    mGemNames.append(ui->lbNameGem8);    mGemNames.append(ui->lbNameGem9);
+    mGemNames.append(ui->lbNameGem10);
+
+    mGemAttrs.append(ui->lbAttrGem0);    mGemAttrs.append(ui->lbAttrGem1);
+    mGemAttrs.append(ui->lbAttrGem2);    mGemAttrs.append(ui->lbAttrGem3);
+    mGemAttrs.append(ui->lbAttrGem4);    mGemAttrs.append(ui->lbAttrGem5);
+    mGemAttrs.append(ui->lbAttrGem6);    mGemAttrs.append(ui->lbAttrGem7);
+    mGemAttrs.append(ui->lbAttrGem8);    mGemAttrs.append(ui->lbAttrGem9);
+    mGemAttrs.append(ui->lbAttrGem10);
 }
 
 void Profile::initUI()
 {
     ui->tabProfile->hide();
+
+    ui->groupBoxSearch->setFixedWidth(500);
 
     ui->barQualWeapon->setFixedSize(50, 15);
     ui->barQualHead->setFixedSize(50, 15);
@@ -126,6 +157,20 @@ void Profile::initUI()
     ui->barQualRing1->setFixedSize(50, 15);
     ui->barQualRing2->setFixedSize(50, 15);
 
+    ui->groupBracelet->setMaximumSize(500, 300);
+
+    ui->lbLevelGem0->setFixedWidth(50);
+    ui->lbLevelGem1->setFixedWidth(50);
+    ui->lbLevelGem2->setFixedWidth(50);
+    ui->lbLevelGem3->setFixedWidth(50);
+    ui->lbLevelGem4->setFixedWidth(50);
+    ui->lbLevelGem5->setFixedWidth(50);
+    ui->lbLevelGem6->setFixedWidth(50);
+    ui->lbLevelGem7->setFixedWidth(50);
+    ui->lbLevelGem8->setFixedWidth(50);
+    ui->lbLevelGem9->setFixedWidth(50);
+    ui->lbLevelGem10->setFixedWidth(50);
+
     ui->tabEquip->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabSkill->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabCard->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
@@ -136,8 +181,8 @@ void Profile::initConnect()
     connect(ui->pbSearch, SIGNAL(pressed()), this, SLOT(slotProfileRequest()));
     connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(slotProfileRequest()));
     connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
-    connect(mNetworkIcon1, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIcon(QNetworkReply*)));
-    connect(mNetworkIcon2, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIcon(QNetworkReply*)));
+    connect(mNetworkIconEquip, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconEquip(QNetworkReply*)));
+    connect(mNetworkIconGem, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconGem(QNetworkReply*)));
 }
 
 // 중첩구조인 json 객체로부터 최종 value를 추출
@@ -155,12 +200,12 @@ QVariant Profile::getValueFromJson(const QJsonObject& src, QStringList keys)
 // 장비 정보 추출 (무기, 방어구, 악세, 보석)
 void Profile::parseEquip()
 {
-    mPathParts.clear();
+    clearAll();
 
     // Equip key의 값으로 Equip(장비류)와 보석 정보가 들어있음
     QJsonObject equip(mProfile->find("Equip")->toObject());
     QStringList equipKeys;   // 무기, 방어구, 악세 key값
-    QStringList jewelKeys;  // 보석 key값
+    QStringList gemKeys;  // 보석 key값
 
     // key값 추출
     const QStringList& keys = equip.keys();
@@ -169,7 +214,7 @@ void Profile::parseEquip()
         // key값이 GEM을 포함하면 보석류, 아니면 gear류
         if (key.contains("Gem"))
         {
-            jewelKeys.append(key);
+            gemKeys.append(key);
         }
         else
         {
@@ -177,6 +222,21 @@ void Profile::parseEquip()
         }
     }
 
+    updateEquip(equip, equipKeys);
+    updateGem(equip, gemKeys);
+}
+
+void Profile::parseEngrave()
+{}
+
+void Profile::parseSkill()
+{}
+
+void Profile::parseCard()
+{}
+
+void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
+{
     // 장비 정보 추출
     QStringList nameKeys;
     nameKeys << "Element_000" << "value";
@@ -193,7 +253,7 @@ void Profile::parseEquip()
     QStringList attrKeys;
     attrKeys << "Element_005" << "value" << "Element_001";
 
-    for (const QString& key : equipKeys)
+    for (const QString& key : keys)
     {
         if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
             key.endsWith("0" + QString::number(static_cast<int>(Part::HEAD))) ||
@@ -218,13 +278,13 @@ void Profile::parseEquip()
             Part part = static_cast<Part>(key.last(3).toInt());
 
             mPathParts[iconPath].append(part);
-            requestIcon(mNetworkIcon1, iconPath);
+            requestIcon(mNetworkIconEquip, iconPath);
 
             mPartQual[part]->setValue(quality);
             setQualityColor(part, quality);
 
             mPartName[part]->setText(name);
-            setNameColor(part, getItemGrade(obj));
+            setNameColor(mPartName[part], getItemGrade(obj));
 
             mPartLevel[part]->setText(level);
 
@@ -251,10 +311,10 @@ void Profile::parseEquip()
             Part part = static_cast<Part>(key.last(3).toInt());
 
             mPathParts[iconPath].append(part);
-            requestIcon(mNetworkIcon2, iconPath);
+            requestIcon(mNetworkIconEquip, iconPath);
 
             mPartName[part]->setText(name);
-            setNameColor(part, getItemGrade(obj));
+            setNameColor(mPartName[part], getItemGrade(obj));
 
             mPartQual[part]->setValue(quality);
             setQualityColor(part, quality);
@@ -271,16 +331,16 @@ void Profile::parseEquip()
             QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
 
             name = name.remove(mHtmlTag);
-            engrave = engrave.replace("#FFFFAC", "#B9B919");
+            engrave = engrave.replace("#FFFFAC", "#B9B919", Qt::CaseInsensitive);
 
             // update ui
             Part part = static_cast<Part>(key.last(3).toInt());
 
             mPathParts[iconPath].append(part);
-            requestIcon(mNetworkIcon1, iconPath);
+            requestIcon(mNetworkIconEquip, iconPath);
 
             mPartName[part]->setText(name);
-            setNameColor(part, getItemGrade(obj));
+            setNameColor(mPartName[part], getItemGrade(obj));
 
             mPartEngrave[part]->setText(engrave);
         }
@@ -305,24 +365,51 @@ void Profile::parseEquip()
             Part part = static_cast<Part>(key.last(3).toInt());
 
             mPathParts[iconPath].append(part);
-            requestIcon(mNetworkIcon2, iconPath);
+            requestIcon(mNetworkIconEquip, iconPath);
 
             mPartName[part]->setText(name);
-            setNameColor(part, getItemGrade(obj));
+            setNameColor(mPartName[part], getItemGrade(obj));
 
             mPartAttr[part]->setText(effect);
         }
     }
 }
 
-void Profile::parseEngrave()
-{}
+void Profile::updateGem(QJsonObject& equip, QStringList& keys)
+{
+    QStringList nameKeys;
+    nameKeys << "Element_000" << "value";
+    QStringList iconKeys;
+    iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
+    QStringList levelKeys;
+    levelKeys << "Element_001" << "value" << "slotData" << "rtString";
+    QStringList attrKeys;
+    attrKeys << "Element_004" << "value" << "Element_001";
 
-void Profile::parseSkill()
-{}
+    for (int i = 0; i < keys.size(); i++)
+    {
+        const QJsonObject& obj = equip.find(keys[i])->toObject();
 
-void Profile::parseCard()
-{}
+        QString name = getValueFromJson(obj, nameKeys).toString();
+        QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
+        QString level = getValueFromJson(obj, levelKeys).toString();
+        QString attr = getValueFromJson(obj, attrKeys).toString();
+
+        name = name.remove(mHtmlTag);
+        attr = attr.replace("#FFD200", "#B9B919", Qt::CaseInsensitive);
+
+        // update ui
+        mGemPathIndex[iconPath].append(i);
+        requestIcon(mNetworkIconGem, iconPath);
+
+        mGemLevels[i]->setText(level);
+
+        mGemNames[i]->setText(name);
+        setNameColor(mGemNames[i], getItemGrade(obj));
+
+        mGemAttrs[i]->setText(attr);
+    }
+}
 
 void Profile::requestIcon(QNetworkAccessManager* networkManager, QString iconPath)
 {
@@ -351,33 +438,91 @@ void Profile::setQualityColor(Part part, int quality)
     mPartQual[part]->setStyleSheet(style);
 }
 
-void Profile::setNameColor(Part part, int grade)
+void Profile::setNameColor(QLabel* label, int grade)
 {
     QString color;
 
     if (grade == 0)
-        color = "#FA5000";
+        color = "#F99200";
     else if (grade == 1)
+        color = "#FA5000";
+    else if (grade == 2)
         color = "rgb(210, 166, 106)";
+    else if (grade == 3)
+        color = "#3CE6B9";
 
     QString style = QString("QLabel { color: %1 }").arg(color);
-    mPartName[part]->setStyleSheet(style);
-    mPartName[part]->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
+    //mPartName[part]->setStyleSheet(style);
+    //mPartName[part]->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
+    label->setStyleSheet(style);
+    label->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
 }
 
-// 유물등급 : 0, 고대등급 : 1
+// 전설등급 : 0, 유물등급 : 1, 고대등급 : 2, 에스더 : 3
 int Profile::getItemGrade(const QJsonObject& obj)
 {
     QStringList keys;
     keys << "Element_001" << "value" << "leftStr0";
 
     QString itemCategory = getValueFromJson(obj, keys).toString();
-    if (itemCategory.contains("유물"))
+    if (itemCategory.contains("전설"))
         return 0;
-    else if (itemCategory.contains("고대"))
+    else if (itemCategory.contains("유물"))
         return 1;
+    else if (itemCategory.contains("고대"))
+        return 2;
+    else if (itemCategory.contains("에스더"))
+        return 3;
     else
         return -1;
+}
+
+void Profile::clearAll()
+{
+    // 이전 캐릭터 정보 모두 초기화
+    mPathParts.clear();
+    mGemPathIndex.clear();
+
+    QList<Part> keys;
+    keys = mPartIcon.keys();
+    for (Part& key : keys)
+        mPartIcon[key]->clear();
+
+    keys = mPartQual.keys();
+    for (Part& key : keys)
+        mPartQual[key]->reset();
+
+    keys = mPartName.keys();
+    for (Part& key : keys)
+        mPartName[key]->clear();
+
+    keys = mPartLevel.keys();
+    for (Part& key : keys)
+        mPartLevel[key]->clear();
+
+    keys = mPartSet.keys();
+    for (Part& key : keys)
+        mPartSet[key]->clear();
+
+    keys = mPartAttr.keys();
+    for (Part& key : keys)
+        mPartAttr[key]->clear();
+
+    keys = mPartEngrave.keys();
+    for (Part& key : keys)
+        mPartEngrave[key]->clear();
+
+    for (QLabel* label : mGemIcons)
+        label->clear();
+
+    for (QLabel* label : mGemLevels)
+        label->clear();
+
+    for (QLabel* label : mGemNames)
+        label->clear();
+
+    for (QLabel* label : mGemAttrs)
+        label->clear();
 }
 
 void Profile::slotProfileRequest()
@@ -412,7 +557,8 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
     }
     else
     {
-        ui->tabProfile->show();
+        if (ui->tabProfile->isHidden())
+            ui->tabProfile->show();
 
         // Profile의 시작 index와 Profile의 크기 계산
         profileIndex += profileStart.size();
@@ -432,13 +578,13 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
     }
 }
 
-void Profile::slotSetIcon(QNetworkReply* reply)
+void Profile::slotSetIconEquip(QNetworkReply* reply)
 {
     QPixmap icon;
     bool load = icon.loadFromData(reply->readAll(), "PNG");
     if (!load)
     {
-        qDebug() << "Icon load fail";
+        qDebug() << Q_FUNC_INFO << "Icon load fail";
         return;
     }
 
@@ -448,6 +594,29 @@ void Profile::slotSetIcon(QNetworkReply* reply)
     for (Part& part : parts)
     {
         QLabel* iconLabel = mPartIcon[part];
+
+        iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        iconLabel->setFixedSize(50, 50);
+        iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
+    }
+}
+
+void Profile::slotSetIconGem(QNetworkReply* reply)
+{
+    QPixmap icon;
+    bool load = icon.loadFromData(reply->readAll(), "PNG");
+    if (!load)
+    {
+        qDebug() << Q_FUNC_INFO << "Icon load fail";
+        return;
+    }
+
+    // 해당하는 Label에 아이콘 추가
+    QString path = reply->url().path();
+    QList<int> index = mGemPathIndex[path];
+    for (int& i : index)
+    {
+        QLabel* iconLabel = mGemIcons[i];
 
         iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         iconLabel->setFixedSize(50, 50);
