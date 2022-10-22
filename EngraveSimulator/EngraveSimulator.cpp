@@ -35,7 +35,7 @@ void EngraveSimulator::loadEngraveList()
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << Q_FUNC_INFO << ": File Open Fail";
+        qDebug() << Q_FUNC_INFO << ": File open fail";
         return;
     }
 
@@ -47,6 +47,8 @@ void EngraveSimulator::loadEngraveList()
 
     // 페널티 리스트 초기화
     mPenaltyList << "공격력 감소" << "공격속도 감소" << "방어력 감소" << "이동속도 감소";
+
+    file.close();
 }
 
 void EngraveSimulator::initMap()

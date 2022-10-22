@@ -12,10 +12,8 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QTabWidget>
-
-#ifdef QT_DEBUG
-    #include <QFile>
-#endif
+#include <QFile>
+#include <QDir>
 
 Profile::Profile(QWidget *parent) :
     QWidget(parent),
@@ -30,6 +28,7 @@ Profile::Profile(QWidget *parent) :
     this->setWindowTitle("캐릭터 조회");
     this->showMaximized();
 
+    initEngraveList();
     initMap();
     initUI();
     initConnect();
@@ -38,6 +37,29 @@ Profile::Profile(QWidget *parent) :
 Profile::~Profile()
 {
     delete ui;
+}
+
+void Profile::initEngraveList()
+{
+    // 각인 리스트 로드
+    QString filePath = QDir::currentPath() + "/resources/EngraveList.txt";
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << Q_FUNC_INFO << ": File open fail";
+        return;
+    }
+
+    QTextStream inStream(&file);
+    while (!inStream.atEnd())
+        mEngraveList << inStream.readLine();
+    mPenaltyList << "공격력 감소" << "공격속도 감소" << "방어력 감소" << "이동속도 감소";
+    mPenaltyIcon["공격력 감소"] = "penalty_att";
+    mPenaltyIcon["공격속도 감소"] = "penalty_attspd";
+    mPenaltyIcon["방어력 감소"] = "penalty_def";
+    mPenaltyIcon["이동속도 감소"] = "penalty_spd";
+
+    file.close();
 }
 
 void Profile::initMap()
@@ -158,6 +180,7 @@ void Profile::initUI()
     ui->barQualRing2->setFixedSize(50, 15);
 
     ui->groupBracelet->setMaximumSize(500, 300);
+    ui->groupEngrave->setMaximumWidth(500);
 
     ui->lbLevelGem0->setFixedWidth(50);
     ui->lbLevelGem1->setFixedWidth(50);
@@ -200,10 +223,8 @@ QVariant Profile::getValueFromJson(const QJsonObject& src, QStringList keys)
 // 장비 정보 추출 (무기, 방어구, 악세, 보석)
 void Profile::parseEquip()
 {
-    clearAll();
-
     // Equip key의 값으로 Equip(장비류)와 보석 정보가 들어있음
-    QJsonObject equip(mProfile->find("Equip")->toObject());
+    QJsonObject equip = mProfile->find("Equip")->toObject();
     QStringList equipKeys;   // 무기, 방어구, 악세 key값
     QStringList gemKeys;  // 보석 key값
 
@@ -213,13 +234,9 @@ void Profile::parseEquip()
     {
         // key값이 GEM을 포함하면 보석류, 아니면 gear류
         if (key.contains("Gem"))
-        {
             gemKeys.append(key);
-        }
         else
-        {
             equipKeys.append(key);
-        }
     }
 
     updateEquip(equip, equipKeys);
@@ -227,13 +244,85 @@ void Profile::parseEquip()
 }
 
 void Profile::parseEngrave()
-{}
+{
+    QJsonObject engrave = mProfile->find("Engrave")->toObject();
+    QStringList keys = engrave.keys();
+
+    QStringList nameKeys;
+    nameKeys << "Element_000" << "value";
+    QStringList valueKeys;
+    valueKeys << "Element_001" << "value" << "leftText";
+
+    for (const QString& key : keys)
+    {
+        const QJsonObject& obj = engrave.find(key)->toObject();
+
+        QString name = getValueFromJson(obj, nameKeys).toString();
+        QString valueStr = getValueFromJson(obj, valueKeys).toString();
+
+        valueStr = valueStr.remove(mHtmlTag);
+        // 각인 값에서 수치만 parsing
+        int value = valueStr.remove("각인 활성 포인트 +").toInt();
+
+        // 각인 - 값 update
+        mEngraveValue[name] += value;
+    }
+
+    updateEngrave();
+}
 
 void Profile::parseSkill()
 {}
 
 void Profile::parseCard()
 {}
+
+void Profile::extractEngraveValue(QString engrave)
+{
+    qsizetype start = 0;
+    qsizetype end = 0;
+    qsizetype from = 0;
+    QString name;
+    int value;
+
+    // 각인 이름, 값 추출 - 1
+    start = engrave.indexOf("[") + 1;
+    end = engrave.indexOf("]");
+    name = engrave.sliced(start, end - start);
+
+    start = engrave.indexOf("+") + 1;
+    if (engrave[start + 1] == '[')
+        value = engrave[start].digitValue();
+    else
+        value = engrave.sliced(start, 2).toInt();
+    mEngraveValue[name] += value;
+
+    // 각인 이름, 값 추출 - 2
+    from = start + 1;
+    start = engrave.indexOf("[", from) + 1;
+    end = engrave.indexOf("]", from);
+    name = engrave.sliced(start, end - start);
+
+    start = engrave.indexOf("+", from) + 1;
+    if (engrave[start + 1] == '[')
+        value = engrave[start].digitValue();
+    else
+        value = engrave.sliced(start, 2).toInt();
+    mEngraveValue[name] += value;
+
+    // 각인 이름, 값 추출 - 3 (Penalty)
+    from = start + 1;
+    start = engrave.indexOf("[", from) + 1;
+    end = engrave.indexOf("]", from);
+    name = engrave.sliced(start, end - start);
+
+    start = engrave.indexOf("+", from) + 1;
+    if (start == engrave.size() - 1)
+        value = engrave[start].digitValue();
+    else
+        value = engrave.sliced(start, 2).toInt();
+    mEngraveValue[name] += value;
+}
 
 void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
 {
@@ -244,8 +333,10 @@ void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
     iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
     QStringList qualKeys;
     qualKeys << "Element_001" << "value" << "qualityValue";
-    QStringList engraveKeys;
-    engraveKeys << "Element_006" << "value" << "Element_001";
+    QStringList engraveKeys1;
+    engraveKeys1 << "Element_005" << "value" << "Element_001";
+    QStringList engraveKeys2;
+    engraveKeys2 << "Element_006" << "value" << "Element_001";
     QStringList levelKeys;
     levelKeys << "Element_001" << "value" << "leftStr2";
     QStringList setKeys;
@@ -301,7 +392,7 @@ void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
             QString name = getValueFromJson(obj, nameKeys).toString();
             int quality = getValueFromJson(obj, qualKeys).toInt();
             QString attr = getValueFromJson(obj, attrKeys).toString();
-            QString engrave = getValueFromJson(obj, engraveKeys).toString();
+            QString engrave = getValueFromJson(obj, engraveKeys2).toString();
             QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
 
             name = name.remove(mHtmlTag);
@@ -321,14 +412,25 @@ void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
 
             mPartAttr[part]->setText(attr);
             mPartEngrave[part]->setText(engrave);
+
+            extractEngraveValue(engrave.remove(mHtmlTag));
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::STONE))))
         {
             const QJsonObject& obj = equip.find(key)->toObject();
 
             QString name = getValueFromJson(obj, nameKeys).toString();
-            QString engrave = getValueFromJson(obj, engraveKeys).toString();
+            QString engrave;
             QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
+
+            // 각인 값의 key가 유동적
+            // 어느 key에 각인이 있는지 탐색후 값 추출
+            QStringList engraveKeys;
+            engraveKeys << "Element_005" << "value" << "Element_000";
+            if (getValueFromJson(obj, engraveKeys).toString().contains("각인"))
+                engrave = getValueFromJson(obj, engraveKeys1).toString();
+            else
+                engrave = getValueFromJson(obj, engraveKeys2).toString();
 
             name = name.remove(mHtmlTag);
             engrave = engrave.replace("#FFFFAC", "#B9B919", Qt::CaseInsensitive);
@@ -343,6 +445,8 @@ void Profile::updateEquip(QJsonObject& equip, QStringList& keys)
             setNameColor(mPartName[part], getItemGrade(obj));
 
             mPartEngrave[part]->setText(engrave);
+
+            extractEngraveValue(engrave.remove(mHtmlTag));
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::BRACELET))))
         {
@@ -408,6 +512,73 @@ void Profile::updateGem(QJsonObject& equip, QStringList& keys)
         setNameColor(mGemNames[i], getItemGrade(obj));
 
         mGemAttrs[i]->setText(attr);
+    }
+}
+
+void Profile::updateEngrave()
+{
+    QStringList engraves = mEngraveValue.keys();
+
+    // level 3 -> 2 -> 1 순으로 ui 추가
+    for (int i = 3; i >= 1; i--)
+    {
+        for (const QString& engrave : engraves)
+        {
+            QHBoxLayout* layout = new QHBoxLayout();
+
+            QLabel* lbIcon = new QLabel();
+            QLabel* lbName = new QLabel();
+            QLabel* lbLevel = new QLabel();
+            layout->addWidget(lbIcon);
+            layout->addWidget(lbName);
+            layout->addWidget(lbLevel);
+            mEngraveLabels.append(lbIcon);
+            mEngraveLabels.append(lbName);
+            mEngraveLabels.append(lbLevel);
+
+            // 값 세팅
+            lbName->setText(engrave);
+
+            int value = mEngraveValue[engrave];
+            int level = value / 5;
+            lbLevel->setText(QString("Lv. %1").arg(level));
+
+            if (level != i)
+                continue;
+            if (mPenaltyList.contains(engrave))
+            {
+                // penalty 각인
+                QString iconPath = QString(":/image/resources/engraves/%1.png").arg(mPenaltyIcon[engrave]);
+                QPixmap pixmap(iconPath);
+                lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+                ui->vLayoutPenalty->addLayout(layout);
+                mPenaltyLayouts.append(layout);
+
+                lbName->setStyleSheet("QLabel { color: red }");
+                lbLevel->setStyleSheet("QLabel { color: red }");
+            }
+            else
+            {
+                // 증가 각인
+                int iconIndex = mEngraveList.indexOf(engrave);
+                QString iconPath = QString(":/image/resources/engraves/%1.png").arg(iconIndex);
+                QPixmap pixmap(iconPath);
+                lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+                ui->vLayoutEngrave->addLayout(layout);
+                mEngraveLayouts.append(layout);
+            }
+
+            // ui 세팅
+            lbIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+            lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+            lbName->setFont(QFont("나눔스퀘어 네오 Bold", 12));
+            lbName->setMaximumHeight(50);
+            lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+            lbLevel->setFont(QFont("나눔스퀘어 네오 Bold", 12));
+            lbLevel->setMaximumHeight(50);
+        }
     }
 }
 
@@ -523,6 +694,26 @@ void Profile::clearAll()
 
     for (QLabel* label : mGemAttrs)
         label->clear();
+
+    mEngraveValue.clear();
+
+    for (QLabel* label : mEngraveLabels)
+        delete label;
+    mEngraveLabels.clear();
+
+    for (QHBoxLayout* layout : mEngraveLayouts)
+    {
+        ui->vLayoutEngrave->removeItem(layout);
+        delete layout;
+    }
+    mEngraveLayouts.clear();
+
+    for (QHBoxLayout* layout : mPenaltyLayouts)
+    {
+        ui->vLayoutPenalty->removeItem(layout);
+        delete layout;
+    }
+    mPenaltyLayouts.clear();
 }
 
 void Profile::slotProfileRequest()
@@ -532,9 +723,6 @@ void Profile::slotProfileRequest()
     QString url = PROFILE_PATH + "/" + name;
     QNetworkRequest request((QUrl(url)));
     mNetworkProfile->get(request);
-
-    // 입력값 clear
-    ui->leName->clear();
 }
 
 // 응답 결과로부터 Profile(Json형식) 부분 추출
@@ -546,6 +734,10 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
     QString responseData = reply->readAll();
     qsizetype profileIndex = responseData.indexOf(profileStart);
     qsizetype profileSize = 0;
+
+    if (ui->leName->text() == "")
+        return;
+    ui->leName->clear();
 
     // 존재하지 않는 캐릭터인 경우 알람 popup 후 종료
     if (profileIndex == -1)
@@ -571,6 +763,7 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         mProfile = new QJsonObject(QJsonDocument::fromJson(profile.toUtf8()).object());
 
         // 추출 결과 parsing
+        clearAll();
         parseEquip();
         parseEngrave();
         parseSkill();

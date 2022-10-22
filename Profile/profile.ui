@@ -1356,6 +1356,28 @@
            </layout>
           </widget>
          </item>
+         <item>
+          <widget class="QGroupBox" name="groupEngrave">
+           <property name="font">
+            <font>
+             <family>나눔스퀘어 네오 Regular</family>
+             <pointsize>10</pointsize>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>각인</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_29">
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutEngrave"/>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutPenalty"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>

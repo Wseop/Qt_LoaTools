@@ -37,6 +37,7 @@ public:
     ~Profile();
 
 private:
+    void initEngraveList();
     void initMap();
     void initUI();
     void initConnect();
@@ -48,8 +49,11 @@ private:
     void parseSkill();
     void parseCard();
 
+    void extractEngraveValue(QString engrave);
+
     void updateEquip(QJsonObject& equip, QStringList& keys);
     void updateGem(QJsonObject& equip, QStringList& keys);
+    void updateEngrave();
 
     void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
     void setQualityColor(Part part, int quality);
@@ -83,6 +87,15 @@ private:
     QList<class QLabel*> mGemLevels;
     QList<class QLabel*> mGemNames;
     QList<class QLabel*> mGemAttrs;
+
+    // Engrave
+    QMap<QString, int> mEngraveValue;
+    QStringList mEngraveList;
+    QStringList mPenaltyList;
+    QMap<QString, QString> mPenaltyIcon;
+    QList<class QLabel*> mEngraveLabels;
+    QList<class QHBoxLayout*> mEngraveLayouts;
+    QList<class QHBoxLayout*> mPenaltyLayouts;
 
 private slots:
     void slotProfileRequest();
