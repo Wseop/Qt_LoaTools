@@ -1,4 +1,4 @@
-#include "Profile.h"
+#include "profile.h"
 #include "ui_profile.h"
 
 #include <QMessageBox>
@@ -28,7 +28,6 @@ Profile::Profile(QWidget *parent) :
     this->setWindowTitle("캐릭터 조회");
     this->showMaximized();
 
-    initEngraveList();
     initMap();
     initUI();
     initConnect();
@@ -37,29 +36,6 @@ Profile::Profile(QWidget *parent) :
 Profile::~Profile()
 {
     delete ui;
-}
-
-void Profile::initEngraveList()
-{
-    // 각인 리스트 로드
-    QString filePath = QDir::currentPath() + "/resources/EngraveList.txt";
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << Q_FUNC_INFO << ": File open fail";
-        return;
-    }
-
-    QTextStream inStream(&file);
-    while (!inStream.atEnd())
-        mEngraveList << inStream.readLine();
-    mPenaltyList << "공격력 감소" << "공격속도 감소" << "방어력 감소" << "이동속도 감소";
-    mPenaltyIcon["공격력 감소"] = "penalty_att";
-    mPenaltyIcon["공격속도 감소"] = "penalty_attspd";
-    mPenaltyIcon["방어력 감소"] = "penalty_def";
-    mPenaltyIcon["이동속도 감소"] = "penalty_spd";
-
-    file.close();
 }
 
 void Profile::initMap()
@@ -545,10 +521,10 @@ void Profile::updateEngrave()
 
             if (level != i)
                 continue;
-            if (mPenaltyList.contains(engrave))
+            if (mEngrave.isValidPenalty(engrave))
             {
                 // penalty 각인
-                QString iconPath = QString(":/image/resources/engraves/%1.png").arg(mPenaltyIcon[engrave]);
+                QString iconPath = mEngrave.getPenaltyPath(engrave);
                 QPixmap pixmap(iconPath);
                 lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
@@ -561,8 +537,7 @@ void Profile::updateEngrave()
             else
             {
                 // 증가 각인
-                int iconIndex = mEngraveList.indexOf(engrave);
-                QString iconPath = QString(":/image/resources/engraves/%1.png").arg(iconIndex);
+                QString iconPath = mEngrave.getEngravePath(engrave);
                 QPixmap pixmap(iconPath);
                 lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
@@ -584,7 +559,7 @@ void Profile::updateEngrave()
 
 void Profile::requestIcon(QNetworkAccessManager* networkManager, QString iconPath)
 {
-    QNetworkRequest request((QUrl(CDN_PATH + iconPath)));
+    QNetworkRequest request((QUrl(PATH_CDN + iconPath)));
     networkManager->get(request);
 }
 
@@ -623,8 +598,6 @@ void Profile::setNameColor(QLabel* label, int grade)
         color = "#3CE6B9";
 
     QString style = QString("QLabel { color: %1 }").arg(color);
-    //mPartName[part]->setStyleSheet(style);
-    //mPartName[part]->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
     label->setStyleSheet(style);
     label->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
 }
@@ -720,7 +693,7 @@ void Profile::slotProfileRequest()
 {
     // 입력받은 캐릭터명으로 전투정보실에 request를 보냄
     QString name = ui->leName->text();
-    QString url = PROFILE_PATH + "/" + name;
+    QString url = PATH_PROFILE + "/" + name;
     QNetworkRequest request((QUrl(url)));
     mNetworkProfile->get(request);
 }

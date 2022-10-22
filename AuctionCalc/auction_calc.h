@@ -1,5 +1,5 @@
-#ifndef AUCTIONCALC_H
-#define AUCTIONCALC_H
+#ifndef AUCTION_CALC_H
+#define AUCTION_CALC_H
 
 #include <QWidget>
 
@@ -32,4 +32,4 @@ private slots:
     void slotCalc();
 };
 
-#endif // AUCTIONCALC_H
+#endif // AUCTION_CALC_H

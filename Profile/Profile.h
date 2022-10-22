@@ -4,12 +4,14 @@
 #include <QWidget>
 #include <QRegularExpression>
 
+#include "engrave.h"
+
 namespace Ui {
 class Profile;
 }
 
-const QString PROFILE_PATH = "https://lostark.game.onstove.com/Profile/Character";
-const QString CDN_PATH = "https://cdn-lostark.game.onstove.com";
+const QString PATH_PROFILE = "https://lostark.game.onstove.com/Profile/Character";
+const QString PATH_CDN = "https://cdn-lostark.game.onstove.com";
 
 enum class Part
 {
@@ -89,9 +91,8 @@ private:
     QList<class QLabel*> mGemAttrs;
 
     // Engrave
+    Engrave mEngrave;
     QMap<QString, int> mEngraveValue;
-    QStringList mEngraveList;
-    QStringList mPenaltyList;
     QMap<QString, QString> mPenaltyIcon;
     QList<class QLabel*> mEngraveLabels;
     QList<class QHBoxLayout*> mEngraveLayouts;

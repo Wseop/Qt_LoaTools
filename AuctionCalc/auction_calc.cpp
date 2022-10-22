@@ -1,4 +1,4 @@
-#include "AuctionCalc.h"
+#include "auction_calc.h"
 #include "ui_auctioncalc.h"
 
 #include <QIntValidator>

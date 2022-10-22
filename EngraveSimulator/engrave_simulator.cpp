@@ -1,4 +1,4 @@
-#include "EngraveSimulator.h"
+#include "engrave_simulator.h"
 #include "ui_engravesimulator.h"
 
 #include <QCompleter>
@@ -16,8 +16,6 @@ EngraveSimulator::EngraveSimulator(QWidget *parent) :
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
     this->setWindowTitle("각인 계산기");
 
-    loadEngraveList();
-
     initMap();
     initUI();
     initConnect();
@@ -26,29 +24,6 @@ EngraveSimulator::EngraveSimulator(QWidget *parent) :
 EngraveSimulator::~EngraveSimulator()
 {
     delete ui;
-}
-
-void EngraveSimulator::loadEngraveList()
-{
-    // 각인 리스트 불러오기
-    QString filePath = QDir::currentPath() + "/resources/EngraveList.txt";
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << Q_FUNC_INFO << ": File open fail";
-        return;
-    }
-
-    QTextStream inStream(&file);
-    while (!inStream.atEnd())
-    {
-        mEngraveList << inStream.readLine();
-    }
-
-    // 페널티 리스트 초기화
-    mPenaltyList << "공격력 감소" << "공격속도 감소" << "방어력 감소" << "이동속도 감소";
-
-    file.close();
 }
 
 void EngraveSimulator::initMap()
@@ -121,7 +96,7 @@ void EngraveSimulator::initUI()
     ui->lbEquip->setStyleSheet("QLabel { border : 1px solid black }");
 
     // LineEdit 초기화 (UI, Completer)
-    QCompleter* cplEngrave = new QCompleter(mEngraveList, this);
+    QCompleter* cplEngrave = new QCompleter(mEngrave.getEngraveList(), this);
     for (int i = 0; i < mEngraveLEMap.size(); i++)
     {
         mEngraveLEMap[i]->setFixedWidth(155);
@@ -130,7 +105,7 @@ void EngraveSimulator::initUI()
     for (int i = 0; i < mPenaltyCBMap.size(); i++)
     {
         mPenaltyCBMap[i]->setFixedWidth(155);
-        mPenaltyCBMap[i]->addItems(mPenaltyList);
+        mPenaltyCBMap[i]->addItems(mEngrave.getPenaltyList());
     }
 
     // SpinBox 초기화 (UI)
@@ -185,15 +160,6 @@ void EngraveSimulator::initConnect()
     }
 }
 
-bool EngraveSimulator::isValidEngrave(QString engrave)
-{
-    // 입력된 각인명 검사
-    if (mEngraveList.contains(engrave))
-        return true;
-    else
-        return false;
-}
-
 bool EngraveSimulator::validateAccValue()
 {
     const int MAX_SUM = 10;
@@ -239,8 +205,7 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     QLabel* lbName = new QLabel();
     QLabel* lbLevel = new QLabel();
     int level = value / 5;
-    int pixmapIdx = mEngraveList.indexOf(engrave);
-    QString pixPath = QString(":/image/resources/engraves/%1.png").arg(pixmapIdx);
+    QString pixPath = mEngrave.getEngravePath(engrave);
     QPixmap pixmap(pixPath);
 
     lbPixmap->setPixmap(pixmap.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
@@ -324,7 +289,7 @@ void EngraveSimulator::slotUpdateResult()
         QString engrave = mEngraveLEMap[i]->text();
         if (engrave == "")
             continue;
-        else if (isValidEngrave(engrave))
+        else if (mEngrave.isValidEngrave(engrave))
         {
             mEngraveValueMap[engrave] += mEngraveSPBMap[i]->value();
             if (!engraveList.contains(engrave))

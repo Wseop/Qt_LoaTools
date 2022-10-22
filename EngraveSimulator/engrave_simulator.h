@@ -1,9 +1,11 @@
-#ifndef ENGRAVESIMULATOR_H
-#define ENGRAVESIMULATOR_H
+#ifndef ENGRAVE_SIMULATOR_H
+#define ENGRAVE_SIMULATOR_H
 
 #include <QWidget>
 #include <QStringList>
 #include <QMap>
+
+#include "engrave.h"
 
 namespace Ui {
 class EngraveSimulator;
@@ -18,13 +20,10 @@ public:
     ~EngraveSimulator();
 
 private:
-    void loadEngraveList();
-
     void initMap();
     void initUI();
     void initConnect();
 
-    bool isValidEngrave(QString engrave);
     bool validateAccValue();
     void addEngraveLayout(QString engrave, int value);
     void clearEngraveLayout();
@@ -45,8 +44,7 @@ private:
     Ui::EngraveSimulator *ui;
     class QHBoxLayout* mEngraveLayout;
 
-    QStringList mEngraveList;
-    QStringList mPenaltyList;
+    Engrave mEngrave;
     QMap<int, class QLineEdit*> mEngraveLEMap;
     QMap<int, class QComboBox*> mPenaltyCBMap;
     QMap<int, class QSpinBox*> mEngraveSPBMap;
@@ -63,4 +61,4 @@ private slots:
     void slotUpdateResult();
 };
 
-#endif // ENGRAVESIMULATOR_H
+#endif // ENGRAVE_SIMULATOR_H

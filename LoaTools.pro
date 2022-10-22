@@ -9,18 +9,20 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AuctionCalc/AuctionCalc.cpp \
-    EngraveSimulator/EngraveSimulator.cpp \
-    MeteorTimer/MeteorTimer.cpp \
-    Profile/Profile.cpp \
+    AuctionCalc/auction_calc.cpp \
+    EngraveSimulator/engrave_simulator.cpp \
+    MeteorTimer/meteor_timer.cpp \
+    Profile/profile.cpp \
+    engrave.cpp \
     main.cpp \
     loatools.cpp
 
 HEADERS += \
-    AuctionCalc/AuctionCalc.h \
-    EngraveSimulator/EngraveSimulator.h \
-    MeteorTimer/MeteorTimer.h \
-    Profile/Profile.h \
+    AuctionCalc/auction_calc.h \
+    EngraveSimulator/engrave_simulator.h \
+    MeteorTimer/meteor_timer.h \
+    Profile/profile.h \
+    engrave.h \
     loatools.h
 
 FORMS += \

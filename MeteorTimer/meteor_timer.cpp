@@ -1,4 +1,4 @@
-#include "MeteorTimer.h"
+#include "meteor_timer.h"
 #include "ui_meteortimer.h"
 
 MeteorTimer::MeteorTimer(QWidget *parent) :

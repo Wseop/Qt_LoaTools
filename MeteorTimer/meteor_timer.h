@@ -1,5 +1,5 @@
-#ifndef METEORTIMER_H
-#define METEORTIMER_H
+#ifndef METEOR_TIMER_H
+#define METEOR_TIMER_H
 
 #include <QWidget>
 #include <QTimer>
@@ -32,4 +32,4 @@ private slots:
     void slotUpdateTimer();
 };
 
-#endif // METEORTIMER_H
+#endif // METEOR_TIMER_H

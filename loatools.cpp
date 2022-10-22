@@ -1,9 +1,9 @@
 #include "loatools.h"
 #include "ui_loatools.h"
-#include "MeteorTimer/MeteorTimer.h"
-#include "AuctionCalc/AuctionCalc.h"
-#include "EngraveSimulator/EngraveSimulator.h"
-#include "Profile/Profile.h"
+#include "MeteorTimer/meteor_timer.h"
+#include "AuctionCalc/auction_calc.h"
+#include "EngraveSimulator/engrave_simulator.h"
+#include "Profile/profile.h"
 
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
