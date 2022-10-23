@@ -50,9 +50,6 @@ private:
     QMap<int, class QSpinBox*> mEngraveSPBMap;
     QMap<int, class QSpinBox*> mPenaltySPBMap;
 
-    QMap<QString, int> mEngraveValueMap;
-    QMap<QString, int> mPenaltyValueMap;
-
     QList<class QLabel*> mLabelList;
     QList<class QVBoxLayout*> mVBoxLayoutList;
 

@@ -9,27 +9,41 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AuctionCalc/auction_calc.cpp \
-    EngraveSimulator/engrave_simulator.cpp \
-    MeteorTimer/meteor_timer.cpp \
-    Profile/profile.cpp \
+    auction_calc/auction_calc.cpp \
+    engrave_simulator//engrave_simulator.cpp \
+    item/abilitystone.cpp \
+    item/accessory.cpp \
+    item/bracelet.cpp \
+    item/equip.cpp \
+    item/gem.cpp \
+    item/item.cpp \
+    meteor_timer/meteor_timer.cpp \
+    profile/character.cpp \
+    profile/profile.cpp \
     engrave.cpp \
     main.cpp \
     loatools.cpp
 
 HEADERS += \
-    AuctionCalc/auction_calc.h \
-    EngraveSimulator/engrave_simulator.h \
-    MeteorTimer/meteor_timer.h \
-    Profile/profile.h \
+    auction_calc/auction_calc.h \
+    engrave_simulator/engrave_simulator.h \
+    item/abilitystone.h \
+    item/accessory.h \
+    item/bracelet.h \
+    item/equip.h \
+    item/gem.h \
+    item/item.h \
+    meteor_timer/meteor_timer.h \
+    profile/character.h \
+    profile/profile.h \
     engrave.h \
     loatools.h
 
 FORMS += \
-    AuctionCalc/auctioncalc.ui \
-    EngraveSimulator/engravesimulator.ui \
-    MeteorTimer/meteortimer.ui \
-    Profile/profile.ui \
+    auction_calc/auctioncalc.ui \
+    engrave_simulator/engravesimulator.ui \
+    meteor_timer/meteortimer.ui \
+    profile/profile.ui \
     loatools.ui \
 
 # Default rules for deployment.

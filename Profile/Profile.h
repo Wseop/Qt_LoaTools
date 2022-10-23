@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QRegularExpression>
 
-#include "engrave.h"
+#include "character.h"
 
 namespace Ui {
 class Profile;
@@ -12,23 +12,6 @@ class Profile;
 
 const QString PATH_PROFILE = "https://lostark.game.onstove.com/Profile/Character";
 const QString PATH_CDN = "https://cdn-lostark.game.onstove.com";
-
-enum class Part
-{
-    WEAPON = 0,
-    HEAD,
-    TOP,
-    BOTTOM,
-    HAND,
-    SHOULDER,
-    NECK,
-    EAR1,
-    EAR2,
-    RING1,
-    RING2,
-    STONE,
-    BRACELET = 26
-};
 
 class Profile : public QWidget
 {
@@ -47,20 +30,23 @@ private:
     QVariant getValueFromJson(const QJsonObject& src, QStringList keys);
 
     void parseEquip();
+    void parseGem();
     void parseEngrave();
     void parseSkill();
     void parseCard();
 
     void extractEngraveValue(QString engrave);
 
-    void updateEquip(QJsonObject& equip, QStringList& keys);
-    void updateGem(QJsonObject& equip, QStringList& keys);
+    void updateEquip();
+    void updateGem();
     void updateEngrave();
+    void updateSkill();
+    void updateCard();
 
     void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
     void setQualityColor(Part part, int quality);
-    void setNameColor(class QLabel* label, int grade);
-    int getItemGrade(const QJsonObject& obj);
+    void setNameColor(class QLabel* label, Grade grade);
+    Grade getItemGrade(const QJsonObject& obj);
 
     void clearAll();
 
@@ -70,6 +56,7 @@ private:
     class QNetworkAccessManager* mNetworkIconEquip = nullptr;
     class QNetworkAccessManager* mNetworkIconGem = nullptr;
     class QJsonObject* mProfile = nullptr;
+    Character* mCharacter;
 
     QRegularExpression mHtmlTag;
 
@@ -91,9 +78,6 @@ private:
     QList<class QLabel*> mGemAttrs;
 
     // Engrave
-    Engrave mEngrave;
-    QMap<QString, int> mEngraveValue;
-    QMap<QString, QString> mPenaltyIcon;
     QList<class QLabel*> mEngraveLabels;
     QList<class QHBoxLayout*> mEngraveLayouts;
     QList<class QHBoxLayout*> mPenaltyLayouts;

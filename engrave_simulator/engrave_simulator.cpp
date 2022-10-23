@@ -251,11 +251,6 @@ void EngraveSimulator::slotClearInput()
         mEngraveLEMap[i]->clear();
     }
 
-//    for (int i = 0; i < mPenaltyCBMap.size(); i++)
-//    {
-//        mPenaltyCBMap[i]->clearEditText();
-//    }
-
     for (int i = 0; i < mEngraveSPBMap.size(); i++)
     {
         mEngraveSPBMap[i]->setValue(0);
@@ -270,8 +265,8 @@ void EngraveSimulator::slotClearInput()
 void EngraveSimulator::slotUpdateResult()
 {
     // 결과값 초기화
-    mEngraveValueMap.clear();
-    mPenaltyValueMap.clear();
+    mEngrave.clearEngrave();
+    mEngrave.clearPenalty();
 
     // 입력값 검증
     if (!validateAccValue())
@@ -283,7 +278,7 @@ void EngraveSimulator::slotUpdateResult()
     }
 
     // 입력값 조회 및 update
-    QStringList engraveList;
+    QStringList addedEngraveList;
     for (int i = 0; i < mEngraveLEMap.size(); i++)
     {
         QString engrave = mEngraveLEMap[i]->text();
@@ -291,9 +286,8 @@ void EngraveSimulator::slotUpdateResult()
             continue;
         else if (mEngrave.isValidEngrave(engrave))
         {
-            mEngraveValueMap[engrave] += mEngraveSPBMap[i]->value();
-            if (!engraveList.contains(engrave))
-                engraveList << engrave;
+            mEngrave.addEngrave(engrave, mEngraveSPBMap[i]->value());
+            addedEngraveList << engrave;
         }
         else
         {
@@ -310,12 +304,11 @@ void EngraveSimulator::slotUpdateResult()
     // Lv. 내림차순으로 layout에 추가
     for (int level = 3; level >= 0; level--)
     {
-        for (const QString& engrave : engraveList)
+        for (const QString& engrave : addedEngraveList)
         {
-            if (level == (mEngraveValueMap[engrave] / 5))
-            {
-                addEngraveLayout(engrave, mEngraveValueMap[engrave]);
-            }
+            int value = mEngrave.getEngraveValue(engrave);
+            if (level == (value / 5))
+                addEngraveLayout(engrave, value);
         }
     }
 
@@ -323,8 +316,8 @@ void EngraveSimulator::slotUpdateResult()
     for (int i = 0; i < mPenaltyCBMap.size(); i++)
     {
         QString penalty = mPenaltyCBMap[i]->currentText();
-        mPenaltyValueMap[penalty] += mPenaltySPBMap[i]->value();
-        int value = mPenaltyValueMap[penalty];
+        mEngrave.addPenalty(penalty, mPenaltySPBMap[i]->value());
+        int value = mEngrave.getPenaltyValue(penalty);
         int level = value / 5;
         if (penalty == "공격력 감소")
         {

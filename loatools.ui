@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
-    <height>168</height>
+    <width>360</width>
+    <height>156</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>20</pointsize>
+          <pointsize>16</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -46,7 +46,7 @@
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>20</pointsize>
+          <pointsize>16</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -75,7 +75,7 @@
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>20</pointsize>
+          <pointsize>16</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -89,7 +89,7 @@
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>20</pointsize>
+          <pointsize>16</pointsize>
           <bold>true</bold>
          </font>
         </property>

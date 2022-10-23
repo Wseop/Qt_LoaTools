@@ -67,3 +67,59 @@ QString Engrave::getPenaltyPath(QString penalty)
     else
         return "";
 }
+
+void Engrave::addEngrave(QString engrave, int value)
+{
+    mEngraveValue[engrave] += value;
+}
+
+void Engrave::addPenalty(QString penalty, int value)
+{
+    mPenaltyValue[penalty] += value;
+}
+
+QStringList Engrave::getActiveEngraveList()
+{
+    QStringList ret;
+    QStringList keys = mEngraveValue.keys();
+
+    for (const QString& key : keys)
+    {
+        if (mEngraveValue[key] >= 5)
+            ret << key;
+    }
+    return ret;
+}
+
+QStringList Engrave::getActivePenaltyList()
+{
+    QStringList ret;
+    QStringList keys = mPenaltyValue.keys();
+
+    for (const QString& key : keys)
+    {
+        if (mPenaltyValue[key] >= 5)
+            ret << key;
+    }
+    return ret;
+}
+
+int Engrave::getEngraveValue(QString engrave)
+{
+    return mEngraveValue[engrave];
+}
+
+int Engrave::getPenaltyValue(QString penalty)
+{
+    return mPenaltyValue[penalty];
+}
+
+void Engrave::clearEngrave()
+{
+    mEngraveValue.clear();
+}
+
+void Engrave::clearPenalty()
+{
+    mPenaltyValue.clear();
+}
