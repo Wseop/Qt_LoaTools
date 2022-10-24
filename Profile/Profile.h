@@ -56,7 +56,7 @@ private:
     class QNetworkAccessManager* mNetworkIconEquip = nullptr;
     class QNetworkAccessManager* mNetworkIconGem = nullptr;
     class QJsonObject* mProfile = nullptr;
-    Character* mCharacter;
+    Character* mCharacter = nullptr;
 
     QRegularExpression mHtmlTag;
 

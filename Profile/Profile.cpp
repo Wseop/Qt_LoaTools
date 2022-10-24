@@ -718,8 +718,11 @@ Grade Profile::getItemGrade(const QJsonObject& obj)
 void Profile::clearAll()
 {
     // 이전 캐릭터 정보 모두 초기화
-    delete mCharacter;
-    mCharacter = nullptr;
+    if (mCharacter != nullptr)
+    {
+        delete mCharacter;
+        mCharacter = nullptr;
+    }
     mPathParts.clear();
     mGemPathIndex.clear();
 

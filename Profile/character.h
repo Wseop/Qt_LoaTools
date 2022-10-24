@@ -8,8 +8,6 @@
 #include "item/gem.h"
 #include "engrave.h"
 
-#include <QVariant>
-
 class Character
 {
 public:
