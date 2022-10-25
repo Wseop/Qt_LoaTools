@@ -14,6 +14,9 @@ public:
     Character();
 
     QString getName();
+    QString getClass();
+    QString getLevel();
+    QString getServer();
     double getItemLevel();
 
     Equip& getWeapon();
@@ -35,9 +38,16 @@ public:
     Item& getItemByPart(Part part);
 
     void setName(QString name);
+    void setClass(QString cls);
+    void setLevel(QString level);
+    void setServer(QString server);
+    void setItemLevel(double itemLevel);
 
 private:
     QString mName;
+    QString mClass;
+    QString mLevel;
+    QString mServer;
     double mItemLevel;
 
     Equip mWeapon;

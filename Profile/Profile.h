@@ -29,6 +29,8 @@ private:
 
     QVariant getValueFromJson(const QJsonObject& src, QStringList keys);
 
+    void parseTitle(QString& profile);
+    void parseCharacterList(QString& profile);
     void parseEquip();
     void parseGem();
     void parseEngrave();
@@ -37,6 +39,7 @@ private:
 
     void extractEngraveValue(QString engrave);
 
+    void updateTitle();
     void updateEquip();
     void updateGem();
     void updateEngrave();
@@ -56,6 +59,7 @@ private:
     class QNetworkAccessManager* mNetworkIconEquip = nullptr;
     class QNetworkAccessManager* mNetworkIconGem = nullptr;
     class QJsonObject* mProfile = nullptr;
+    class CharacterList* mCharacterList = nullptr;
     Character* mCharacter = nullptr;
 
     QRegularExpression mHtmlTag;
@@ -87,6 +91,7 @@ private slots:
     void slotExtractProfile(class QNetworkReply* reply);
     void slotSetIconEquip(class QNetworkReply* reply);
     void slotSetIconGem(class QNetworkReply* reply);
+    void slotShowCharacterList();
 };
 
 #endif // PROFILE_H

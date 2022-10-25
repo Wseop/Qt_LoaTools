@@ -19,6 +19,7 @@ SOURCES += \
     item/item.cpp \
     meteor_timer/meteor_timer.cpp \
     profile/character.cpp \
+    profile/character_list.cpp \
     profile/profile.cpp \
     engrave.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     item/item.h \
     meteor_timer/meteor_timer.h \
     profile/character.h \
+    profile/character_list.h \
     profile/profile.h \
     engrave.h \
     loatools.h
@@ -43,6 +45,7 @@ FORMS += \
     auction_calc/auctioncalc.ui \
     engrave_simulator/engravesimulator.ui \
     meteor_timer/meteortimer.ui \
+    profile/character_list.ui \
     profile/profile.ui \
     loatools.ui \
 

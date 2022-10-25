@@ -23,6 +23,21 @@ QString Character::getName()
     return mName;
 }
 
+QString Character::getClass()
+{
+    return mClass;
+}
+
+QString Character::getLevel()
+{
+    return mLevel;
+}
+
+QString Character::getServer()
+{
+    return mServer;
+}
+
 double Character::getItemLevel()
 {
     return mItemLevel;
@@ -136,5 +151,25 @@ Item& Character::getItemByPart(Part part)
 void Character::setName(QString name)
 {
     mName = name;
+}
+
+void Character::setClass(QString cls)
+{
+    mClass = cls;
+}
+
+void Character::setLevel(QString level)
+{
+    mLevel = level;
+}
+
+void Character::setServer(QString server)
+{
+    mServer = server;
+}
+
+void Character::setItemLevel(double itemLevel)
+{
+    mItemLevel = itemLevel;
 }
 

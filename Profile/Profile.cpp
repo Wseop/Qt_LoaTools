@@ -1,5 +1,6 @@
 #include "profile.h"
 #include "ui_profile.h"
+#include "character_list.h"
 
 #include <QMessageBox>
 #include <QUrl>
@@ -182,6 +183,7 @@ void Profile::initConnect()
     connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
     connect(mNetworkIconEquip, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconEquip(QNetworkReply*)));
     connect(mNetworkIconGem, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconGem(QNetworkReply*)));
+    connect(ui->pbCharacterList, SIGNAL(pressed()), this, SLOT(slotShowCharacterList()));
 }
 
 // 중첩구조인 json 객체로부터 최종 value를 추출
@@ -194,6 +196,72 @@ QVariant Profile::getValueFromJson(const QJsonObject& src, QStringList keys)
         obj = obj.find(keys[i])->toObject();
     }
     return obj.find(keys.last())->toVariant();
+}
+
+void Profile::parseTitle(QString& profile)
+{
+    qsizetype startIndex, endIndex;
+
+    // 직업 정보 추출
+    QString classToken = "profile-character-info__img";
+    startIndex = profile.indexOf(classToken);
+    startIndex = profile.indexOf("alt=\"", startIndex) + 5;
+    endIndex = profile.indexOf("\">", startIndex);
+    mCharacter->setClass(profile.sliced(startIndex, endIndex - startIndex));
+
+    // level 정보 추출
+    classToken = "profile-character-info__lv";
+    startIndex = profile.indexOf(classToken);
+    startIndex = profile.indexOf("Lv.", startIndex);
+    endIndex = profile.indexOf("</span>", startIndex);
+    mCharacter->setLevel(profile.sliced(startIndex, endIndex - startIndex));
+
+    // 서버 정보 추출
+    classToken = "profile-character-info__server";
+    startIndex = profile.indexOf(classToken);
+    startIndex = profile.indexOf("@", startIndex);
+    endIndex = profile.indexOf("\">", startIndex);
+    mCharacter->setServer(profile.sliced(startIndex, endIndex - startIndex));
+
+    // 보유 캐릭터 목록 추출
+    parseCharacterList(profile);
+
+    updateTitle();
+}
+
+void Profile::parseCharacterList(QString &profile)
+{
+    qsizetype serverIndexStart = profile.indexOf("profile-character-list__server");
+    qsizetype serverIndexEnd = 0;
+
+    while (serverIndexStart != -1)
+    {
+        serverIndexStart = profile.indexOf("@", serverIndexStart);
+        serverIndexEnd = profile.indexOf("</strong>", serverIndexStart);
+        QString server = profile.sliced(serverIndexStart, serverIndexEnd - serverIndexStart);
+
+        qsizetype startIndex = profile.indexOf("profile-character-list__char", serverIndexStart);
+        qsizetype endIndex = 0;
+        serverIndexStart = profile.indexOf("profile-character-list__server", startIndex);
+
+        while (startIndex != -1)
+        {
+            startIndex = profile.indexOf("common/thumb", startIndex);
+            startIndex = profile.indexOf("alt", startIndex) + 5;
+            endIndex = profile.indexOf("\">", startIndex);
+            QString cls = profile.sliced(startIndex, endIndex - startIndex);
+
+            startIndex = profile.indexOf("<span>", startIndex) + 6;
+            endIndex = profile.indexOf("</span>", startIndex);
+            QString name = profile.sliced(startIndex, endIndex - startIndex);
+
+            mCharacterList->addCharacter(server, name, cls);
+
+            startIndex = profile.indexOf("common/thumb", startIndex);
+            if (serverIndexStart != -1 && startIndex > serverIndexStart)
+                break;
+        }
+    }
 }
 
 // 장비 정보 추출 (무기, 방어구, 악세, 어빌리티 스톤, 팔찌)
@@ -228,6 +296,8 @@ void Profile::parseEquip()
     QStringList attrKeys;
     attrKeys << "Element_005" << "value" << "Element_001";
 
+    double itemLevel = 0;
+
     for (const QString& key : keys)
     {
         if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
@@ -260,6 +330,11 @@ void Profile::parseEquip()
             equip.setSetLevel(set);
 
             mPathParts[iconPath].append(part);
+
+            // 아이템 level parsing
+            int startIndex = level.indexOf("레벨") + 3;
+            int endIndex = level.indexOf("(", startIndex) - 1;
+            itemLevel += level.sliced(startIndex, endIndex - startIndex).toDouble();
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::NECK))) ||
                  key.endsWith("0" + QString::number(static_cast<int>(Part::EAR1))) ||
@@ -350,6 +425,7 @@ void Profile::parseEquip()
             mPathParts[iconPath].append(part);
         }
     }
+    mCharacter->setItemLevel(itemLevel / 6);
 
     updateEquip();
 }
@@ -481,6 +557,17 @@ void Profile::extractEngraveValue(QString engrave)
     else
         value = engrave.sliced(start, 2).toInt();
     mCharacter->getEngrave().addPenalty(name, value);
+}
+
+void Profile::updateTitle()
+{
+    ui->lbClassLevel->setText(QString("%1 %2").arg(mCharacter->getClass(), mCharacter->getLevel()));
+    ui->lbName->setText(mCharacter->getName());
+    ui->lbServer->setText(mCharacter->getServer());
+    ui->lbServer->setStyleSheet("QLabel { color: #B178FF }");
+    ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
+    ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
+    ui->verticalLayout_59->setAlignment(Qt::AlignTop);
 }
 
 void Profile::updateEquip()
@@ -723,6 +810,11 @@ void Profile::clearAll()
         delete mCharacter;
         mCharacter = nullptr;
     }
+    if (mCharacterList != nullptr)
+    {
+        delete mCharacterList;
+        mCharacterList = nullptr;
+    }
     mPathParts.clear();
     mGemPathIndex.clear();
 
@@ -835,12 +927,14 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         mCharacter = new Character();
         mCharacter->setName(ui->leName->text());
         ui->leName->clear();
+        mCharacterList = new CharacterList(nullptr, this);
 
         parseEquip();
         parseGem();
         parseEngrave();
         parseSkill();
         parseCard();
+        parseTitle(responseData);
     }
 }
 
@@ -886,4 +980,11 @@ void Profile::slotSetIconGem(QNetworkReply* reply)
         iconLabel->setFixedSize(50, 50);
         iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
     }
+}
+
+void Profile::slotShowCharacterList()
+{
+    mCharacterList->updateUI();
+    this->setDisabled(true);
+    mCharacterList->show();
 }
