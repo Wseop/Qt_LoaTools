@@ -285,10 +285,12 @@ void Profile::parseEquip()
     iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
     QStringList qualKeys;
     qualKeys << "Element_001" << "value" << "qualityValue";
-    QStringList engraveKeys1;
-    engraveKeys1 << "Element_005" << "value" << "Element_001";
-    QStringList engraveKeys2;
-    engraveKeys2 << "Element_006" << "value" << "Element_001";
+    QStringList engraveKeys_0;
+    engraveKeys_0 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_000" << "contentStr";
+    QStringList engraveKeys_1;
+    engraveKeys_1 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_001" << "contentStr";
+    QStringList engraveKeys_2;
+    engraveKeys_2 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_002" << "contentStr";
     QStringList levelKeys;
     levelKeys << "Element_001" << "value" << "leftStr2";
     QStringList setKeys;
@@ -297,7 +299,6 @@ void Profile::parseEquip()
     attrKeys << "Element_005" << "value" << "Element_001";
 
     double itemLevel = 0;
-
     for (const QString& key : keys)
     {
         if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
@@ -347,7 +348,10 @@ void Profile::parseEquip()
             QString name = getValueFromJson(obj, nameKeys).toString();
             int quality = getValueFromJson(obj, qualKeys).toInt();
             QString attr = getValueFromJson(obj, attrKeys).toString();
-            QString engrave = getValueFromJson(obj, engraveKeys2).toString();
+            QString engrave =
+                    getValueFromJson(obj, engraveKeys_0).toString() +
+                    getValueFromJson(obj, engraveKeys_1).toString() +
+                    getValueFromJson(obj, engraveKeys_2).toString();
             QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
 
             name = name.remove(mHtmlTag);
@@ -374,16 +378,21 @@ void Profile::parseEquip()
             QString engrave;
             QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
 
+            name = name.remove(mHtmlTag);
             // 각인 값의 key가 유동적
             // 어느 key에 각인이 있는지 탐색후 값 추출
             QStringList engraveKeys;
             engraveKeys << "Element_005" << "value" << "Element_000";
-            if (getValueFromJson(obj, engraveKeys).toString().contains("각인"))
-                engrave = getValueFromJson(obj, engraveKeys1).toString();
-            else
-                engrave = getValueFromJson(obj, engraveKeys2).toString();
-
-            name = name.remove(mHtmlTag);
+            if (getValueFromJson(obj, engraveKeys).toJsonObject().contains("contentStr"))
+            {
+                engraveKeys_0[0] = "Element_005";
+                engraveKeys_1[0] = "Element_005";
+                engraveKeys_2[0] = "Element_005";
+            }
+            engrave =
+                    getValueFromJson(obj, engraveKeys_0).toString() +
+                    getValueFromJson(obj, engraveKeys_1).toString() +
+                    getValueFromJson(obj, engraveKeys_2).toString();
             engrave = engrave.replace("#FFFFAC", "#B9B919", Qt::CaseInsensitive);
 
             Part part = static_cast<Part>(key.last(3).toInt());
