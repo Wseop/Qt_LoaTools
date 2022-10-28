@@ -6,9 +6,18 @@
 struct CharacterTitle
 {
     QString name;
+    QString server;
     QString cls;
     QString itemLevel;
 };
+
+struct GridPos
+{
+    int row;
+    int col;
+};
+
+const int MAX_COL = 2;
 
 namespace Ui {
 class CharacterList;
@@ -25,7 +34,6 @@ public:
     void initConnect();
 
     void addCharacter(QString server, QString name, QString cls);
-    void updateUI();
 
 protected:
     void closeEvent(QCloseEvent* event) override;
@@ -34,12 +42,16 @@ private:
     Ui::CharacterList *ui;
     QWidget* mParent;
     class QNetworkAccessManager* mNetworkItemLevel;
-    QList<QWidget*> mWidgetList;
-    QList<QLayout*> mLayoutList;
 
-    bool mIsUIUpdated = false;
-    QMap<QString, QList<CharacterTitle*>> mServerCharacterList;
+    QMap<QString, class QGridLayout*> mServerLayout;
+    QMap<QString, GridPos> mServerGridPos;
     QMap<QString, CharacterTitle*> mNameTitle;
+
+    QList<class QLabel*> mLabelList;
+    QList<class QPushButton*> mButtonList;
+
+private:
+    void movePos(GridPos& pos);
 
 private slots:
     void slotParseItemLevel(class QNetworkReply*);

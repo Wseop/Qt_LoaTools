@@ -993,7 +993,6 @@ void Profile::slotSetIconGem(QNetworkReply* reply)
 
 void Profile::slotShowCharacterList()
 {
-    mCharacterList->updateUI();
     this->setDisabled(true);
     mCharacterList->show();
 }

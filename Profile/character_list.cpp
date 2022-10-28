@@ -7,7 +7,7 @@
 #include <QCloseEvent>
 #include <QPushButton>
 #include <QLabel>
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 CharacterList::CharacterList(QWidget *parent, QWidget* ret) :
     QWidget(parent),
@@ -27,12 +27,19 @@ CharacterList::~CharacterList()
     delete ui;
     delete mNetworkItemLevel;
 
-    const QStringList& keys = mNameTitle.keys();
-    for (const QString& key : keys)
-        delete mNameTitle[key];
+    for (QPushButton* btn : mButtonList)
+        delete btn;
 
-    for (QWidget* widget : mWidgetList)
-        delete widget;
+    for (QLabel* label : mLabelList)
+        delete label;
+
+    QStringList keys = mServerLayout.keys();
+    for (QString& key : keys)
+        delete mServerLayout[key];
+
+    keys = mNameTitle.keys();
+    for (QString& key : keys)
+        delete mNameTitle[key];
 }
 
 void CharacterList::initConnect()
@@ -44,52 +51,33 @@ void CharacterList::addCharacter(QString server, QString name, QString cls)
 {
     CharacterTitle* title = new CharacterTitle();
     title->name = name;
+    title->server = server;
     title->cls = cls;
-
-    mServerCharacterList[server].append(title);
     mNameTitle[name] = title;
 
-    QString url = QString("https://lostark.game.onstove.com/Profile/Character/%1").arg(title->name);
+    if (!mServerLayout.contains(server))
+    {
+        // server명 레이아웃이 없으면 새로 추가
+        QGridLayout* layout = new QGridLayout();
+        mServerLayout[server] = layout;
 
+        QLabel* label = new QLabel(server);
+        mLabelList.append(label);
+        label->setFont(QFont("나눔스퀘어 네오 ExtraBold", 12));
+        label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        label->setFixedHeight(30);
+        label->setStyleSheet("QLabel { color: #B178FF; background-color: #444A5B }");
+
+        layout->addWidget(label, 0, 0, 1, 3);
+        ui->vLayoutCharacterList->addLayout(layout);
+
+        mServerGridPos[server] = GridPos{1, 0};
+    }
+
+    // level 정보 request
+    QString url = QString("https://lostark.game.onstove.com/Profile/Character/%1").arg(title->name);
     QNetworkRequest request((QUrl(url)));
     mNetworkItemLevel->get(request);
-}
-
-void CharacterList::updateUI()
-{
-    if (mIsUIUpdated)
-        return;
-    mIsUIUpdated = true;
-
-    QStringList serverList = mServerCharacterList.keys();
-    for (const QString& server : serverList)
-    {
-        QLabel* serverLabel = new QLabel(server);
-        serverLabel->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-        serverLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        serverLabel->setStyleSheet("QLabel { color: #B178FF }");
-        ui->vLayoutCharacterList->addWidget(serverLabel);
-        mWidgetList.append(serverLabel);
-
-        const QList<CharacterTitle*>& characterList = mServerCharacterList[server];
-        QHBoxLayout* layout;
-        for (int i = 0; i < characterList.size(); i++)
-        {
-            if (i % 3 == 0)
-            {
-                layout = new QHBoxLayout();
-                ui->vLayoutCharacterList->addLayout(layout);
-                mLayoutList.append(layout);
-            }
-            QPushButton* pbTitle = new QPushButton();
-            const CharacterTitle* title = characterList[i];
-            QString text = QString("%1 %2 %3").arg(title->cls, title->name, title->itemLevel);
-            pbTitle->setText(text);
-            pbTitle->setFont(QFont("나눔스퀘어 네오 Regular", 10));
-            layout->addWidget(pbTitle);
-            mWidgetList.append(pbTitle);
-        }
-    }
 }
 
 void CharacterList::closeEvent(QCloseEvent *event)
@@ -98,12 +86,23 @@ void CharacterList::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+void CharacterList::movePos(GridPos &pos)
+{
+    pos.col += 1;
+    if (pos.col > MAX_COL)
+    {
+        pos.row += 1;
+        pos.col = 0;
+    }
+}
+
+// level 정보 update 후 ui 추가
 void CharacterList::slotParseItemLevel(QNetworkReply* reply)
 {
     QString profile = reply->readAll();
+
     QString itemLevel;
     qsizetype startIndex, endIndex;
-
     startIndex = profile.indexOf("level-info2__expedition");
     startIndex = profile.indexOf("</small>", startIndex) + 8;
     endIndex = profile.indexOf("<small>", startIndex);
@@ -113,5 +112,15 @@ void CharacterList::slotParseItemLevel(QNetworkReply* reply)
     itemLevel += profile.sliced(startIndex, endIndex - startIndex);
 
     QString name = reply->url().path().remove("/Profile/Character/");
-    mNameTitle[name]->itemLevel = itemLevel;
+    CharacterTitle* title = mNameTitle[name];
+    title->itemLevel = itemLevel;
+
+    QString text = QString("%1 [%2]\n%3").arg(title->cls, title->itemLevel, title->name);
+    QPushButton* btn = new QPushButton(text);
+    btn->setFont(QFont("나눔스퀘어 네오 Regular", 10));
+
+    GridPos& pos = mServerGridPos[title->server];
+    mServerLayout[title->server]->addWidget(btn, pos.row, pos.col, 1, 1);
+    movePos(pos);
+    mButtonList.append(btn);
 }
