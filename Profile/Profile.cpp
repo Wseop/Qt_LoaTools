@@ -39,6 +39,12 @@ Profile::~Profile()
     delete ui;
 }
 
+void Profile::profileRequest(QString name)
+{
+    ui->leName->setText(name);
+    emit ui->pbSearch->pressed();
+}
+
 void Profile::initMap()
 {
     mPartIcon[Part::WEAPON] = ui->lbIconWeapon;
@@ -778,7 +784,13 @@ void Profile::setNameColor(QLabel* label, Grade grade)
 {
     QString color;
 
-    if (grade == Grade::LEGEND)
+    if (grade == Grade::UNCOMMON)
+        color = "#8DF901";
+    else if (grade == Grade::RARE)
+        color = "#00B0FA";
+    else if (grade == Grade::EPIC)
+        color = "#AE43FC";
+    else if (grade == Grade::LEGEND)
         color = "#F99200";
     else if (grade == Grade::RELIC)
         color = "#FA5000";
@@ -792,14 +804,20 @@ void Profile::setNameColor(QLabel* label, Grade grade)
     label->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
 }
 
-// 전설등급 : 0, 유물등급 : 1, 고대등급 : 2, 에스더 : 3
 Grade Profile::getItemGrade(const QJsonObject& obj)
 {
     QStringList keys;
     keys << "Element_001" << "value" << "leftStr0";
 
     QString itemCategory = getValueFromJson(obj, keys).toString();
-    if (itemCategory.contains("전설"))
+
+    if (itemCategory.contains("고급"))
+        return Grade::UNCOMMON;
+    else if (itemCategory.contains("희귀"))
+        return Grade::RARE;
+    else if (itemCategory.contains("영웅"))
+        return Grade::EPIC;
+    else if (itemCategory.contains("전설"))
         return Grade::LEGEND;
     else if (itemCategory.contains("유물"))
         return Grade::RELIC;

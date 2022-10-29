@@ -1,5 +1,6 @@
 #include "character_list.h"
 #include "ui_character_list.h"
+#include "profile.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -27,13 +28,14 @@ CharacterList::~CharacterList()
     delete ui;
     delete mNetworkItemLevel;
 
-    for (QPushButton* btn : mButtonList)
-        delete btn;
+    QStringList keys = mNameButton.keys();
+    for (QString& key : keys)
+        delete mNameButton[key];
 
     for (QLabel* label : mLabelList)
         delete label;
 
-    QStringList keys = mServerLayout.keys();
+    keys = mServerLayout.keys();
     for (QString& key : keys)
         delete mServerLayout[key];
 
@@ -118,9 +120,22 @@ void CharacterList::slotParseItemLevel(QNetworkReply* reply)
     QString text = QString("%1 [%2]\n%3").arg(title->cls, title->itemLevel, title->name);
     QPushButton* btn = new QPushButton(text);
     btn->setFont(QFont("나눔스퀘어 네오 Regular", 10));
+    mNameButton[name] = btn;
+
+    connect(btn, SIGNAL(pressed()), this, SLOT(slotSearchCharacter()));
 
     GridPos& pos = mServerGridPos[title->server];
     mServerLayout[title->server]->addWidget(btn, pos.row, pos.col, 1, 1);
     movePos(pos);
-    mButtonList.append(btn);
+}
+
+void CharacterList::slotSearchCharacter()
+{
+    QPushButton* btn = static_cast<QPushButton*>(sender());
+
+    mParent->setEnabled(true);
+    Profile* profile = static_cast<Profile*>(mParent);
+    profile->profileRequest(mNameButton.key(btn));
+
+    this->close();
 }

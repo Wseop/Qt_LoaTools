@@ -46,15 +46,16 @@ private:
     QMap<QString, class QGridLayout*> mServerLayout;
     QMap<QString, GridPos> mServerGridPos;
     QMap<QString, CharacterTitle*> mNameTitle;
+    QMap<QString, class QPushButton*> mNameButton;
 
     QList<class QLabel*> mLabelList;
-    QList<class QPushButton*> mButtonList;
 
 private:
     void movePos(GridPos& pos);
 
 private slots:
     void slotParseItemLevel(class QNetworkReply*);
+    void slotSearchCharacter();
 };
 
 #endif // CHARACTER_LIST_H

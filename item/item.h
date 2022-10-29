@@ -6,6 +6,9 @@
 enum class Grade
 {
     NONE,
+    UNCOMMON,
+    RARE,
+    EPIC,
     LEGEND,
     RELIC,
     ANCIENT,

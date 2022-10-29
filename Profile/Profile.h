@@ -21,6 +21,8 @@ public:
     explicit Profile(QWidget *parent = nullptr);
     ~Profile();
 
+    void profileRequest(QString name);
+
 private:
     void initEngraveList();
     void initMap();
