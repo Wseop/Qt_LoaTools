@@ -38,6 +38,11 @@ QString Character::getServer()
     return mServer;
 }
 
+QString Character::getGuild()
+{
+    return mGuild;
+}
+
 double Character::getItemLevel()
 {
     return mItemLevel;
@@ -171,6 +176,11 @@ void Character::setLevel(QString level)
 void Character::setServer(QString server)
 {
     mServer = server;
+}
+
+void Character::setGuild(QString guild)
+{
+    mGuild = guild;
 }
 
 void Character::setItemLevel(double itemLevel)

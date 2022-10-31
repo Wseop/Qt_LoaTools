@@ -36,6 +36,7 @@ private:
 
     void parseTitle(QString& profile);
     void parseCharacterList(QString& profile);
+    void parseGuildName(QString& profile);
     void parseEquip();
     void parseGem();
     void parseEngrave();

@@ -231,8 +231,8 @@ void Profile::parseTitle(QString& profile)
     endIndex = profile.indexOf("\">", startIndex);
     mCharacter->setServer(profile.sliced(startIndex, endIndex - startIndex));
 
-    // 보유 캐릭터 목록 추출
     parseCharacterList(profile);
+    parseGuildName(profile);
 
     updateTitle();
 }
@@ -270,6 +270,18 @@ void Profile::parseCharacterList(QString &profile)
                 break;
         }
     }
+}
+
+void Profile::parseGuildName(QString &profile)
+{
+    qsizetype indexStart = profile.indexOf("game-info__guild");
+    indexStart = profile.indexOf("<span>", indexStart) + 1;
+    indexStart = profile.indexOf("<span>", indexStart) + 6;
+    if (profile[indexStart] == '<')
+        indexStart = profile.indexOf(">", indexStart) + 1;
+    qsizetype indexEnd = profile.indexOf("</span>", indexStart);
+
+    mCharacter->setGuild(profile.sliced(indexStart, indexEnd - indexStart));
 }
 
 // 장비 정보 추출 (무기, 방어구, 악세, 어빌리티 스톤, 팔찌)
@@ -566,6 +578,14 @@ void Profile::extractEngraveValue(QString engrave)
     name = engrave.sliced(start, end - start);
 
     start = engrave.indexOf("+") + 1;
+    // 예외처리1) 아이템 각인이 1줄밖에 없는 경우
+    if (start + 1 == engrave.size())
+    {
+        value = engrave[start].digitValue();
+        mCharacter->getEngrave().addEngrave(name, value);
+        return;
+    }
+
     if (engrave[start + 1] == '[')
         value = engrave[start].digitValue();
     else
@@ -605,6 +625,8 @@ void Profile::updateTitle()
     ui->lbName->setText(mCharacter->getName());
     ui->lbServer->setText(mCharacter->getServer());
     ui->lbServer->setStyleSheet("QLabel { color: #B178FF }");
+    ui->lbGuild->setText(mCharacter->getGuild());
+    ui->lbGuild->setStyleSheet("QLabel { color: #00B700 }");
     ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
     ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
     ui->verticalLayout_59->setAlignment(Qt::AlignTop);

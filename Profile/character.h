@@ -18,6 +18,7 @@ public:
     QString getClass();
     QString getLevel();
     QString getServer();
+    QString getGuild();
     double getItemLevel();
     CardSet& getCardSet();
 
@@ -43,6 +44,7 @@ public:
     void setClass(QString cls);
     void setLevel(QString level);
     void setServer(QString server);
+    void setGuild(QString guild);
     void setItemLevel(double itemLevel);
     void setCardSet(CardSet cardSet);
 
@@ -51,6 +53,7 @@ private:
     QString mClass;
     QString mLevel;
     QString mServer;
+    QString mGuild;
     double mItemLevel;
     CardSet mCardSet;
 
