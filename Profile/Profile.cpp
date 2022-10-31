@@ -1,6 +1,7 @@
 #include "profile.h"
 #include "ui_profile.h"
 #include "character_list.h"
+#include "card_set.h"
 
 #include <QMessageBox>
 #include <QUrl>
@@ -177,9 +178,10 @@ void Profile::initUI()
     ui->lbLevelGem9->setFixedWidth(50);
     ui->lbLevelGem10->setFixedWidth(50);
 
+    ui->groupCard->setMaximumWidth(350);
+
     ui->tabEquip->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabSkill->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
-    ui->tabCard->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
 }
 
 void Profile::initConnect()
@@ -273,7 +275,7 @@ void Profile::parseCharacterList(QString &profile)
 // 장비 정보 추출 (무기, 방어구, 악세, 어빌리티 스톤, 팔찌)
 void Profile::parseEquip()
 {
-    QJsonObject equip = mProfile->find("Equip")->toObject();
+    const QJsonObject& equip = mProfile->find("Equip")->toObject();
     const QStringList& tempKeys = equip.keys();
     QStringList keys;
 
@@ -448,7 +450,7 @@ void Profile::parseEquip()
 // 보석 정보 추출
 void Profile::parseGem()
 {
-    QJsonObject equip = mProfile->find("Equip")->toObject();
+    const QJsonObject& equip = mProfile->find("Equip")->toObject();
     const QStringList& tempKeys = equip.keys();
     QStringList keys;
 
@@ -497,7 +499,7 @@ void Profile::parseGem()
 // 각인 정보 추출
 void Profile::parseEngrave()
 {
-    QJsonObject engrave = mProfile->find("Engrave")->toObject();
+    const QJsonObject& engrave = mProfile->find("Engrave")->toObject();
     QStringList keys = engrave.keys();
 
     QStringList nameKeys;
@@ -525,7 +527,30 @@ void Profile::parseSkill()
 {}
 
 void Profile::parseCard()
-{}
+{
+    const QJsonObject& cardSetObj = mProfile->find("CardSet")->toObject();
+    QStringList keys = cardSetObj.keys();
+
+    CardSet cardSet;
+    for (const QString& key : keys)
+    {
+        const QJsonObject& obj = cardSetObj.find(key)->toObject();
+        for (int i = 0; i < 6; i++)
+        {
+            QString effectKey = QString("Effect_00%1").arg(i);
+            auto iter = obj.find(effectKey);
+            if (iter == obj.end())
+                break;
+
+            const QJsonObject& content = iter->toObject();
+            cardSet.addTitle(content.find("title")->toString());
+            cardSet.addDesc(content.find("desc")->toString());
+        }
+    }
+
+    mCharacter->setCardSet(cardSet);
+    updateCard();
+}
 
 void Profile::extractEngraveValue(QString engrave)
 {
@@ -750,7 +775,32 @@ void Profile::updateSkill()
 
 void Profile::updateCard()
 {
+    CardSet& cardSet = mCharacter->getCardSet();
+    qsizetype effectCount = cardSet.count();
 
+    for (int i = 0; i < effectCount; i++)
+    {
+        QVBoxLayout* layout = new QVBoxLayout();
+        mCardLayoutList.append(layout);
+
+        QLabel* lbTitle = new QLabel(cardSet.getTitle(i));
+        QLabel* lbDesc = new QLabel(cardSet.getDesc(i));
+        lbTitle->setFont(QFont("나눔스퀘어 네오 Bold", 12));
+        lbDesc->setFont(QFont("나눔스퀘어 네오 Bold", 12));
+        lbTitle->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        lbDesc->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+        lbTitle->setStyleSheet("QLabel { color: #00B700 }");
+        lbTitle->setMaximumWidth(300);
+        lbDesc->setMinimumHeight(50);
+        lbDesc->setMaximumWidth(300);
+        lbDesc->setWordWrap(true);
+        mCardLabelList.append(lbTitle);
+        mCardLabelList.append(lbDesc);
+        layout->addWidget(lbTitle);
+        layout->addWidget(lbDesc);
+
+        ui->vLayoutCard->addLayout(layout);
+    }
 }
 
 void Profile::requestIcon(QNetworkAccessManager* networkManager, QString iconPath)
@@ -891,18 +941,20 @@ void Profile::clearAll()
     mEngraveLabels.clear();
 
     for (QHBoxLayout* layout : mEngraveLayouts)
-    {
-        ui->vLayoutEngrave->removeItem(layout);
         delete layout;
-    }
     mEngraveLayouts.clear();
 
     for (QHBoxLayout* layout : mPenaltyLayouts)
-    {
-        ui->vLayoutPenalty->removeItem(layout);
         delete layout;
-    }
     mPenaltyLayouts.clear();
+
+    for (QLabel* label : mCardLabelList)
+        delete label;
+    mCardLabelList.clear();
+
+    for (QVBoxLayout* layout : mCardLayoutList)
+        delete layout;
+    mCardLayoutList.clear();
 }
 
 void Profile::slotProfileRequest()

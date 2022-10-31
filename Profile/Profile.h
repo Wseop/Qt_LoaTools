@@ -13,6 +13,9 @@ class Profile;
 const QString PATH_PROFILE = "https://lostark.game.onstove.com/Profile/Character";
 const QString PATH_CDN = "https://cdn-lostark.game.onstove.com";
 
+class QLabel;
+class QHBoxLayout;
+
 class Profile : public QWidget
 {
     Q_OBJECT
@@ -50,7 +53,7 @@ private:
 
     void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
     void setQualityColor(Part part, int quality);
-    void setNameColor(class QLabel* label, Grade grade);
+    void setNameColor(QLabel* label, Grade grade);
     Grade getItemGrade(const QJsonObject& obj);
 
     void clearAll();
@@ -67,26 +70,30 @@ private:
     QRegularExpression mHtmlTag;
 
     // Part Map
-    QMap<Part, class QLabel*> mPartIcon;
+    QMap<Part, QLabel*> mPartIcon;
     QMap<QString, QList<Part>> mPathParts;
     QMap<Part, class QProgressBar*> mPartQual;
-    QMap<Part, class QLabel*> mPartName;
-    QMap<Part, class QLabel*> mPartLevel;
-    QMap<Part, class QLabel*> mPartSet;
-    QMap<Part, class QLabel*> mPartAttr;
-    QMap<Part, class QLabel*> mPartEngrave;
+    QMap<Part, QLabel*> mPartName;
+    QMap<Part, QLabel*> mPartLevel;
+    QMap<Part, QLabel*> mPartSet;
+    QMap<Part, QLabel*> mPartAttr;
+    QMap<Part, QLabel*> mPartEngrave;
 
     // Gem Map
-    QList<class QLabel*> mGemIcons;
+    QList<QLabel*> mGemIcons;
     QMap<QString, QList<int>> mGemPathIndex;
-    QList<class QLabel*> mGemLevels;
-    QList<class QLabel*> mGemNames;
-    QList<class QLabel*> mGemAttrs;
+    QList<QLabel*> mGemLevels;
+    QList<QLabel*> mGemNames;
+    QList<QLabel*> mGemAttrs;
 
     // Engrave
-    QList<class QLabel*> mEngraveLabels;
-    QList<class QHBoxLayout*> mEngraveLayouts;
-    QList<class QHBoxLayout*> mPenaltyLayouts;
+    QList<QLabel*> mEngraveLabels;
+    QList<QHBoxLayout*> mEngraveLayouts;
+    QList<QHBoxLayout*> mPenaltyLayouts;
+
+    // Card
+    QList<class QVBoxLayout*> mCardLayoutList;
+    QList<QLabel*> mCardLabelList;
 
 private slots:
     void slotProfileRequest();

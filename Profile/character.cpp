@@ -43,6 +43,11 @@ double Character::getItemLevel()
     return mItemLevel;
 }
 
+CardSet& Character::getCardSet()
+{
+    return mCardSet;
+}
+
 Equip &Character::getWeapon()
 {
     return mWeapon;
@@ -171,5 +176,10 @@ void Character::setServer(QString server)
 void Character::setItemLevel(double itemLevel)
 {
     mItemLevel = itemLevel;
+}
+
+void Character::setCardSet(CardSet cardSet)
+{
+    mCardSet = cardSet;
 }
 

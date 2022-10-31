@@ -235,6 +235,25 @@
            </layout>
           </widget>
          </item>
+         <item>
+          <widget class="QGroupBox" name="groupCard">
+           <property name="font">
+            <font>
+             <family>나눔스퀘어 네오 Regular</family>
+             <pointsize>10</pointsize>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>카드 효과</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_34">
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutCard"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -2370,11 +2389,6 @@
      <widget class="QWidget" name="tabSkill">
       <attribute name="title">
        <string>스킬</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tabCard">
-      <attribute name="title">
-       <string>카드</string>
       </attribute>
      </widget>
     </widget>

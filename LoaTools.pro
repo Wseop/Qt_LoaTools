@@ -18,6 +18,7 @@ SOURCES += \
     item/gem.cpp \
     item/item.cpp \
     meteor_timer/meteor_timer.cpp \
+    profile/card_set.cpp \
     profile/character.cpp \
     profile/character_list.cpp \
     profile/profile.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     item/gem.h \
     item/item.h \
     meteor_timer/meteor_timer.h \
+    profile/card_set.h \
     profile/character.h \
     profile/character_list.h \
     profile/profile.h \

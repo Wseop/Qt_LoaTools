@@ -7,6 +7,7 @@
 #include "item/bracelet.h"
 #include "item/gem.h"
 #include "engrave.h"
+#include "card_set.h"
 
 class Character
 {
@@ -18,6 +19,7 @@ public:
     QString getLevel();
     QString getServer();
     double getItemLevel();
+    CardSet& getCardSet();
 
     Equip& getWeapon();
     Equip& getHead();
@@ -42,6 +44,7 @@ public:
     void setLevel(QString level);
     void setServer(QString server);
     void setItemLevel(double itemLevel);
+    void setCardSet(CardSet cardSet);
 
 private:
     QString mName;
@@ -49,6 +52,7 @@ private:
     QString mLevel;
     QString mServer;
     double mItemLevel;
+    CardSet mCardSet;
 
     Equip mWeapon;
     Equip mHead;
