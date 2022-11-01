@@ -8,8 +8,8 @@ class Gem : public Item
 public:
     Gem();
 
-    QString GetLevel();
-    QString getAttr();
+    QString GetLevel() const;
+    QString getAttr() const;
 
     void setLevel(QString level);
     void setAttr(QString attr);

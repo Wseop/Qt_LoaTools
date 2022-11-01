@@ -8,9 +8,9 @@ class Equip : public Item
 public:
     Equip(Part part);
 
-    QString getLevelTier();
-    int getQuality();
-    QString getSetLevel();
+    QString getLevelTier() const;
+    int getQuality() const;
+    QString getSetLevel() const;
 
     void setLevelTier(QString levelTier);
     void setQuality(int quality);

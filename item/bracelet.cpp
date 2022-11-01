@@ -5,7 +5,7 @@ Bracelet::Bracelet() : Item(Part::BRACELET)
 
 }
 
-QString Bracelet::getEffect()
+QString Bracelet::getEffect() const
 {
     return mEffect;
 }

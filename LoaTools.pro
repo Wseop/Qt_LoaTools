@@ -17,6 +17,7 @@ SOURCES += \
     item/equip.cpp \
     item/gem.cpp \
     item/item.cpp \
+    item/rune.cpp \
     meteor_timer/meteor_timer.cpp \
     profile/card_set.cpp \
     profile/character.cpp \
@@ -24,7 +25,8 @@ SOURCES += \
     profile/profile.cpp \
     engrave.cpp \
     main.cpp \
-    loatools.cpp
+    loatools.cpp \
+    profile/skill.cpp
 
 HEADERS += \
     auction_calc/auction_calc.h \
@@ -35,13 +37,15 @@ HEADERS += \
     item/equip.h \
     item/gem.h \
     item/item.h \
+    item/rune.h \
     meteor_timer/meteor_timer.h \
     profile/card_set.h \
     profile/character.h \
     profile/character_list.h \
     profile/profile.h \
     engrave.h \
-    loatools.h
+    loatools.h \
+    profile/skill.h
 
 FORMS += \
     auction_calc/auctioncalc.ui \

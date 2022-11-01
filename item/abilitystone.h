@@ -8,7 +8,7 @@ class AbilityStone : public Item
 public:
     AbilityStone();
 
-    QString getEngrave();
+    QString getEngrave() const;
 
     void setEngrave(QString engrave);
 

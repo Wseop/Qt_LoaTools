@@ -48,87 +48,22 @@ double Character::getItemLevel()
     return mItemLevel;
 }
 
-CardSet& Character::getCardSet()
+const CardSet& Character::getCardSet()
 {
     return mCardSet;
 }
 
-Equip &Character::getWeapon()
-{
-    return mWeapon;
-}
-
-Equip &Character::getHead()
-{
-    return mHead;
-}
-
-Equip &Character::getTop()
-{
-    return mTop;
-}
-
-Equip &Character::getBottom()
-{
-    return mBottom;
-}
-
-Equip &Character::getHand()
-{
-    return mHand;
-}
-
-Equip &Character::getShoulder()
-{
-    return mShoulder;
-}
-
-Accessory &Character::getNeck()
-{
-    return mNeck;
-}
-
-Accessory &Character::getEar1()
-{
-    return mEar1;
-}
-
-Accessory &Character::getEar2()
-{
-    return mEar2;
-}
-
-Accessory &Character::getRing1()
-{
-    return mRing1;
-}
-
-Accessory &Character::getRing2()
-{
-    return mRing2;
-}
-
-AbilityStone &Character::getStone()
-{
-    return mStone;
-}
-
-Bracelet &Character::getBracelet()
-{
-    return mBracelet;
-}
-
-QList<Gem> &Character::getGems()
+const QList<Gem> &Character::getGems()
 {
     return mGems;
 }
 
-Engrave &Character::getEngrave()
+const Engrave &Character::getEngrave()
 {
     return mEngrave;
 }
 
-Item& Character::getItemByPart(Part part)
+const Item& Character::getItemByPart(Part part)
 {
     if (part == Part::WEAPON)
         return static_cast<Item&>(mWeapon);
@@ -191,5 +126,60 @@ void Character::setItemLevel(double itemLevel)
 void Character::setCardSet(CardSet cardSet)
 {
     mCardSet = cardSet;
+}
+
+void Character::setItemByPart(const Item& item, Part part)
+{
+    if (part == Part::WEAPON)
+        mWeapon = static_cast<const Equip&>(item);
+    else if (part == Part::HEAD)
+        mHead = static_cast<const Equip&>(item);
+    else if (part == Part::TOP)
+        mTop = static_cast<const Equip&>(item);
+    else if (part == Part::BOTTOM)
+        mBottom = static_cast<const Equip&>(item);
+    else if (part == Part::HAND)
+        mHand = static_cast<const Equip&>(item);
+    else if (part == Part::SHOULDER)
+        mShoulder = static_cast<const Equip&>(item);
+    else if (part == Part::NECK)
+        mNeck = static_cast<const Accessory&>(item);
+    else if (part == Part::EAR1)
+        mEar1 = static_cast<const Accessory&>(item);
+    else if (part == Part::EAR2)
+        mEar2 = static_cast<const Accessory&>(item);
+    else if (part == Part::RING1)
+        mRing1 = static_cast<const Accessory&>(item);
+    else if (part == Part::RING2)
+        mRing2 = static_cast<const Accessory&>(item);
+    else if (part == Part::STONE)
+        mStone = static_cast<const AbilityStone&>(item);
+    else if (part == Part::BRACELET)
+        mBracelet = static_cast<const Bracelet&>(item);
+}
+
+void Character::addGem(const Gem &gem)
+{
+    mGems.append(gem);
+}
+
+void Character::addEngrave(QString name, int value)
+{
+    mEngrave.addEngrave(name, value);
+}
+
+void Character::addPenalty(QString name, int value)
+{
+    mEngrave.addPenalty(name, value);
+}
+
+void Character::setEngrave(Engrave engrave)
+{
+    mEngrave = engrave;
+}
+
+void Character::setSkill(Skill skill)
+{
+    mSkill = skill;
 }
 

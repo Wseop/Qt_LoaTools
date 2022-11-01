@@ -5,7 +5,7 @@ AbilityStone::AbilityStone() : Item(Part::STONE)
 
 }
 
-QString AbilityStone::getEngrave()
+QString AbilityStone::getEngrave() const
 {
     return mEngrave;
 }

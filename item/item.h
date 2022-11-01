@@ -32,6 +32,7 @@ enum class Part
     STONE,
     BRACELET = 26,
     GEM,
+    RUNE,
 };
 
 class Item
@@ -39,10 +40,10 @@ class Item
 public:
     Item(Part part);
 
-    QString getName();
-    Grade getGrade();
-    QString getIconPath();
-    Part getPart();
+    QString getName() const;
+    Grade getGrade() const;
+    QString getIconPath() const;
+    Part getPart() const;
 
     void setName(QString name);
     void setGrade(Grade grade);

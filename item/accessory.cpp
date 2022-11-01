@@ -5,17 +5,17 @@ Accessory::Accessory(Part part) : Item(part)
 
 }
 
-int Accessory::getQuality()
+int Accessory::getQuality() const
 {
     return mQuality;
 }
 
-QString Accessory::getAttr()
+QString Accessory::getAttr() const
 {
     return mAttr;
 }
 
-QString Accessory::getEngrave()
+QString Accessory::getEngrave() const
 {
     return mEngrave;
 }

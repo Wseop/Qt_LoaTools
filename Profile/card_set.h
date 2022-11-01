@@ -8,13 +8,13 @@ class CardSet
 public:
     CardSet();
 
-    QString getTitle(int index);
-    QString getDesc(int index);
+    QString getTitle(int index) const;
+    QString getDesc(int index) const;
 
     void addTitle(QString title);
     void addDesc(QString desc);
 
-    qsizetype count();
+    qsizetype count() const;
 
 private:
     QStringList mTitleList;

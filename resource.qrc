@@ -96,5 +96,17 @@
         <file>resources/engraves/penalty_attspd.png</file>
         <file>resources/engraves/penalty_def.png</file>
         <file>resources/engraves/penalty_spd.png</file>
+        <file>resources/runes/0.png</file>
+        <file>resources/runes/1.png</file>
+        <file>resources/runes/2.png</file>
+        <file>resources/runes/3.png</file>
+        <file>resources/runes/4.png</file>
+        <file>resources/runes/5.png</file>
+        <file>resources/runes/6.png</file>
+        <file>resources/runes/7.png</file>
+        <file>resources/runes/8.png</file>
+        <file>resources/runes/9.png</file>
+        <file>resources/runes/10.png</file>
+        <file>resources/runes/11.png</file>
     </qresource>
 </RCC>

@@ -8,6 +8,7 @@
 #include "item/gem.h"
 #include "engrave.h"
 #include "card_set.h"
+#include "skill.h"
 
 class Character
 {
@@ -20,25 +21,13 @@ public:
     QString getServer();
     QString getGuild();
     double getItemLevel();
-    CardSet& getCardSet();
+    const CardSet& getCardSet();
 
-    Equip& getWeapon();
-    Equip& getHead();
-    Equip& getTop();
-    Equip& getBottom();
-    Equip& getHand();
-    Equip& getShoulder();
-    Accessory& getNeck();
-    Accessory& getEar1();
-    Accessory& getEar2();
-    Accessory& getRing1();
-    Accessory& getRing2();
-    AbilityStone& getStone();
-    Bracelet& getBracelet();
-    QList<Gem>& getGems();
-    Engrave& getEngrave();
+    const Item& getItemByPart(Part part);
+    const QList<Gem>& getGems();
 
-    Item& getItemByPart(Part part);
+    const Engrave& getEngrave();
+    const Skill& getSkill();
 
     void setName(QString name);
     void setClass(QString cls);
@@ -47,6 +36,14 @@ public:
     void setGuild(QString guild);
     void setItemLevel(double itemLevel);
     void setCardSet(CardSet cardSet);
+
+    void setItemByPart(const Item& item, Part part);
+    void addGem(const Gem& gem);
+
+    void addEngrave(QString name, int value);
+    void addPenalty(QString name, int value);
+    void setEngrave(Engrave engrave);
+    void setSkill(Skill skill);
 
 private:
     QString mName;
@@ -71,7 +68,9 @@ private:
     AbilityStone mStone;
     Bracelet mBracelet;
     QList<Gem> mGems;
+
     Engrave mEngrave;
+    Skill mSkill;
 };
 
 #endif // CHARACTER_H

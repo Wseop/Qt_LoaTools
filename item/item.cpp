@@ -5,22 +5,22 @@ Item::Item(Part part) : mPart(part)
 
 }
 
-QString Item::getName()
+QString Item::getName() const
 {
     return mName;
 }
 
-Grade Item::getGrade()
+Grade Item::getGrade() const
 {
     return mGrade;
 }
 
-QString Item::getIconPath()
+QString Item::getIconPath() const
 {
     return mIconPath;
 }
 
-Part Item::getPart()
+Part Item::getPart() const
 {
     return mPart;
 }

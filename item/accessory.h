@@ -8,9 +8,9 @@ class Accessory : public Item
 public:
     Accessory(Part part);
 
-    int getQuality();
-    QString getAttr();
-    QString getEngrave();
+    int getQuality() const;
+    QString getAttr() const;
+    QString getEngrave() const;
 
     void setQuality(int quality);
     void setAttr(QString attr);

@@ -8,7 +8,7 @@ class Bracelet : public Item
 public:
     Bracelet();
 
-    QString getEffect();
+    QString getEffect() const;
 
     void setEffect(QString effect);
 

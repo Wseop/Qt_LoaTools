@@ -15,15 +15,15 @@ public:
     QStringList getPenaltyList();
     bool isValidEngrave(QString engrave);
     bool isValidPenalty(QString penalty);
-    QString getEngravePath(QString engrave);
-    QString getPenaltyPath(QString penalty);
+    QString getEngravePath(QString engrave) const;
+    QString getPenaltyPath(QString penalty) const;
 
     void addEngrave(QString engrave, int value);
     void addPenalty(QString penalty, int value);
-    QStringList getActiveEngraveList();
-    QStringList getActivePenaltyList();
-    int getEngraveValue(QString engrave);
-    int getPenaltyValue(QString penalty);
+    QStringList getActiveEngraveList() const;
+    QStringList getActivePenaltyList() const;
+    int getEngraveValue(QString engrave) const;
+    int getPenaltyValue(QString penalty) const;
     void clearEngrave();
     void clearPenalty();
 

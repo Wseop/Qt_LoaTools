@@ -5,12 +5,12 @@ Gem::Gem() : Item(Part::GEM)
 
 }
 
-QString Gem::GetLevel()
+QString Gem::GetLevel() const
 {
     return mLevel;
 }
 
-QString Gem::getAttr()
+QString Gem::getAttr() const
 {
     return mAttr;
 }

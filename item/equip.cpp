@@ -5,17 +5,17 @@ Equip::Equip(Part part) : Item(part)
 
 }
 
-QString Equip::getLevelTier()
+QString Equip::getLevelTier() const
 {
     return mLevelTier;
 }
 
-int Equip::getQuality()
+int Equip::getQuality() const
 {
     return mQuality;
 }
 
-QString Equip::getSetLevel()
+QString Equip::getSetLevel() const
 {
     return mSetLevel;
 }

@@ -341,14 +341,14 @@ void Profile::parseEquip()
             set = set.remove(mHtmlTag);
 
             Part part = static_cast<Part>(key.last(3).toInt());
-            Equip& equip = static_cast<Equip&>(mCharacter->getItemByPart(part));
-
+            Equip equip(part);
             equip.setName(name);
             equip.setGrade(getItemGrade(obj));
             equip.setIconPath(iconPath);
             equip.setLevelTier(level);
             equip.setQuality(quality);
             equip.setSetLevel(set);
+            mCharacter->setItemByPart(static_cast<const Item&>(equip), part);
 
             mPathParts[iconPath].append(part);
 
@@ -378,14 +378,14 @@ void Profile::parseEquip()
             engrave = engrave.replace("#FFFFAC", "#B9B919");
 
             Part part = static_cast<Part>(key.last(3).toInt());
-            Accessory& acc = static_cast<Accessory&>(mCharacter->getItemByPart(part));
-
+            Accessory acc(part);
             acc.setName(name);
             acc.setGrade(getItemGrade(obj));
             acc.setIconPath(iconPath);
             acc.setQuality(quality);
             acc.setAttr(attr);
             acc.setEngrave(engrave);
+            mCharacter->setItemByPart(static_cast<const Item&>(acc), part);
 
             mPathParts[iconPath].append(part);
             extractEngraveValue(engrave.remove(mHtmlTag));
@@ -416,12 +416,12 @@ void Profile::parseEquip()
             engrave = engrave.replace("#FFFFAC", "#B9B919", Qt::CaseInsensitive);
 
             Part part = static_cast<Part>(key.last(3).toInt());
-            AbilityStone& stone = static_cast<AbilityStone&>(mCharacter->getItemByPart(part));
-
+            AbilityStone stone;
             stone.setName(name);
             stone.setGrade(getItemGrade(obj));
             stone.setIconPath(iconPath);
             stone.setEngrave(engrave);
+            mCharacter->setItemByPart(static_cast<const Item&>(stone), part);
 
             mPathParts[iconPath].append(part);
             extractEngraveValue(engrave.remove(mHtmlTag));
@@ -444,12 +444,12 @@ void Profile::parseEquip()
             effect = effect.replace("#99FF99", "#0ADC64", Qt::CaseInsensitive);
 
             Part part = static_cast<Part>(key.last(3).toInt());
-            Bracelet& bracelet = static_cast<Bracelet&>(mCharacter->getItemByPart(part));
-
+            Bracelet bracelet;
             bracelet.setName(name);
             bracelet.setGrade(getItemGrade(obj));
             bracelet.setIconPath(iconPath);
             bracelet.setEffect(effect);
+            mCharacter->setItemByPart(static_cast<const Item&>(bracelet), part);
 
             mPathParts[iconPath].append(part);
         }
@@ -500,7 +500,7 @@ void Profile::parseGem()
         gem.setIconPath(iconPath);
         gem.setLevel(level);
         gem.setAttr(attr);
-        mCharacter->getGems().append(gem);
+        mCharacter->addGem(gem);
 
         mGemPathIndex[iconPath].append(i);
     }
@@ -529,7 +529,7 @@ void Profile::parseEngrave()
         valueStr = valueStr.remove(mHtmlTag);
         int value = valueStr.remove("각인 활성 포인트 +").toInt();
 
-        mCharacter->getEngrave().addEngrave(name, value);
+        mCharacter->addEngrave(name, value);
     }
 
     updateEngrave();
@@ -582,7 +582,7 @@ void Profile::extractEngraveValue(QString engrave)
     if (start + 1 == engrave.size())
     {
         value = engrave[start].digitValue();
-        mCharacter->getEngrave().addEngrave(name, value);
+        mCharacter->addEngrave(name, value);
         return;
     }
 
@@ -590,7 +590,7 @@ void Profile::extractEngraveValue(QString engrave)
         value = engrave[start].digitValue();
     else
         value = engrave.sliced(start, 2).toInt();
-    mCharacter->getEngrave().addEngrave(name, value);
+    mCharacter->addEngrave(name, value);
 
     // 각인 이름, 값 추출 - 2
     from = start + 1;
@@ -603,7 +603,7 @@ void Profile::extractEngraveValue(QString engrave)
         value = engrave[start].digitValue();
     else
         value = engrave.sliced(start, 2).toInt();
-    mCharacter->getEngrave().addEngrave(name, value);
+    mCharacter->addEngrave(name, value);
 
     // 각인 이름, 값 추출 - 3 (Penalty)
     from = start + 1;
@@ -616,7 +616,7 @@ void Profile::extractEngraveValue(QString engrave)
         value = engrave[start].digitValue();
     else
         value = engrave.sliced(start, 2).toInt();
-    mCharacter->getEngrave().addPenalty(name, value);
+    mCharacter->addPenalty(name, value);
 }
 
 void Profile::updateTitle()
@@ -644,7 +644,7 @@ void Profile::updateEquip()
     for (int i = START_EQUIP; i < START_ACCESSORY; i++)
     {
         part = static_cast<Part>(i);
-        Equip& equip = static_cast<Equip&>(mCharacter->getItemByPart(part));
+        const Equip& equip = static_cast<const Equip&>(mCharacter->getItemByPart(part));
 
         requestIcon(mNetworkIconEquip, equip.getIconPath());
         mPartName[part]->setText(equip.getName());
@@ -658,7 +658,7 @@ void Profile::updateEquip()
     for (int i = START_ACCESSORY; i < START_STONE; i++)
     {
         part = static_cast<Part>(i);
-        Accessory& acc = static_cast<Accessory&>(mCharacter->getItemByPart(part));
+        const Accessory& acc = static_cast<const Accessory&>(mCharacter->getItemByPart(part));
 
         requestIcon(mNetworkIconEquip, acc.getIconPath());
         mPartName[part]->setText(acc.getName());
@@ -670,7 +670,7 @@ void Profile::updateEquip()
     }
     // Ability Stone
     part = static_cast<Part>(START_STONE);
-    AbilityStone& stone = static_cast<AbilityStone&>(mCharacter->getItemByPart(part));
+    const AbilityStone& stone = static_cast<const AbilityStone&>(mCharacter->getItemByPart(part));
 
     requestIcon(mNetworkIconEquip, stone.getIconPath());
     mPartName[part]->setText(stone.getName());
@@ -679,7 +679,7 @@ void Profile::updateEquip()
 
     // Bracelet
     part = static_cast<Part>(START_BRACELET);
-    Bracelet& bracelet = static_cast<Bracelet&>(mCharacter->getItemByPart(part));
+    const Bracelet& bracelet = static_cast<const Bracelet&>(mCharacter->getItemByPart(part));
 
     requestIcon(mNetworkIconEquip, bracelet.getIconPath());
     mPartName[part]->setText(bracelet.getName());
@@ -689,11 +689,11 @@ void Profile::updateEquip()
 
 void Profile::updateGem()
 {
-    QList<Gem>& gems = mCharacter->getGems();
+    const QList<Gem>& gems = mCharacter->getGems();
 
     for (int i = 0; i < gems.size(); i++)
     {
-        Gem& gem = gems[i];
+        const Gem& gem = gems[i];
 
         requestIcon(mNetworkIconGem, gem.getIconPath());
         mGemNames[i]->setText(gem.getName());
@@ -705,7 +705,7 @@ void Profile::updateGem()
 
 void Profile::updateEngrave()
 {
-    Engrave& engrave = mCharacter->getEngrave();
+    const Engrave& engrave = mCharacter->getEngrave();
     QStringList engraveList = engrave.getActiveEngraveList();
     QStringList penaltyList = engrave.getActivePenaltyList();
 
@@ -797,7 +797,7 @@ void Profile::updateSkill()
 
 void Profile::updateCard()
 {
-    CardSet& cardSet = mCharacter->getCardSet();
+    const CardSet& cardSet = mCharacter->getCardSet();
     qsizetype effectCount = cardSet.count();
 
     for (int i = 0; i < effectCount; i++)
@@ -861,15 +861,15 @@ void Profile::setNameColor(QLabel* label, Grade grade)
     else if (grade == Grade::RARE)
         color = "#00B0FA";
     else if (grade == Grade::EPIC)
-        color = "#AE43FC";
+        color = "#EE43FC";
     else if (grade == Grade::LEGEND)
         color = "#F99200";
     else if (grade == Grade::RELIC)
-        color = "#FA5000";
+        color = "#FA5D00";
     else if (grade == Grade::ANCIENT)
-        color = "#D2A76A";
+        color = "#E3C7A1";
     else if (grade == Grade::ESTHER)
-        color = "#3CE6B9";
+        color = "#3CF2E6";
 
     QString style = QString("QLabel { color: %1 }").arg(color);
     label->setStyleSheet(style);
@@ -896,6 +896,26 @@ Grade Profile::getItemGrade(const QJsonObject& obj)
     else if (itemCategory.contains("고대"))
         return Grade::ANCIENT;
     else if (itemCategory.contains("에스더"))
+        return Grade::ESTHER;
+    else
+        return Grade::NONE;
+}
+
+Grade Profile::getGradeByColor(QString color)
+{
+    if (color == "#8DF901")
+        return Grade::UNCOMMON;
+    else if (color == "#00B0FA")
+        return Grade::RARE;
+    else if (color == "#EE43FC")
+        return Grade::EPIC;
+    else if (color == "#F99200")
+        return Grade::LEGEND;
+    else if (color == "#FA5D00")
+        return Grade::RELIC;
+    else if (color == "#E3C7A1")
+        return Grade::ANCIENT;
+    else if (color == "#3CF2E6")
         return Grade::ESTHER;
     else
         return Grade::NONE;

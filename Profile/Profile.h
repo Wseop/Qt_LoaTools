@@ -56,6 +56,7 @@ private:
     void setQualityColor(Part part, int quality);
     void setNameColor(QLabel* label, Grade grade);
     Grade getItemGrade(const QJsonObject& obj);
+    Grade getGradeByColor(QString color);
 
     void clearAll();
 
