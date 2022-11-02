@@ -14,7 +14,10 @@ const QString PATH_PROFILE = "https://lostark.game.onstove.com/Profile/Character
 const QString PATH_CDN = "https://cdn-lostark.game.onstove.com";
 
 class QLabel;
+class QLayout;
 class QHBoxLayout;
+class QVBoxLayout;
+class QGroupBox;
 
 class Profile : public QWidget
 {
@@ -57,6 +60,7 @@ private:
     void setNameColor(QLabel* label, Grade grade);
     Grade getItemGrade(const QJsonObject& obj);
     Grade getGradeByColor(QString color);
+    QString getColorByGrade(Grade grade);
 
     void clearAll();
 
@@ -65,6 +69,7 @@ private:
     class QNetworkAccessManager* mNetworkProfile = nullptr;
     class QNetworkAccessManager* mNetworkIconEquip = nullptr;
     class QNetworkAccessManager* mNetworkIconGem = nullptr;
+    class QNetworkAccessManager* mNetworkIconSkill = nullptr;
     class QJsonObject* mProfile = nullptr;
     class CharacterList* mCharacterList = nullptr;
     Character* mCharacter = nullptr;
@@ -94,14 +99,21 @@ private:
     QList<QHBoxLayout*> mPenaltyLayouts;
 
     // Card
-    QList<class QVBoxLayout*> mCardLayoutList;
+    QList<QVBoxLayout*> mCardLayoutList;
     QList<QLabel*> mCardLabelList;
+
+    // Skill
+    QList<QGroupBox*> mSkillGroupBoxes;
+    QList<QLayout*> mSkillLayouts;
+    QList<QLabel*> mSkillLabels;
+    QMap<QString, QLabel*> mSkillIconLabel;
 
 private slots:
     void slotProfileRequest();
     void slotExtractProfile(class QNetworkReply* reply);
     void slotSetIconEquip(class QNetworkReply* reply);
     void slotSetIconGem(class QNetworkReply* reply);
+    void slotSetIconSkill(class QNetworkReply* reply);
     void slotShowCharacterList();
 };
 

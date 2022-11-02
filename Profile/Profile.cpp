@@ -23,6 +23,7 @@ Profile::Profile(QWidget *parent) :
     mNetworkProfile(new QNetworkAccessManager()),
     mNetworkIconEquip(new QNetworkAccessManager()),
     mNetworkIconGem(new QNetworkAccessManager()),
+    mNetworkIconSkill(new QNetworkAccessManager()),
     mHtmlTag("<[^>]*>")
 {
     ui->setupUi(this);
@@ -191,6 +192,7 @@ void Profile::initConnect()
     connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
     connect(mNetworkIconEquip, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconEquip(QNetworkReply*)));
     connect(mNetworkIconGem, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconGem(QNetworkReply*)));
+    connect(mNetworkIconSkill, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconSkill(QNetworkReply*)));
     connect(ui->pbCharacterList, SIGNAL(pressed()), this, SLOT(slotShowCharacterList()));
 }
 
@@ -536,7 +538,91 @@ void Profile::parseEngrave()
 }
 
 void Profile::parseSkill()
-{}
+{
+    const QJsonObject& skill = mProfile->find("Skill")->toObject();
+    QStringList keys = skill.keys();
+
+    QStringList iconKeys;
+    iconKeys << "value" << "slotData" << "iconPath";
+
+    for (const QString& key : keys)
+    {
+        const QJsonObject& obj = skill.find(key)->toObject();
+        QStringList elements = obj.keys();
+
+        Skill skill;
+        bool bRuneExist = false;
+        for (const QString& element : elements)
+        {
+            const QJsonObject& data = obj.find(element)->toObject();
+            QString type = data.find("type")->toString();
+
+
+            if (type == "NameTagBox")
+            {
+                QString name = data.find("value")->toString();
+                skill.setName(name);
+            }
+            else if (type == "CommonSkillTitle")
+            {
+                QString iconPath = "/" + getValueFromJson(data, iconKeys).toString();
+                skill.setIconPath(iconPath);
+            }
+            else if (type == "SingleTextBox")
+            {
+                QString levelStr = data.find("value")->toString();
+                if (levelStr.startsWith("스킬 레벨"))
+                {
+                    int level = levelStr.remove("스킬 레벨 ").remove( "(최대)").toInt();
+                    skill.setLevel(level);
+                }
+            }
+            else if (type == "TripodSkillCustom")
+            {
+                const QJsonObject& tripods = data.find("value")->toObject();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    QString tripodKey = QString("Element_00%1").arg(i);
+                    const QJsonObject& tripodObj = tripods.find(tripodKey)->toObject();
+
+                    if (tripodObj.find("lock")->toBool())
+                        break;
+
+                    Tripod tripod;
+                    tripod.name = tripodObj.find("name")->toString().remove(mHtmlTag);
+                    tripod.level = tripodObj.find("tier")->toString().remove(mHtmlTag).remove("레벨 ");
+                    skill.addTripod(tripod);
+                }
+            }
+            else if (type == "ItemPartBox")
+            {
+                const QJsonObject& value = data.find("value")->toObject();
+
+                if (value.find("Element_000")->toString().contains("룬"))
+                {
+                    bRuneExist = true;
+                    QString element001 = value.find("Element_001")->toString();
+                    int indexColor = element001.indexOf("#");
+                    QString color = element001.sliced(indexColor, 7);
+                    QString name = element001.remove(mHtmlTag).sliced(1, 2);
+
+                    Rune* rune = new Rune();
+                    rune->setName(name);
+                    rune->setGrade(getGradeByColor(color));
+                    skill.setRune(rune);
+                }
+            }
+        }
+        // 스킬레벨이 2이상이거나 룬이 착용되어 있는 경우만 추가
+        if (skill.getLevel() >= 2 || bRuneExist)
+        {
+            mCharacter->addSkill(skill);
+        }
+    }
+
+    updateSkill();
+}
 
 void Profile::parseCard()
 {
@@ -792,7 +878,87 @@ void Profile::updateEngrave()
 
 void Profile::updateSkill()
 {
+    const QList<Skill>& skills = mCharacter->getSkills();
 
+    for (const Skill& skill : skills)
+    {
+        QGroupBox* groupSkill = new QGroupBox();
+        mSkillGroupBoxes.append(groupSkill);
+        ui->vLayoutSkill->addWidget(groupSkill);
+
+        QHBoxLayout* hLayoutSkill = new QHBoxLayout();
+        mSkillLayouts.append(hLayoutSkill);
+        groupSkill->setLayout(hLayoutSkill);
+        hLayoutSkill->setAlignment(Qt::AlignLeft);
+
+        // 스킬 아이콘
+        QLabel* lbSkillIcon = new QLabel();
+        mSkillLabels.append(lbSkillIcon);
+        hLayoutSkill->addWidget(lbSkillIcon);
+        mSkillIconLabel[skill.getIconPath()] = lbSkillIcon;
+        requestIcon(mNetworkIconSkill, skill.getIconPath());
+
+        // 스킬명, 레벨
+        QLabel* lbSkillNameLevel = new QLabel(QString("%1 Lv.%2").arg(skill.getName()).arg(skill.getLevel()));
+        mSkillLabels.append(lbSkillNameLevel);
+        hLayoutSkill->addWidget(lbSkillNameLevel);
+        lbSkillNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+        lbSkillNameLevel->setFixedWidth(200);
+
+        // 트라이포드
+        QGroupBox* groupTripod = new QGroupBox("트라이포드");
+        mSkillGroupBoxes.append(groupTripod);
+        hLayoutSkill->addWidget(groupTripod);
+        groupTripod->setFont(QFont("나눔스퀘어 네오 regular", 10));
+        groupTripod->setFixedWidth(250);
+
+        QVBoxLayout* vLayoutTripod = new QVBoxLayout();
+        mSkillLayouts.append(vLayoutTripod);
+        groupTripod->setLayout(vLayoutTripod);
+
+        QList<Tripod> tripods = skill.getTripods();
+        for (int i = 0; i < tripods.size(); i++)
+        {
+            const Tripod& tripod = tripods[i];
+            QHBoxLayout* hLayoutTripod = new QHBoxLayout();
+            mSkillLayouts.append(hLayoutTripod);
+            vLayoutTripod->addLayout(hLayoutTripod);
+
+            QLabel* lbTripodNameLevel = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
+            mSkillLabels.append(lbTripodNameLevel);
+            hLayoutTripod->addWidget(lbTripodNameLevel);
+            lbTripodNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+            lbTripodNameLevel->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
+        }
+
+        // 룬
+        QGroupBox* groupRune = new QGroupBox("룬");
+        mSkillGroupBoxes.append(groupRune);
+        hLayoutSkill->addWidget(groupRune);
+        groupRune->setFont(QFont("나눔스퀘어 네오 regular", 10));
+        groupRune->setFixedWidth(200);
+
+        QHBoxLayout* hLayoutRune = new QHBoxLayout();
+        mSkillLayouts.append(hLayoutRune);
+        groupRune->setLayout(hLayoutRune);
+
+        QLabel* lbRuneIcon = new QLabel();
+        mSkillLabels.append(lbRuneIcon);
+        hLayoutRune->addWidget(lbRuneIcon);
+
+        const Rune* rune = skill.getRune();
+        if (rune != nullptr)
+        {
+            QPixmap pixmap(rune->getIconPath());
+            lbRuneIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+            QLabel* lbRuneName = new QLabel(rune->getName());
+            mSkillLabels.append(lbRuneName);
+            hLayoutRune->addWidget(lbRuneName);
+            lbRuneName->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+            lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(getColorByGrade(rune->getGrade())));
+        }
+    }
 }
 
 void Profile::updateCard()
@@ -861,7 +1027,7 @@ void Profile::setNameColor(QLabel* label, Grade grade)
     else if (grade == Grade::RARE)
         color = "#00B0FA";
     else if (grade == Grade::EPIC)
-        color = "#EE43FC";
+        color = "#CE43FC";
     else if (grade == Grade::LEGEND)
         color = "#F99200";
     else if (grade == Grade::RELIC)
@@ -903,22 +1069,45 @@ Grade Profile::getItemGrade(const QJsonObject& obj)
 
 Grade Profile::getGradeByColor(QString color)
 {
-    if (color == "#8DF901")
+    if (color.compare("#8DF901", Qt::CaseInsensitive) == 0)
         return Grade::UNCOMMON;
-    else if (color == "#00B0FA")
+    else if (color.compare("#00B0FA", Qt::CaseInsensitive) == 0)
         return Grade::RARE;
-    else if (color == "#EE43FC")
+    else if (color.compare("#CE43FC", Qt::CaseInsensitive) == 0)
         return Grade::EPIC;
-    else if (color == "#F99200")
+    else if (color.compare("#F99200", Qt::CaseInsensitive) == 0)
         return Grade::LEGEND;
-    else if (color == "#FA5D00")
+    else if (color.compare("#FA5D00", Qt::CaseInsensitive) == 0)
         return Grade::RELIC;
-    else if (color == "#E3C7A1")
+    else if (color.compare("#E3C7A1", Qt::CaseInsensitive) == 0)
         return Grade::ANCIENT;
-    else if (color == "#3CF2E6")
+    else if (color.compare("#3CF2E6", Qt::CaseInsensitive) == 0)
         return Grade::ESTHER;
     else
         return Grade::NONE;
+}
+
+QString Profile::getColorByGrade(Grade grade)
+{
+    switch (grade)
+    {
+    case Grade::UNCOMMON:
+        return "#8DF901";
+    case Grade::RARE:
+        return "#00B0FA";
+    case Grade::EPIC:
+        return "#CE43FC";
+    case Grade::LEGEND:
+        return "#F99200";
+    case Grade::RELIC:
+        return "#FA5D00";
+    case Grade::ANCIENT:
+        return "#E3C7A1";
+    case Grade::ESTHER:
+        return "#3CF2E6";
+    case Grade::NONE:
+        return "#000000";
+    }
 }
 
 void Profile::clearAll()
@@ -997,6 +1186,20 @@ void Profile::clearAll()
     for (QVBoxLayout* layout : mCardLayoutList)
         delete layout;
     mCardLayoutList.clear();
+
+    for (QLabel* label : mSkillLabels)
+        delete label;
+    mSkillLabels.clear();
+
+    for (auto rIter = mSkillLayouts.rbegin(); rIter != mSkillLayouts.rend(); rIter++)
+        delete *rIter;
+    mSkillLayouts.clear();
+
+    for (auto rIter = mSkillGroupBoxes.rbegin(); rIter != mSkillGroupBoxes.rend(); rIter++)
+        delete *rIter;
+    mSkillGroupBoxes.clear();
+
+    mSkillIconLabel.clear();
 }
 
 void Profile::slotProfileRequest()
@@ -1071,7 +1274,7 @@ void Profile::slotSetIconEquip(QNetworkReply* reply)
 
     QString path = reply->url().path();
     QList<Part> parts = mPathParts[path];
-    for (Part& part : parts)
+    for (const Part& part : parts)
     {
         QLabel* iconLabel = mPartIcon[part];
 
@@ -1093,7 +1296,7 @@ void Profile::slotSetIconGem(QNetworkReply* reply)
 
     QString path = reply->url().path();
     QList<int> index = mGemPathIndex[path];
-    for (int& i : index)
+    for (const int& i : index)
     {
         QLabel* iconLabel = mGemIcons[i];
 
@@ -1101,6 +1304,22 @@ void Profile::slotSetIconGem(QNetworkReply* reply)
         iconLabel->setFixedSize(50, 50);
         iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
     }
+}
+
+void Profile::slotSetIconSkill(QNetworkReply *reply)
+{
+    QPixmap icon;
+    bool load = icon.loadFromData(reply->readAll(), "PNG");
+    if (!load)
+    {
+        qDebug() << Q_FUNC_INFO << "Icon load fail";
+        return;
+    }
+
+    QString path = reply->url().path();
+    QLabel* label = mSkillIconLabel[path];
+    label->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    label->setFixedSize(50, 50);
 }
 
 void Profile::slotShowCharacterList()

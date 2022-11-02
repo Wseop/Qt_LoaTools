@@ -63,6 +63,11 @@ const Engrave &Character::getEngrave()
     return mEngrave;
 }
 
+const QList<Skill> &Character::getSkills()
+{
+    return mSkills;
+}
+
 const Item& Character::getItemByPart(Part part)
 {
     if (part == Part::WEAPON)
@@ -178,8 +183,7 @@ void Character::setEngrave(Engrave engrave)
     mEngrave = engrave;
 }
 
-void Character::setSkill(Skill skill)
+void Character::addSkill(const Skill &skill)
 {
-    mSkill = skill;
+    mSkills.append(skill);
 }
-

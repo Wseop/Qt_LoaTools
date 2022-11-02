@@ -7,8 +7,8 @@
 struct Tripod
 {
     QString name;
-    QString iconPath;
     QString level;
+    QString color;
 };
 
 class Skill
@@ -16,18 +16,17 @@ class Skill
 public:
     Skill();
 
-    QString getName();
-    QString getIconPath();
-    int getLevel();
-    QList<Tripod> getTripods();
-    Tripod getTripod(int index);
-    Rune getRune();
+    QString getName() const;
+    QString getIconPath() const;
+    int getLevel() const;
+    QList<Tripod> getTripods() const;
+    Tripod getTripod(int index) const;
+    const Rune* getRune() const;
 
     void setName(QString name);
     void setIconPath(QString iconPath);
     void setLevel(int level);
-    void setTripod(QList<Tripod> tripods);
-    void setRune(Rune rune);
+    void setRune(Rune* rune);
 
     void addTripod(Tripod tripod);
 
@@ -36,7 +35,7 @@ private:
     QString mIconPath;
     int mLevel;
     QList<Tripod> mTripods;
-    Rune mRune;
+    Rune* mRune = nullptr;
 };
 
 #endif // SKILL_H

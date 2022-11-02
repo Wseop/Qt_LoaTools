@@ -27,7 +27,7 @@ public:
     const QList<Gem>& getGems();
 
     const Engrave& getEngrave();
-    const Skill& getSkill();
+    const QList<Skill>& getSkills();
 
     void setName(QString name);
     void setClass(QString cls);
@@ -43,7 +43,8 @@ public:
     void addEngrave(QString name, int value);
     void addPenalty(QString name, int value);
     void setEngrave(Engrave engrave);
-    void setSkill(Skill skill);
+
+    void addSkill(const Skill& skill);
 
 private:
     QString mName;
@@ -70,7 +71,7 @@ private:
     QList<Gem> mGems;
 
     Engrave mEngrave;
-    Skill mSkill;
+    QList<Skill> mSkills;
 };
 
 #endif // CHARACTER_H
