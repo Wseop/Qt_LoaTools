@@ -149,6 +149,7 @@ void Profile::initMap()
 void Profile::initUI()
 {
     ui->tabProfile->hide();
+    ui->groupTitle->hide();
 
     ui->groupBoxSearch->setFixedWidth(500);
 
@@ -715,7 +716,7 @@ void Profile::updateTitle()
     ui->lbGuild->setStyleSheet("QLabel { color: #00B700 }");
     ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
     ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
-    ui->verticalLayout_59->setAlignment(Qt::AlignTop);
+    ui->vLayoutTitle->setAlignment(Qt::AlignTop);
 }
 
 void Profile::updateEquip()
@@ -1237,6 +1238,8 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
     {
         if (ui->tabProfile->isHidden())
             ui->tabProfile->show();
+        if (ui->groupTitle->isHidden())
+            ui->groupTitle->show();
 
         // Profile 정보 추출
         profileIndex += profileStart.size();
