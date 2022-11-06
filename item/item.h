@@ -18,12 +18,12 @@ enum class Grade
 
 static QStringList gItemColor = {
     "#000000",
-    "#8DF901",
+    "#00B700",
     "#00B0FA",
     "#CE43FC",
     "#F99200",
     "#FA5D00",
-    "#E3C7A1",
+    "#DCB496",
     "#3CF2E6"
 };
 

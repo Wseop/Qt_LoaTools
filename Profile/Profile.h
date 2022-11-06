@@ -37,7 +37,6 @@ public:
     void profileRequest(QString name);
 
 private:
-    void initMap();
     void initUI();
     void initConnect();
 
@@ -58,9 +57,6 @@ private:
 
     Grade extractGrade(QString str);
     void extractEngraveValue(int type, QString engrave);
-
-    void updateEquip();
-    void updateGem();
 
     Grade getGradeByColor(QString color);
 
@@ -83,10 +79,7 @@ private:
 
     // Gem
 
-    // Engrave
     class EngraveWidget* mEngraveWidget = nullptr;
-
-    // Card
     QList<class CardLabel*> mCardLabels;
 
     // Skill

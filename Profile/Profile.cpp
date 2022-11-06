@@ -261,7 +261,10 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
             qsizetype indexStart = levelTier.indexOf("아이템 레벨") + 7;
             qsizetype indexEnd = levelTier.indexOf("(");
-            itemLevel = levelTier.sliced(indexStart, indexEnd - indexStart).toInt();
+            if (indexEnd == -1)
+                itemLevel = levelTier.sliced(indexStart).toInt();
+            else
+                itemLevel = levelTier.sliced(indexStart, indexEnd - indexStart).toInt();
         }
         else if (type == "ItemPartBox")
         {
@@ -676,22 +679,6 @@ void Profile::extractEngraveValue(int type, QString engrave)
         mCharacter->addEngrave(engraveName, engraveValue);
     else
         mCharacter->addPenalty(engraveName, engraveValue);
-}
-
-void Profile::updateGem()
-{
-//    const QList<Gem>& gems = mCharacter->getGems();
-
-//    for (int i = 0; i < gems.size(); i++)
-//    {
-//        const Gem& gem = gems[i];
-
-//        requestIcon(mNetworkIconGem, gem.getIconPath());
-//        mGemNames[i]->setText(gem.getName());
-//        setNameColor(mGemNames[i], gem.getGrade());
-//        //mGemLevels[i]->setText(gem.GetLevel());
-//        mGemAttrs[i]->setText(gem.getAttr());
-//    }
 }
 
 Grade Profile::getGradeByColor(QString color)

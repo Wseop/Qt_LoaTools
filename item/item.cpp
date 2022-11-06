@@ -1,6 +1,8 @@
 #include "item.h"
 
-Item::Item(Part part) : mPart(part)
+Item::Item(Part part) :
+    mGrade(Grade::NONE),
+    mPart(part)
 {
 
 }

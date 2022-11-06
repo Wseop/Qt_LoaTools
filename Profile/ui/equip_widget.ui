@@ -67,7 +67,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Icon</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -93,7 +93,7 @@
            </font>
           </property>
           <property name="value">
-           <number>50</number>
+           <number>0</number>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
