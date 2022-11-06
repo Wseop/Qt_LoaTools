@@ -2,6 +2,7 @@
 #define ACCESSORY_H
 
 #include "item.h"
+#include <QStringList>
 
 class Accessory : public Item
 {
@@ -10,16 +11,19 @@ public:
 
     int getQuality() const;
     QString getAttr() const;
-    QString getEngrave() const;
+    const QStringList& getEngraves() const;
+    QString getPenalty() const;
 
     void setQuality(int quality);
     void setAttr(QString attr);
-    void setEngrave(QString engrave);
+    void addEngrave(QString engrave);
+    void setPenalty(QString penalty);
 
 private:
     int mQuality;
     QString mAttr;
-    QString mEngrave;
+    QStringList mEngraves;
+    QString mPenalty;
 };
 
 #endif // ACCESSORY_H

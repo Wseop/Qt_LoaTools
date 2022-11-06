@@ -3,6 +3,13 @@
 #include "character_list.h"
 #include "card_set.h"
 
+#include "ui/card_label.h"
+#include "ui/equip_widget.h"
+#include "ui/acc_widget.h"
+#include "ui/abilitystone_widget.h"
+#include "ui/bracelet_widget.h"
+#include "ui/engrave_widget.h"
+
 #include <QMessageBox>
 #include <QUrl>
 #include <QNetworkAccessManager>
@@ -21,9 +28,6 @@ Profile::Profile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Profile),
     mNetworkProfile(new QNetworkAccessManager()),
-    mNetworkIconEquip(new QNetworkAccessManager()),
-    mNetworkIconGem(new QNetworkAccessManager()),
-    mNetworkIconSkill(new QNetworkAccessManager()),
     mHtmlTag("<[^>]*>")
 {
     ui->setupUi(this);
@@ -31,7 +35,6 @@ Profile::Profile(QWidget *parent) :
     this->setWindowTitle("캐릭터 조회");
     this->showMaximized();
 
-    initMap();
     initUI();
     initConnect();
 }
@@ -47,169 +50,49 @@ void Profile::profileRequest(QString name)
     emit ui->pbSearch->pressed();
 }
 
-void Profile::initMap()
-{
-    mPartIcon[Part::WEAPON] = ui->lbIconWeapon;
-    mPartIcon[Part::HEAD] = ui->lbIconHead;
-    mPartIcon[Part::TOP] = ui->lbIconTop;
-    mPartIcon[Part::BOTTOM] = ui->lbIconBottom;
-    mPartIcon[Part::HAND] = ui->lbIconHand;
-    mPartIcon[Part::SHOULDER] = ui->lbIconShoulder;
-    mPartIcon[Part::NECK] = ui->lbIconNeck;
-    mPartIcon[Part::EAR1] = ui->lbIconEar1;
-    mPartIcon[Part::EAR2] = ui->lbIconEar2;
-    mPartIcon[Part::RING1] = ui->lbIconRing1;
-    mPartIcon[Part::RING2] = ui->lbIconRing2;
-    mPartIcon[Part::STONE] = ui->lbIconStone;
-    mPartIcon[Part::BRACELET] = ui->lbIconBracelet;
-
-    mPartQual[Part::WEAPON] = ui->barQualWeapon;
-    mPartQual[Part::HEAD] = ui->barQualHead;
-    mPartQual[Part::TOP] = ui->barQualTop;
-    mPartQual[Part::BOTTOM] = ui->barQualBottom;
-    mPartQual[Part::HAND] = ui->barQualHand;
-    mPartQual[Part::SHOULDER] = ui->barQualShoulder;
-    mPartQual[Part::NECK] = ui->barQualNeck;
-    mPartQual[Part::EAR1] = ui->barQualEar1;
-    mPartQual[Part::EAR2] = ui->barQualEar2;
-    mPartQual[Part::RING1] = ui->barQualRing1;
-    mPartQual[Part::RING2] = ui->barQualRing2;
-
-    mPartName[Part::WEAPON] = ui->lbNameWeapon;
-    mPartName[Part::HEAD] = ui->lbNameHead;
-    mPartName[Part::TOP] = ui->lbNameTop;
-    mPartName[Part::BOTTOM] = ui->lbNameBottom;
-    mPartName[Part::HAND] = ui->lbNameHand;
-    mPartName[Part::SHOULDER] = ui->lbNameShoulder;
-    mPartName[Part::NECK] = ui->lbNameNeck;
-    mPartName[Part::EAR1] = ui->lbNameEar1;
-    mPartName[Part::EAR2] = ui->lbNameEar2;
-    mPartName[Part::RING1] = ui->lbNameRing1;
-    mPartName[Part::RING2] = ui->lbNameRing2;
-    mPartName[Part::STONE] = ui->lbNameStone;
-    mPartName[Part::BRACELET] = ui->lbNameBracelet;
-
-    mPartLevel[Part::WEAPON] = ui->lbLevelWeapon;
-    mPartLevel[Part::HEAD] = ui->lbLevelHead;
-    mPartLevel[Part::TOP] = ui->lbLevelTop;
-    mPartLevel[Part::BOTTOM] = ui->lbLevelBottom;
-    mPartLevel[Part::HAND] = ui->lbLevelHand;
-    mPartLevel[Part::SHOULDER] = ui->lbLevelShoulder;
-
-    mPartSet[Part::WEAPON] = ui->lbSetWeapon;
-    mPartSet[Part::HEAD] = ui->lbSetHead;
-    mPartSet[Part::TOP] = ui->lbSetTop;
-    mPartSet[Part::BOTTOM] = ui->lbSetBottom;
-    mPartSet[Part::HAND] = ui->lbSetHand;
-    mPartSet[Part::SHOULDER] = ui->lbSetShoulder;
-
-    mPartAttr[Part::NECK] = ui->lbAttrNeck;
-    mPartAttr[Part::EAR1] = ui->lbAttrEar1;
-    mPartAttr[Part::EAR2] = ui->lbAttrEar2;
-    mPartAttr[Part::RING1] = ui->lbAttrRing1;
-    mPartAttr[Part::RING2] = ui->lbAttrRing2;
-    mPartAttr[Part::BRACELET] = ui->lbEffectBracelet;
-
-    mPartEngrave[Part::NECK] = ui->lbEngraveNeck;
-    mPartEngrave[Part::EAR1] = ui->lbEngraveEar1;
-    mPartEngrave[Part::EAR2] = ui->lbEngraveEar2;
-    mPartEngrave[Part::RING1] = ui->lbEngraveRing1;
-    mPartEngrave[Part::RING2] = ui->lbEngraveRing2;
-    mPartEngrave[Part::STONE] = ui->lbEngraveStone;
-
-    mGemIcons.append(ui->lbIconGem0);    mGemIcons.append(ui->lbIconGem1);
-    mGemIcons.append(ui->lbIconGem2);    mGemIcons.append(ui->lbIconGem3);
-    mGemIcons.append(ui->lbIconGem4);    mGemIcons.append(ui->lbIconGem5);
-    mGemIcons.append(ui->lbIconGem6);    mGemIcons.append(ui->lbIconGem7);
-    mGemIcons.append(ui->lbIconGem8);    mGemIcons.append(ui->lbIconGem9);
-    mGemIcons.append(ui->lbIconGem10);
-
-    mGemLevels.append(ui->lbLevelGem0);    mGemLevels.append(ui->lbLevelGem1);
-    mGemLevels.append(ui->lbLevelGem2);    mGemLevels.append(ui->lbLevelGem3);
-    mGemLevels.append(ui->lbLevelGem4);    mGemLevels.append(ui->lbLevelGem5);
-    mGemLevels.append(ui->lbLevelGem6);    mGemLevels.append(ui->lbLevelGem7);
-    mGemLevels.append(ui->lbLevelGem8);    mGemLevels.append(ui->lbLevelGem9);
-    mGemLevels.append(ui->lbLevelGem10);
-
-    mGemNames.append(ui->lbNameGem0);    mGemNames.append(ui->lbNameGem1);
-    mGemNames.append(ui->lbNameGem2);    mGemNames.append(ui->lbNameGem3);
-    mGemNames.append(ui->lbNameGem4);    mGemNames.append(ui->lbNameGem5);
-    mGemNames.append(ui->lbNameGem6);    mGemNames.append(ui->lbNameGem7);
-    mGemNames.append(ui->lbNameGem8);    mGemNames.append(ui->lbNameGem9);
-    mGemNames.append(ui->lbNameGem10);
-
-    mGemAttrs.append(ui->lbAttrGem0);    mGemAttrs.append(ui->lbAttrGem1);
-    mGemAttrs.append(ui->lbAttrGem2);    mGemAttrs.append(ui->lbAttrGem3);
-    mGemAttrs.append(ui->lbAttrGem4);    mGemAttrs.append(ui->lbAttrGem5);
-    mGemAttrs.append(ui->lbAttrGem6);    mGemAttrs.append(ui->lbAttrGem7);
-    mGemAttrs.append(ui->lbAttrGem8);    mGemAttrs.append(ui->lbAttrGem9);
-    mGemAttrs.append(ui->lbAttrGem10);
-}
-
 void Profile::initUI()
-{
+{   
+    ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+
     ui->tabProfile->hide();
     ui->groupTitle->hide();
 
-    ui->groupBoxSearch->setFixedWidth(500);
-
-    ui->barQualWeapon->setFixedSize(50, 15);
-    ui->barQualHead->setFixedSize(50, 15);
-    ui->barQualShoulder->setFixedSize(50, 15);
-    ui->barQualTop->setFixedSize(50, 15);
-    ui->barQualBottom->setFixedSize(50, 15);
-    ui->barQualHand->setFixedSize(50, 15);
-    ui->barQualNeck->setFixedSize(50, 15);
-    ui->barQualEar1->setFixedSize(50, 15);
-    ui->barQualEar2->setFixedSize(50, 15);
-    ui->barQualRing1->setFixedSize(50, 15);
-    ui->barQualRing2->setFixedSize(50, 15);
-
-    ui->groupBracelet->setMaximumSize(500, 300);
-    ui->groupEngrave->setMaximumWidth(500);
-
-    ui->lbLevelGem0->setFixedWidth(50);
-    ui->lbLevelGem1->setFixedWidth(50);
-    ui->lbLevelGem2->setFixedWidth(50);
-    ui->lbLevelGem3->setFixedWidth(50);
-    ui->lbLevelGem4->setFixedWidth(50);
-    ui->lbLevelGem5->setFixedWidth(50);
-    ui->lbLevelGem6->setFixedWidth(50);
-    ui->lbLevelGem7->setFixedWidth(50);
-    ui->lbLevelGem8->setFixedWidth(50);
-    ui->lbLevelGem9->setFixedWidth(50);
-    ui->lbLevelGem10->setFixedWidth(50);
-
-    ui->groupCard->setMaximumWidth(350);
+    ui->groupBoxSearch->setMaximumWidth(500);
 
     ui->tabEquip->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabSkill->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
+
+    // Title
+    ui->vLayoutTitle->setAlignment(Qt::AlignTop);
+    ui->lbServer->setStyleSheet("QLabel { color: #B178FF }");
+    ui->lbGuild->setStyleSheet("QLabel { color: #00B700 }");
+    ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
+
+    // Item
+    ui->vLayoutEquip->setAlignment(Qt::AlignTop);
+    ui->vLayoutAccessory->setAlignment(Qt::AlignTop);
+    ui->vLayoutOther->setAlignment(Qt::AlignTop);
+
+    // Card
+    ui->vLayoutCard->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 }
 
 void Profile::initConnect()
 {
     connect(ui->pbSearch, SIGNAL(pressed()), this, SLOT(slotProfileRequest()));
     connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(slotProfileRequest()));
-    connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
-    connect(mNetworkIconEquip, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconEquip(QNetworkReply*)));
-    connect(mNetworkIconGem, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconGem(QNetworkReply*)));
-    connect(mNetworkIconSkill, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSetIconSkill(QNetworkReply*)));
     connect(ui->pbCharacterList, SIGNAL(pressed()), this, SLOT(slotShowCharacterList()));
+    connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
+
+    connect(this, SIGNAL(sigUpdateTitle()), this, SLOT(slotUpdateTitle()));
+    connect(this, SIGNAL(sigUpdateItem()), this, SLOT(slotUpdateItem()));
+    connect(this, SIGNAL(sigUpdateGem()), this, SLOT(slotUpdateGem()));
+    connect(this, SIGNAL(sigUpdateEngrave()), this, SLOT(slotUpdateEngrave()));
+    connect(this, SIGNAL(sigUpdateCard()), this, SLOT(slotUpdateCard()));
+    connect(this, SIGNAL(sigUpdateSkill()), this, SLOT(slotUpdateSkill()));
 }
 
-// 중첩구조인 json 객체로부터 최종 value를 추출
-QVariant Profile::getValueFromJson(const QJsonObject& src, QStringList keys)
-{
-    QJsonObject obj = src;
-
-    for (int i = 0; i < keys.size() - 1; i++)
-    {
-        obj = obj.find(keys[i])->toObject();
-    }
-    return obj.find(keys.last())->toVariant();
-}
-
-void Profile::parseTitle(QString& profile)
+void Profile::parseTitle(const QString& profile)
 {
     qsizetype startIndex, endIndex;
 
@@ -237,10 +120,10 @@ void Profile::parseTitle(QString& profile)
     parseCharacterList(profile);
     parseGuildName(profile);
 
-    updateTitle();
+    emit sigUpdateTitle();
 }
 
-void Profile::parseCharacterList(QString &profile)
+void Profile::parseCharacterList(const QString &profile)
 {
     qsizetype serverIndexStart = profile.indexOf("profile-character-list__server");
     qsizetype serverIndexEnd = 0;
@@ -275,7 +158,7 @@ void Profile::parseCharacterList(QString &profile)
     }
 }
 
-void Profile::parseGuildName(QString &profile)
+void Profile::parseGuildName(const QString &profile)
 {
     qsizetype indexStart = profile.indexOf("game-info__guild");
     indexStart = profile.indexOf("<span>", indexStart) + 1;
@@ -287,43 +170,27 @@ void Profile::parseGuildName(QString &profile)
     mCharacter->setGuild(profile.sliced(indexStart, indexEnd - indexStart));
 }
 
-// 장비 정보 추출 (무기, 방어구, 악세, 어빌리티 스톤, 팔찌)
-void Profile::parseEquip()
+void Profile::parseItem()
 {
-    const QJsonObject& equip = mProfile->find("Equip")->toObject();
-    const QStringList& tempKeys = equip.keys();
-    QStringList keys;
+    const QJsonObject& obj = mProfile->find("Equip")->toObject();
 
-    // 장비류 key값 parsing
-    for (const QString& key : tempKeys)
+    const QStringList& objKeys = obj.keys();
+    // gem(보석 아이템)만 구분하여 item key 추출
+    QStringList keys;
+    QStringList gemKeys;
+    for (const QString& key : objKeys)
     {
         if (key.contains("Gem"))
-            continue;
-        keys << key;
+            gemKeys << key;
+        else
+            keys << key;
     }
 
-    QStringList nameKeys;
-    nameKeys << "Element_000" << "value";
-    QStringList iconKeys;
-    iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
-    QStringList qualKeys;
-    qualKeys << "Element_001" << "value" << "qualityValue";
-    QStringList engraveKeys_0;
-    engraveKeys_0 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_000" << "contentStr";
-    QStringList engraveKeys_1;
-    engraveKeys_1 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_001" << "contentStr";
-    QStringList engraveKeys_2;
-    engraveKeys_2 << "Element_006" << "value" << "Element_000" << "contentStr" << "Element_002" << "contentStr";
-    QStringList levelKeys;
-    levelKeys << "Element_001" << "value" << "leftStr2";
-    QStringList setKeys;
-    setKeys << "Element_008" << "value" << "Element_001";
-    QStringList attrKeys;
-    attrKeys << "Element_005" << "value" << "Element_001";
-
-    double itemLevel = 0;
+    // item parsing
     for (const QString& key : keys)
     {
+        const QJsonObject& itemObj = obj.find(key)->toObject();
+
         if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
             key.endsWith("0" + QString::number(static_cast<int>(Part::HEAD))) ||
             key.endsWith("0" + QString::number(static_cast<int>(Part::TOP))) ||
@@ -331,34 +198,8 @@ void Profile::parseEquip()
             key.endsWith("0" + QString::number(static_cast<int>(Part::HAND))) ||
             key.endsWith("0" + QString::number(static_cast<int>(Part::SHOULDER))))
         {
-            const QJsonObject& obj = equip.find(key)->toObject();
-
-            QString name = getValueFromJson(obj, nameKeys).toString();
-            QString level = getValueFromJson(obj, levelKeys).toString();
-            int quality = getValueFromJson(obj, qualKeys).toInt();
-            QString set = getValueFromJson(obj, setKeys).toString();
-            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
-
-            name = name.remove(mHtmlTag);
-            level = level.remove(mHtmlTag);
-            set = set.remove(mHtmlTag);
-
             Part part = static_cast<Part>(key.last(3).toInt());
-            Equip equip(part);
-            equip.setName(name);
-            equip.setGrade(getItemGrade(obj));
-            equip.setIconPath(iconPath);
-            equip.setLevelTier(level);
-            equip.setQuality(quality);
-            equip.setSetLevel(set);
-            mCharacter->setItemByPart(static_cast<const Item&>(equip), part);
-
-            mPathParts[iconPath].append(part);
-
-            // 아이템 level parsing
-            int startIndex = level.indexOf("레벨") + 3;
-            int endIndex = level.indexOf("(", startIndex) - 1;
-            itemLevel += level.sliced(startIndex, endIndex - startIndex).toDouble();
+            parseEquip(itemObj, part);
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::NECK))) ||
                  key.endsWith("0" + QString::number(static_cast<int>(Part::EAR1))) ||
@@ -366,176 +207,347 @@ void Profile::parseEquip()
                  key.endsWith("0" + QString::number(static_cast<int>(Part::RING1))) ||
                  key.endsWith("0" + QString::number(static_cast<int>(Part::RING2))))
         {
-            const QJsonObject& obj = equip.find(key)->toObject();
-
-            QString name = getValueFromJson(obj, nameKeys).toString();
-            int quality = getValueFromJson(obj, qualKeys).toInt();
-            QString attr = getValueFromJson(obj, attrKeys).toString();
-            QString engrave =
-                    getValueFromJson(obj, engraveKeys_0).toString() +
-                    getValueFromJson(obj, engraveKeys_1).toString() +
-                    getValueFromJson(obj, engraveKeys_2).toString();
-            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
-
-            name = name.remove(mHtmlTag);
-            engrave = engrave.replace("#FFFFAC", "#B9B919");
-
             Part part = static_cast<Part>(key.last(3).toInt());
-            Accessory acc(part);
-            acc.setName(name);
-            acc.setGrade(getItemGrade(obj));
-            acc.setIconPath(iconPath);
-            acc.setQuality(quality);
-            acc.setAttr(attr);
-            acc.setEngrave(engrave);
-            mCharacter->setItemByPart(static_cast<const Item&>(acc), part);
-
-            mPathParts[iconPath].append(part);
-            extractEngraveValue(engrave.remove(mHtmlTag));
+            parseAccessory(itemObj, part);
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::STONE))))
         {
-            const QJsonObject& obj = equip.find(key)->toObject();
-
-            QString name = getValueFromJson(obj, nameKeys).toString();
-            QString engrave;
-            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
-
-            name = name.remove(mHtmlTag);
-            // 각인 값의 key가 유동적
-            // 어느 key에 각인이 있는지 탐색후 값 추출
-            QStringList engraveKeys;
-            engraveKeys << "Element_005" << "value" << "Element_000";
-            if (getValueFromJson(obj, engraveKeys).toJsonObject().contains("contentStr"))
-            {
-                engraveKeys_0[0] = "Element_005";
-                engraveKeys_1[0] = "Element_005";
-                engraveKeys_2[0] = "Element_005";
-            }
-            engrave =
-                    getValueFromJson(obj, engraveKeys_0).toString() +
-                    getValueFromJson(obj, engraveKeys_1).toString() +
-                    getValueFromJson(obj, engraveKeys_2).toString();
-            engrave = engrave.replace("#FFFFAC", "#B9B919", Qt::CaseInsensitive);
-
-            Part part = static_cast<Part>(key.last(3).toInt());
-            AbilityStone stone;
-            stone.setName(name);
-            stone.setGrade(getItemGrade(obj));
-            stone.setIconPath(iconPath);
-            stone.setEngrave(engrave);
-            mCharacter->setItemByPart(static_cast<const Item&>(stone), part);
-
-            mPathParts[iconPath].append(part);
-            extractEngraveValue(engrave.remove(mHtmlTag));
+            parseStone(itemObj);
         }
         else if (key.endsWith("0" + QString::number(static_cast<int>(Part::BRACELET))))
         {
-            const QJsonObject& obj = equip.find(key)->toObject();
-
-            QStringList braceletEffectKeys;
-            braceletEffectKeys << "Element_004" << "value" << "Element_001";
-
-            QString name = getValueFromJson(obj, nameKeys).toString();
-            QString effect = getValueFromJson(obj, braceletEffectKeys).toString();
-            QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
-
-            name = name.remove(mHtmlTag);
-            effect = effect.remove(QRegularExpression("<img[^>]*>"));
-            effect = effect.replace("</img>", "-");
-            effect = effect.replace("#F9F7D0", "#B9B919", Qt::CaseInsensitive);
-            effect = effect.replace("#99FF99", "#0ADC64", Qt::CaseInsensitive);
-
-            Part part = static_cast<Part>(key.last(3).toInt());
-            Bracelet bracelet;
-            bracelet.setName(name);
-            bracelet.setGrade(getItemGrade(obj));
-            bracelet.setIconPath(iconPath);
-            bracelet.setEffect(effect);
-            mCharacter->setItemByPart(static_cast<const Item&>(bracelet), part);
-
-            mPathParts[iconPath].append(part);
+            parseBracelet(itemObj);
         }
     }
-    mCharacter->setItemLevel(itemLevel / 6);
+    emit sigUpdateItem();
 
-    updateEquip();
+    // gem parsing
+    for (const QString& key : gemKeys)
+    {
+        const QJsonObject& gemObj = obj.find(key)->toObject();
+        parseGem(gemObj);
+    }
+    emit sigUpdateGem();
 }
 
-// 보석 정보 추출
-void Profile::parseGem()
+void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 {
-    const QJsonObject& equip = mProfile->find("Equip")->toObject();
-    const QStringList& tempKeys = equip.keys();
-    QStringList keys;
+    Equip equip(part);
+    const QStringList& elementKeys = equipObj.keys();
 
-    // 장비류 key값 parsing
-    for (const QString& key : tempKeys)
+    int itemLevel = 0;
+    for (const QString& elementKey : elementKeys)
     {
-        if (key.contains("Gem"))
-            keys << key;
+        const QJsonObject& element = equipObj.find(elementKey)->toObject();
+        QString type = element.find("type")->toString();
+
+        if (type == "NameTagBox")
+        {
+            QString name = element.find("value")->toString().remove(mHtmlTag);
+            equip.setName(name);
+        }
+        else if (type == "ItemTitle")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            QString levelTier = valueObj.find("leftStr2")->toString().remove(mHtmlTag);
+            int quality = valueObj.find("qualityValue")->toInt();
+            QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
+            equip.setGrade(grade);
+            equip.setLevelTier(levelTier);
+            equip.setQuality(quality);
+            equip.setIconPath(iconPath);
+
+            qsizetype indexStart = levelTier.indexOf("아이템 레벨") + 7;
+            qsizetype indexEnd = levelTier.indexOf("(");
+            itemLevel = levelTier.sliced(indexStart, indexEnd - indexStart).toInt();
+        }
+        else if (type == "ItemPartBox")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            if (valueObj.find("Element_000")->toString().contains("세트 효과 레벨"))
+            {
+                QString setLevel = valueObj.find("Element_001")->toString().remove(mHtmlTag);
+                equip.setSetLevel(setLevel);
+            }
+        }
     }
 
-    QStringList nameKeys;
-    nameKeys << "Element_000" << "value";
-    QStringList iconKeys;
-    iconKeys << "Element_001" << "value" << "slotData" << "iconPath";
-    QStringList levelKeys;
-    levelKeys << "Element_001" << "value" << "slotData" << "rtString";
-    QStringList attrKeys;
-    attrKeys << "Element_004" << "value" << "Element_001";
-
-    for (int i = 0; i < keys.size(); i++)
-    {
-        const QJsonObject& obj = equip.find(keys[i])->toObject();
-
-        QString name = getValueFromJson(obj, nameKeys).toString();
-        QString iconPath = "/" + getValueFromJson(obj, iconKeys).toString();
-        QString level = getValueFromJson(obj, levelKeys).toString();
-        QString attr = getValueFromJson(obj, attrKeys).toString();
-
-        name = name.remove(mHtmlTag);
-        attr = attr.replace("#FFD200", "#B9B919", Qt::CaseInsensitive);
-
-        Gem gem;
-        gem.setName(name);
-        gem.setGrade(getItemGrade(obj));
-        gem.setIconPath(iconPath);
-        gem.setLevel(level);
-        gem.setAttr(attr);
-        mCharacter->addGem(gem);
-
-        mGemPathIndex[iconPath].append(i);
-    }
-
-    updateGem();
+    mCharacter->setItem(static_cast<const Item&>(equip));
+    mCharacter->addItemLevel(itemLevel);
 }
 
-// 각인 정보 추출
+void Profile::parseAccessory(const QJsonObject &accObj, Part part)
+{
+    Accessory acc(part);
+    const QStringList& elementKeys = accObj.keys();
+
+    for (const QString& elementKey : elementKeys)
+    {
+        const QJsonObject& element = accObj.find(elementKey)->toObject();
+        QString type = element.find("type")->toString();
+
+        if (type == "NameTagBox")
+        {
+            QString name = element.find("value")->toString().remove(mHtmlTag);
+            acc.setName(name);
+        }
+        else if (type == "ItemTitle")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            int quality = valueObj.find("qualityValue")->toInt();
+            QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
+            acc.setGrade(grade);
+            acc.setQuality(quality);
+            acc.setIconPath(iconPath);
+        }
+        else if (type == "ItemPartBox")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            if (valueObj.find("Element_000")->toString().contains("추가 효과"))
+            {
+                QString attr = valueObj.find("Element_001")->toString();
+                acc.setAttr(attr);
+            }
+        }
+        else if (type == "IndentStringGroup")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject().find("Element_000")->toObject();
+
+            if (valueObj.find("topStr")->toString().contains("각인"))
+            {
+                const QJsonObject& engraves = valueObj.find("contentStr")->toObject();
+                const QStringList& engraveKeys = engraves.keys();
+
+                for (const QString& engraveKey : engraveKeys)
+                {
+                    const QJsonObject& engraveObj = engraves.find(engraveKey)->toObject();
+
+                    QString engrave = engraveObj.find("contentStr")->toString();
+                    engrave.replace("#FFFFAC", "#B9B919");
+                    if (engrave.contains("감소"))
+                    {
+                        acc.setPenalty(engrave);
+                        extractEngraveValue(1, engrave);
+                    }
+                    else
+                    {
+                        acc.addEngrave(engrave);
+                        extractEngraveValue(0, engrave);
+                    }
+                }
+            }
+        }
+    }
+
+    mCharacter->setItem(static_cast<const Item&>(acc));
+}
+
+void Profile::parseStone(const QJsonObject &stoneObj)
+{
+    AbilityStone stone;
+    const QStringList& elementKeys = stoneObj.keys();
+
+    for (const QString& elementKey : elementKeys)
+    {
+        const QJsonObject& element = stoneObj.find(elementKey)->toObject();
+        QString type = element.find("type")->toString();
+
+        if (type == "NameTagBox")
+        {
+            QString name = element.find("value")->toString().remove(mHtmlTag);
+            stone.setName(name);
+        }
+        else if (type == "ItemTitle")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
+            stone.setGrade(grade);
+            stone.setIconPath(iconPath);
+        }
+        else if (type == "IndentStringGroup")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject().find("Element_000")->toObject();
+
+            if (valueObj.find("topStr")->toString().contains("각인"))
+            {
+                const QJsonObject& engraves = valueObj.find("contentStr")->toObject();
+                const QStringList& engraveKeys = engraves.keys();
+
+                for (const QString& engraveKey : engraveKeys)
+                {
+                    const QJsonObject& engraveObj = engraves.find(engraveKey)->toObject();
+
+                    QString engrave = engraveObj.find("contentStr")->toString();
+                    engrave.replace("#FFFFAC", "#B9B919");
+                    if (engrave.contains("감소"))
+                    {
+                        stone.setPenalty(engrave);
+                        extractEngraveValue(1, engrave);
+                    }
+                    else
+                    {
+                        stone.addEngrave(engrave);
+                        extractEngraveValue(0, engrave);
+                    }
+                }
+            }
+        }
+    }
+
+    mCharacter->setItem(static_cast<const Item&>(stone));
+}
+
+void Profile::parseBracelet(const QJsonObject &braceletObj)
+{
+    Bracelet bracelet;
+    const QStringList& elementKeys = braceletObj.keys();
+
+    for (const QString& elementKey : elementKeys)
+    {
+        const QJsonObject& element = braceletObj.find(elementKey)->toObject();
+        QString type = element.find("type")->toString();
+
+        if (type == "NameTagBox")
+        {
+            QString name = element.find("value")->toString().remove(mHtmlTag);
+            bracelet.setName(name);
+        }
+        else if (type == "ItemTitle")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
+            bracelet.setGrade(grade);
+            bracelet.setIconPath(iconPath);
+        }
+        else if (type == "ItemPartBox")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            if (valueObj.find("Element_000")->toString().contains("팔찌 효과"))
+            {
+                QString effect = valueObj.find("Element_001")->toString();
+                effect = effect.remove(QRegularExpression("<img[^>]*>"));
+                effect = effect.replace("</img>", "-");
+                effect = effect.replace("#F9F7D0", "#B9B919", Qt::CaseInsensitive);
+                effect = effect.replace("#99FF99", "#0ADC64", Qt::CaseInsensitive);
+                bracelet.setEffect(effect);
+            }
+        }
+    }
+
+    mCharacter->setItem(static_cast<const Item&>(bracelet));
+}
+
+void Profile::parseGem(const QJsonObject &gemObj)
+{
+    Gem gem;
+    const QStringList& elementKeys = gemObj.keys();
+
+    for (const QString& elementKey : elementKeys)
+    {
+        const QJsonObject& element = gemObj.find(elementKey)->toObject();
+        QString type = element.find("type")->toString();
+
+        if (type == "NameTagBox")
+        {
+            QString name = element.find("value")->toString().remove(mHtmlTag);
+            gem.setName(name);
+        }
+        else if (type == "ItemTitle")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
+            int level = valueObj.find("slotData")->toObject().find("rtString")->toString().remove("Lv.").toInt();
+            gem.setGrade(grade);
+            gem.setIconPath(iconPath);
+            gem.setLevel(level);
+        }
+        else if (type == "ItemPartBox")
+        {
+            const QJsonObject& valueObj = element.find("value")->toObject();
+
+            if (valueObj.find("Element_000")->toString().contains("효과"))
+            {
+                QString effect = valueObj.find("Element_001")->toString().remove(mHtmlTag);
+                effect = effect.replace("#FFD200", "#B9B919", Qt::CaseInsensitive);
+                gem.setEffect(effect);
+            }
+        }
+    }
+
+    mCharacter->addGem(gem);
+}
+
 void Profile::parseEngrave()
 {
-    const QJsonObject& engrave = mProfile->find("Engrave")->toObject();
-    QStringList keys = engrave.keys();
+    const QJsonObject& obj = mProfile->find("Engrave")->toObject();
+    const QStringList& objKeys = obj.keys();
 
-    QStringList nameKeys;
-    nameKeys << "Element_000" << "value";
-    QStringList valueKeys;
-    valueKeys << "Element_001" << "value" << "leftText";
-
-    for (const QString& key : keys)
+    // 장착 각인 parsing
+    for (const QString& objKey : objKeys)
     {
-        const QJsonObject& obj = engrave.find(key)->toObject();
+        const QJsonObject& engraveObj = obj.find(objKey)->toObject();
+        const QStringList& elementKeys = engraveObj.keys();
 
-        QString name = getValueFromJson(obj, nameKeys).toString();
-        QString valueStr = getValueFromJson(obj, valueKeys).toString();
+        QString name;
+        int value = 0;
+        for (const QString& elementKey : elementKeys)
+        {
+            const QJsonObject& element = engraveObj.find(elementKey)->toObject();
+            QString type = element.find("type")->toString();
 
-        valueStr = valueStr.remove(mHtmlTag);
-        int value = valueStr.remove("각인 활성 포인트 +").toInt();
-
+            if (type == "NameTagBox")
+            {
+                name = element.find("value")->toString();
+            }
+            else if (type == "EngraveSkillTitle")
+            {
+                value = element.find("value")->toObject().find("leftText")->toString()
+                        .remove(mHtmlTag).remove("각인 활성 포인트 +").toInt();
+            }
+        }
         mCharacter->addEngrave(name, value);
     }
 
-    updateEngrave();
+    emit sigUpdateEngrave();
+}
+
+void Profile::parseCard()
+{
+    const QJsonObject& cardSetObj = mProfile->find("CardSet")->toObject();
+    QStringList keys = cardSetObj.keys();
+
+    CardSet cardSet;
+    for (const QString& key : keys)
+    {
+        const QJsonObject& obj = cardSetObj.find(key)->toObject();
+        for (int i = 0; i < 6; i++)
+        {
+            QString effectKey = QString("Effect_00%1").arg(i);
+            auto iter = obj.find(effectKey);
+            if (iter == obj.end())
+                break;
+
+            const QJsonObject& content = iter->toObject();
+            cardSet.addTitle(content.find("title")->toString());
+            cardSet.addDesc(content.find("desc")->toString());
+        }
+    }
+
+    mCharacter->setCardSet(cardSet);
+    emit sigUpdateCard();
 }
 
 void Profile::parseSkill()
@@ -558,7 +570,6 @@ void Profile::parseSkill()
             const QJsonObject& data = obj.find(element)->toObject();
             QString type = data.find("type")->toString();
 
-
             if (type == "NameTagBox")
             {
                 QString name = data.find("value")->toString();
@@ -566,7 +577,8 @@ void Profile::parseSkill()
             }
             else if (type == "CommonSkillTitle")
             {
-                QString iconPath = "/" + getValueFromJson(data, iconKeys).toString();
+                const QJsonObject& valueObj = data.find("value")->toObject();
+                QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
                 skill.setIconPath(iconPath);
             }
             else if (type == "SingleTextBox")
@@ -622,450 +634,64 @@ void Profile::parseSkill()
         }
     }
 
-    updateSkill();
+    emit sigUpdateSkill();
 }
 
-void Profile::parseCard()
+Grade Profile::extractGrade(QString str)
 {
-    const QJsonObject& cardSetObj = mProfile->find("CardSet")->toObject();
-    QStringList keys = cardSetObj.keys();
-
-    CardSet cardSet;
-    for (const QString& key : keys)
-    {
-        const QJsonObject& obj = cardSetObj.find(key)->toObject();
-        for (int i = 0; i < 6; i++)
-        {
-            QString effectKey = QString("Effect_00%1").arg(i);
-            auto iter = obj.find(effectKey);
-            if (iter == obj.end())
-                break;
-
-            const QJsonObject& content = iter->toObject();
-            cardSet.addTitle(content.find("title")->toString());
-            cardSet.addDesc(content.find("desc")->toString());
-        }
-    }
-
-    mCharacter->setCardSet(cardSet);
-    updateCard();
-}
-
-void Profile::extractEngraveValue(QString engrave)
-{
-    qsizetype start = 0;
-    qsizetype end = 0;
-    qsizetype from = 0;
-    QString name;
-    int value;
-
-    // 각인 이름, 값 추출 - 1
-    start = engrave.indexOf("[") + 1;
-    end = engrave.indexOf("]");
-    name = engrave.sliced(start, end - start);
-
-    start = engrave.indexOf("+") + 1;
-    // 예외처리1) 아이템 각인이 1줄밖에 없는 경우
-    if (start + 1 == engrave.size())
-    {
-        value = engrave[start].digitValue();
-        mCharacter->addEngrave(name, value);
-        return;
-    }
-
-    if (engrave[start + 1] == '[')
-        value = engrave[start].digitValue();
+    if (str.contains("고급"))
+        return Grade::UNCOMMON;
+    else if (str.contains("희귀"))
+        return Grade::RARE;
+    else if (str.contains("영웅"))
+        return Grade::EPIC;
+    else if (str.contains("전설"))
+        return Grade::LEGEND;
+    else if (str.contains("유물"))
+        return Grade::RELIC;
+    else if (str.contains("고대"))
+        return Grade::ANCIENT;
+    else if (str.contains("에스더"))
+        return Grade::ESTHER;
     else
-        value = engrave.sliced(start, 2).toInt();
-    mCharacter->addEngrave(name, value);
-
-    // 각인 이름, 값 추출 - 2
-    from = start + 1;
-    start = engrave.indexOf("[", from) + 1;
-    end = engrave.indexOf("]", from);
-    name = engrave.sliced(start, end - start);
-
-    start = engrave.indexOf("+", from) + 1;
-    if (engrave[start + 1] == '[')
-        value = engrave[start].digitValue();
-    else
-        value = engrave.sliced(start, 2).toInt();
-    mCharacter->addEngrave(name, value);
-
-    // 각인 이름, 값 추출 - 3 (Penalty)
-    from = start + 1;
-    start = engrave.indexOf("[", from) + 1;
-    end = engrave.indexOf("]", from);
-    name = engrave.sliced(start, end - start);
-
-    start = engrave.indexOf("+", from) + 1;
-    if (start == engrave.size() - 1)
-        value = engrave[start].digitValue();
-    else
-        value = engrave.sliced(start, 2).toInt();
-    mCharacter->addPenalty(name, value);
+        return Grade::NONE;
 }
 
-void Profile::updateTitle()
+void Profile::extractEngraveValue(int type, QString engrave)
 {
-    ui->lbClassLevel->setText(QString("%1 %2").arg(mCharacter->getClass(), mCharacter->getLevel()));
-    ui->lbName->setText(mCharacter->getName());
-    ui->lbServer->setText(mCharacter->getServer());
-    ui->lbServer->setStyleSheet("QLabel { color: #B178FF }");
-    ui->lbGuild->setText(mCharacter->getGuild());
-    ui->lbGuild->setStyleSheet("QLabel { color: #00B700 }");
-    ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
-    ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
-    ui->vLayoutTitle->setAlignment(Qt::AlignTop);
-}
+    int indexStart, indexEnd, engraveValue;
+    QString engraveName;
 
-void Profile::updateEquip()
-{
-    const int START_EQUIP = 0;
-    const int START_ACCESSORY = 6;
-    const int START_STONE = 11;
-    const int START_BRACELET = 26;
+    // 각인명 추출
+    indexStart = engrave.indexOf(">") + 1;
+    indexEnd = engrave.indexOf("</FONT>");
+    engraveName = engrave.sliced(indexStart, indexEnd - indexStart);
 
-    Part part;
-    // Equip
-    for (int i = START_EQUIP; i < START_ACCESSORY; i++)
-    {
-        part = static_cast<Part>(i);
-        const Equip& equip = static_cast<const Equip&>(mCharacter->getItemByPart(part));
+    // 각인값 추출
+    indexStart = engrave.indexOf("+") + 1;
+    indexEnd = engrave.indexOf("<BR>");
+    engraveValue = engrave.sliced(indexStart, indexEnd - indexStart).toInt();
 
-        requestIcon(mNetworkIconEquip, equip.getIconPath());
-        mPartName[part]->setText(equip.getName());
-        setNameColor(mPartName[part], equip.getGrade());
-        mPartQual[part]->setValue(equip.getQuality());
-        setQualityColor(part, equip.getQuality());
-        mPartLevel[part]->setText(equip.getLevelTier());
-        mPartSet[part]->setText(equip.getSetLevel());
-    }
-    // Accessory
-    for (int i = START_ACCESSORY; i < START_STONE; i++)
-    {
-        part = static_cast<Part>(i);
-        const Accessory& acc = static_cast<const Accessory&>(mCharacter->getItemByPart(part));
-
-        requestIcon(mNetworkIconEquip, acc.getIconPath());
-        mPartName[part]->setText(acc.getName());
-        setNameColor(mPartName[part], acc.getGrade());
-        mPartQual[part]->setValue(acc.getQuality());
-        setQualityColor(part, acc.getQuality());
-        mPartAttr[part]->setText(acc.getAttr());
-        mPartEngrave[part]->setText(acc.getEngrave());
-    }
-    // Ability Stone
-    part = static_cast<Part>(START_STONE);
-    const AbilityStone& stone = static_cast<const AbilityStone&>(mCharacter->getItemByPart(part));
-
-    requestIcon(mNetworkIconEquip, stone.getIconPath());
-    mPartName[part]->setText(stone.getName());
-    setNameColor(mPartName[part], stone.getGrade());
-    mPartEngrave[part]->setText(stone.getEngrave());
-
-    // Bracelet
-    part = static_cast<Part>(START_BRACELET);
-    const Bracelet& bracelet = static_cast<const Bracelet&>(mCharacter->getItemByPart(part));
-
-    requestIcon(mNetworkIconEquip, bracelet.getIconPath());
-    mPartName[part]->setText(bracelet.getName());
-    setNameColor(mPartName[part], bracelet.getGrade());
-    mPartAttr[part]->setText(bracelet.getEffect());
+    if (type == 0)
+        mCharacter->addEngrave(engraveName, engraveValue);
+    else
+        mCharacter->addPenalty(engraveName, engraveValue);
 }
 
 void Profile::updateGem()
 {
-    const QList<Gem>& gems = mCharacter->getGems();
+//    const QList<Gem>& gems = mCharacter->getGems();
 
-    for (int i = 0; i < gems.size(); i++)
-    {
-        const Gem& gem = gems[i];
+//    for (int i = 0; i < gems.size(); i++)
+//    {
+//        const Gem& gem = gems[i];
 
-        requestIcon(mNetworkIconGem, gem.getIconPath());
-        mGemNames[i]->setText(gem.getName());
-        setNameColor(mGemNames[i], gem.getGrade());
-        mGemLevels[i]->setText(gem.GetLevel());
-        mGemAttrs[i]->setText(gem.getAttr());
-    }
-}
-
-void Profile::updateEngrave()
-{
-    const Engrave& engrave = mCharacter->getEngrave();
-    QStringList engraveList = engrave.getActiveEngraveList();
-    QStringList penaltyList = engrave.getActivePenaltyList();
-
-    // level 3 -> 2 -> 1 순으로 ui 추가
-    for (int i = 3; i >= 1; i--)
-    {
-        for (const QString& engraveName : engraveList)
-        {
-            int value = engrave.getEngraveValue(engraveName);
-            int level = value / 5;
-            if (level != i)
-                continue;
-
-            QHBoxLayout* layout = new QHBoxLayout();
-
-            QLabel* lbIcon = new QLabel();
-            QLabel* lbName = new QLabel();
-            QLabel* lbLevel = new QLabel();
-            layout->addWidget(lbIcon);
-            layout->addWidget(lbName);
-            layout->addWidget(lbLevel);
-            mEngraveLabels.append(lbIcon);
-            mEngraveLabels.append(lbName);
-            mEngraveLabels.append(lbLevel);
-
-            lbName->setText(engraveName);
-            lbLevel->setText(QString("Lv. %1").arg(level));
-
-            QString iconPath = engrave.getEngravePath(engraveName);
-            QPixmap pixmap(iconPath);
-            lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            ui->vLayoutEngrave->addLayout(layout);
-            mEngraveLayouts.append(layout);
-
-            lbIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbName->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-            lbName->setMaximumHeight(50);
-            lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbLevel->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-            lbLevel->setMaximumHeight(50);
-        }
-
-        for (const QString& penalty : penaltyList)
-        {
-            int value = engrave.getPenaltyValue(penalty);
-            int level = value / 5;
-            if (level != i)
-                continue;
-
-            QHBoxLayout* layout = new QHBoxLayout();
-
-            QLabel* lbIcon = new QLabel();
-            QLabel* lbName = new QLabel();
-            QLabel* lbLevel = new QLabel();
-            layout->addWidget(lbIcon);
-            layout->addWidget(lbName);
-            layout->addWidget(lbLevel);
-            mEngraveLabels.append(lbIcon);
-            mEngraveLabels.append(lbName);
-            mEngraveLabels.append(lbLevel);
-
-            lbName->setText(penalty);
-            lbLevel->setText(QString("Lv. %1").arg(level));
-
-            QString iconPath = engrave.getPenaltyPath(penalty);
-            QPixmap pixmap(iconPath);
-            lbIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            ui->vLayoutPenalty->addLayout(layout);
-            mPenaltyLayouts.append(layout);
-
-            lbName->setStyleSheet("QLabel { color: red }");
-            lbLevel->setStyleSheet("QLabel { color: red }");
-            lbIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbName->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-            lbName->setMaximumHeight(50);
-            lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            lbLevel->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-            lbLevel->setMaximumHeight(50);
-        }
-    }
-}
-
-void Profile::updateSkill()
-{
-    const QList<Skill>& skills = mCharacter->getSkills();
-
-    for (const Skill& skill : skills)
-    {
-        QGroupBox* groupSkill = new QGroupBox();
-        mSkillGroupBoxes.append(groupSkill);
-        ui->vLayoutSkill->addWidget(groupSkill);
-
-        QHBoxLayout* hLayoutSkill = new QHBoxLayout();
-        mSkillLayouts.append(hLayoutSkill);
-        groupSkill->setLayout(hLayoutSkill);
-        hLayoutSkill->setAlignment(Qt::AlignLeft);
-
-        // 스킬 아이콘
-        QLabel* lbSkillIcon = new QLabel();
-        mSkillLabels.append(lbSkillIcon);
-        hLayoutSkill->addWidget(lbSkillIcon);
-        mSkillIconLabel[skill.getIconPath()] = lbSkillIcon;
-        requestIcon(mNetworkIconSkill, skill.getIconPath());
-
-        // 스킬명, 레벨
-        QLabel* lbSkillNameLevel = new QLabel(QString("%1 Lv.%2").arg(skill.getName()).arg(skill.getLevel()));
-        mSkillLabels.append(lbSkillNameLevel);
-        hLayoutSkill->addWidget(lbSkillNameLevel);
-        lbSkillNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-        lbSkillNameLevel->setFixedWidth(200);
-
-        // 트라이포드
-        QGroupBox* groupTripod = new QGroupBox("트라이포드");
-        mSkillGroupBoxes.append(groupTripod);
-        hLayoutSkill->addWidget(groupTripod);
-        groupTripod->setFont(QFont("나눔스퀘어 네오 regular", 10));
-        groupTripod->setFixedWidth(250);
-
-        QVBoxLayout* vLayoutTripod = new QVBoxLayout();
-        mSkillLayouts.append(vLayoutTripod);
-        groupTripod->setLayout(vLayoutTripod);
-
-        QList<Tripod> tripods = skill.getTripods();
-        for (int i = 0; i < tripods.size(); i++)
-        {
-            const Tripod& tripod = tripods[i];
-            QHBoxLayout* hLayoutTripod = new QHBoxLayout();
-            mSkillLayouts.append(hLayoutTripod);
-            vLayoutTripod->addLayout(hLayoutTripod);
-
-            QLabel* lbTripodNameLevel = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
-            mSkillLabels.append(lbTripodNameLevel);
-            hLayoutTripod->addWidget(lbTripodNameLevel);
-            lbTripodNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-            lbTripodNameLevel->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
-        }
-
-        // 룬
-        QGroupBox* groupRune = new QGroupBox("룬");
-        mSkillGroupBoxes.append(groupRune);
-        hLayoutSkill->addWidget(groupRune);
-        groupRune->setFont(QFont("나눔스퀘어 네오 regular", 10));
-        groupRune->setFixedWidth(200);
-
-        QHBoxLayout* hLayoutRune = new QHBoxLayout();
-        mSkillLayouts.append(hLayoutRune);
-        groupRune->setLayout(hLayoutRune);
-
-        QLabel* lbRuneIcon = new QLabel();
-        mSkillLabels.append(lbRuneIcon);
-        hLayoutRune->addWidget(lbRuneIcon);
-
-        const Rune* rune = skill.getRune();
-        if (rune != nullptr)
-        {
-            QPixmap pixmap(rune->getIconPath());
-            lbRuneIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
-            QLabel* lbRuneName = new QLabel(rune->getName());
-            mSkillLabels.append(lbRuneName);
-            hLayoutRune->addWidget(lbRuneName);
-            lbRuneName->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-            lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(getColorByGrade(rune->getGrade())));
-        }
-    }
-}
-
-void Profile::updateCard()
-{
-    const CardSet& cardSet = mCharacter->getCardSet();
-    qsizetype effectCount = cardSet.count();
-
-    for (int i = 0; i < effectCount; i++)
-    {
-        QVBoxLayout* layout = new QVBoxLayout();
-        mCardLayoutList.append(layout);
-
-        QLabel* lbTitle = new QLabel(cardSet.getTitle(i));
-        QLabel* lbDesc = new QLabel(cardSet.getDesc(i));
-        lbTitle->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-        lbDesc->setFont(QFont("나눔스퀘어 네오 Bold", 12));
-        lbTitle->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        lbDesc->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-        lbTitle->setStyleSheet("QLabel { color: #00B700 }");
-        lbTitle->setMaximumWidth(300);
-        lbDesc->setMinimumHeight(50);
-        lbDesc->setMaximumWidth(300);
-        lbDesc->setWordWrap(true);
-        mCardLabelList.append(lbTitle);
-        mCardLabelList.append(lbDesc);
-        layout->addWidget(lbTitle);
-        layout->addWidget(lbDesc);
-
-        ui->vLayoutCard->addLayout(layout);
-    }
-}
-
-void Profile::requestIcon(QNetworkAccessManager* networkManager, QString iconPath)
-{
-    QNetworkRequest request((QUrl(PATH_CDN + iconPath)));
-    networkManager->get(request);
-}
-
-void Profile::setQualityColor(Part part, int quality)
-{
-    QString color;
-
-    if (quality == 100)
-        color = "#FE9600";
-    else if (quality >= 90)
-        color = "#CE43FC";
-    else if (quality >= 70)
-        color = "#00B5FF";
-    else if (quality >= 30)
-        color = "#00B700";
-    else if (quality >= 10)
-        color = "#FFD200";
-    else
-        color = "#FF6000";
-
-    QString style = QString("QProgressBar::chunk { background-color: %1 }").arg(color);
-    mPartQual[part]->setStyleSheet(style);
-}
-
-void Profile::setNameColor(QLabel* label, Grade grade)
-{
-    QString color;
-
-    if (grade == Grade::UNCOMMON)
-        color = "#8DF901";
-    else if (grade == Grade::RARE)
-        color = "#00B0FA";
-    else if (grade == Grade::EPIC)
-        color = "#CE43FC";
-    else if (grade == Grade::LEGEND)
-        color = "#F99200";
-    else if (grade == Grade::RELIC)
-        color = "#FA5D00";
-    else if (grade == Grade::ANCIENT)
-        color = "#E3C7A1";
-    else if (grade == Grade::ESTHER)
-        color = "#3CF2E6";
-
-    QString style = QString("QLabel { color: %1 }").arg(color);
-    label->setStyleSheet(style);
-    label->setFont(QFont("나눔스퀘어 네오 ExtraBold", 10));
-}
-
-Grade Profile::getItemGrade(const QJsonObject& obj)
-{
-    QStringList keys;
-    keys << "Element_001" << "value" << "leftStr0";
-
-    QString itemCategory = getValueFromJson(obj, keys).toString();
-
-    if (itemCategory.contains("고급"))
-        return Grade::UNCOMMON;
-    else if (itemCategory.contains("희귀"))
-        return Grade::RARE;
-    else if (itemCategory.contains("영웅"))
-        return Grade::EPIC;
-    else if (itemCategory.contains("전설"))
-        return Grade::LEGEND;
-    else if (itemCategory.contains("유물"))
-        return Grade::RELIC;
-    else if (itemCategory.contains("고대"))
-        return Grade::ANCIENT;
-    else if (itemCategory.contains("에스더"))
-        return Grade::ESTHER;
-    else
-        return Grade::NONE;
+//        requestIcon(mNetworkIconGem, gem.getIconPath());
+//        mGemNames[i]->setText(gem.getName());
+//        setNameColor(mGemNames[i], gem.getGrade());
+//        //mGemLevels[i]->setText(gem.GetLevel());
+//        mGemAttrs[i]->setText(gem.getAttr());
+//    }
 }
 
 Grade Profile::getGradeByColor(QString color)
@@ -1088,32 +714,9 @@ Grade Profile::getGradeByColor(QString color)
         return Grade::NONE;
 }
 
-QString Profile::getColorByGrade(Grade grade)
-{
-    switch (grade)
-    {
-    case Grade::UNCOMMON:
-        return "#8DF901";
-    case Grade::RARE:
-        return "#00B0FA";
-    case Grade::EPIC:
-        return "#CE43FC";
-    case Grade::LEGEND:
-        return "#F99200";
-    case Grade::RELIC:
-        return "#FA5D00";
-    case Grade::ANCIENT:
-        return "#E3C7A1";
-    case Grade::ESTHER:
-        return "#3CF2E6";
-    case Grade::NONE:
-        return "#000000";
-    }
-}
-
 void Profile::clearAll()
 {
-    // 이전 캐릭터 정보 모두 초기화
+    // 이전 캐릭터 정보 초기화
     if (mCharacter != nullptr)
     {
         delete mCharacter;
@@ -1124,83 +727,48 @@ void Profile::clearAll()
         delete mCharacterList;
         mCharacterList = nullptr;
     }
-    mPathParts.clear();
-    mGemPathIndex.clear();
 
-    QList<Part> keys;
-    keys = mPartIcon.keys();
-    for (Part& key : keys)
-        mPartIcon[key]->clear();
+    for (EquipWidget* equipWidget : mEquipWidgets)
+    {
+        ui->vLayoutEquip->removeWidget(equipWidget);
+        delete equipWidget;
+    }
+    mEquipWidgets.clear();
 
-    keys = mPartQual.keys();
-    for (Part& key : keys)
-        mPartQual[key]->reset();
+    for (AccWidget* accWidget : mAccWidgets)
+    {
+        ui->vLayoutAccessory->removeWidget(accWidget);
+        delete accWidget;
+    }
+    mAccWidgets.clear();
 
-    keys = mPartName.keys();
-    for (Part& key : keys)
-        mPartName[key]->clear();
+    if (mStoneWidget != nullptr)
+    {
+        ui->vLayoutAccessory->removeWidget(mStoneWidget);
+        delete mStoneWidget;
+        mStoneWidget = nullptr;
+    }
 
-    keys = mPartLevel.keys();
-    for (Part& key : keys)
-        mPartLevel[key]->clear();
+    if (mBraceletWidget != nullptr)
+    {
+        ui->vLayoutOther->removeWidget(mBraceletWidget);
+        delete mBraceletWidget;
+        mBraceletWidget = nullptr;
+    }
 
-    keys = mPartSet.keys();
-    for (Part& key : keys)
-        mPartSet[key]->clear();
+    if (mEngraveWidget != nullptr)
+    {
+        ui->vLayoutOther->removeWidget(mEngraveWidget);
+        delete mEngraveWidget;
+        mEngraveWidget = nullptr;
+    }
 
-    keys = mPartAttr.keys();
-    for (Part& key : keys)
-        mPartAttr[key]->clear();
-
-    keys = mPartEngrave.keys();
-    for (Part& key : keys)
-        mPartEngrave[key]->clear();
-
-    for (QLabel* label : mGemIcons)
-        label->clear();
-
-    for (QLabel* label : mGemLevels)
-        label->clear();
-
-    for (QLabel* label : mGemNames)
-        label->clear();
-
-    for (QLabel* label : mGemAttrs)
-        label->clear();
-
-    for (QLabel* label : mEngraveLabels)
-        delete label;
-    mEngraveLabels.clear();
-
-    for (QHBoxLayout* layout : mEngraveLayouts)
-        delete layout;
-    mEngraveLayouts.clear();
-
-    for (QHBoxLayout* layout : mPenaltyLayouts)
-        delete layout;
-    mPenaltyLayouts.clear();
-
-    for (QLabel* label : mCardLabelList)
-        delete label;
-    mCardLabelList.clear();
-
-    for (QVBoxLayout* layout : mCardLayoutList)
-        delete layout;
-    mCardLayoutList.clear();
-
-    for (QLabel* label : mSkillLabels)
-        delete label;
-    mSkillLabels.clear();
-
-    for (auto rIter = mSkillLayouts.rbegin(); rIter != mSkillLayouts.rend(); rIter++)
-        delete *rIter;
-    mSkillLayouts.clear();
-
-    for (auto rIter = mSkillGroupBoxes.rbegin(); rIter != mSkillGroupBoxes.rend(); rIter++)
-        delete *rIter;
-    mSkillGroupBoxes.clear();
-
-    mSkillIconLabel.clear();
+    for (CardLabel* cardLabel : mCardLabels)
+    {
+        ui->vLayoutCard->removeWidget(cardLabel);
+        delete cardLabel;
+    }
+    mCardLabels.clear();
 }
 
 void Profile::slotProfileRequest()
@@ -1241,7 +809,7 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         if (ui->groupTitle->isHidden())
             ui->groupTitle->show();
 
-        // Profile 정보 추출
+        // Profile 추출
         profileIndex += profileStart.size();
         profileSize = responseData.indexOf(profileEnd) - profileIndex + 1;
         const QString& profile = responseData.sliced(profileIndex, profileSize);
@@ -1249,84 +817,180 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
             delete mProfile;
         mProfile = new QJsonObject(QJsonDocument::fromJson(profile.toUtf8()).object());
 
+        // 기존 데이터 초기화
         clearAll();
-        // 추출 결과 parsing
         mCharacter = new Character();
         mCharacter->setName(ui->leName->text());
         ui->leName->clear();
         mCharacterList = new CharacterList(nullptr, this);
 
-        parseEquip();
-        parseGem();
+        // 추출 결과 parsing
+        parseItem();
         parseEngrave();
-        parseSkill();
         parseCard();
+        parseSkill();
         parseTitle(responseData);
     }
-}
-
-void Profile::slotSetIconEquip(QNetworkReply* reply)
-{
-    QPixmap icon;
-    bool load = icon.loadFromData(reply->readAll(), "PNG");
-    if (!load)
-    {
-        qDebug() << Q_FUNC_INFO << "Icon load fail";
-        return;
-    }
-
-    QString path = reply->url().path();
-    QList<Part> parts = mPathParts[path];
-    for (const Part& part : parts)
-    {
-        QLabel* iconLabel = mPartIcon[part];
-
-        iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        iconLabel->setFixedSize(50, 50);
-        iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
-    }
-}
-
-void Profile::slotSetIconGem(QNetworkReply* reply)
-{
-    QPixmap icon;
-    bool load = icon.loadFromData(reply->readAll(), "PNG");
-    if (!load)
-    {
-        qDebug() << Q_FUNC_INFO << "Icon load fail";
-        return;
-    }
-
-    QString path = reply->url().path();
-    QList<int> index = mGemPathIndex[path];
-    for (const int& i : index)
-    {
-        QLabel* iconLabel = mGemIcons[i];
-
-        iconLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        iconLabel->setFixedSize(50, 50);
-        iconLabel->setStyleSheet("QLabel { border: 1px solid black }");
-    }
-}
-
-void Profile::slotSetIconSkill(QNetworkReply *reply)
-{
-    QPixmap icon;
-    bool load = icon.loadFromData(reply->readAll(), "PNG");
-    if (!load)
-    {
-        qDebug() << Q_FUNC_INFO << "Icon load fail";
-        return;
-    }
-
-    QString path = reply->url().path();
-    QLabel* label = mSkillIconLabel[path];
-    label->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    label->setFixedSize(50, 50);
 }
 
 void Profile::slotShowCharacterList()
 {
     this->setDisabled(true);
     mCharacterList->show();
+}
+
+void Profile::slotUpdateTitle()
+{
+    ui->lbClassLevel->setText(QString("%1 %2").arg(mCharacter->getClass(), mCharacter->getLevel()));
+    ui->lbName->setText(mCharacter->getName());
+    ui->lbServer->setText(mCharacter->getServer());
+    ui->lbGuild->setText(mCharacter->getGuild());
+    ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
+}
+
+void Profile::slotUpdateItem()
+{
+    const int INDEX_EQUIP = static_cast<int>(Part::WEAPON);
+    const int INDEX_ACCESSORY = static_cast<int>(Part::NECK);
+    const int INDEX_STONE = static_cast<int>(Part::STONE);
+
+    Part part;
+    for (int i = INDEX_EQUIP; i < INDEX_ACCESSORY; i++)
+    {
+        part = static_cast<Part>(i);
+        const Equip& equip = static_cast<const Equip&>(mCharacter->getItemByPart(part));
+        EquipWidget* equipWidget = new EquipWidget(nullptr, &equip, PATH_CDN);
+        ui->vLayoutEquip->addWidget(equipWidget);
+        mEquipWidgets.append(equipWidget);
+    }
+
+    for (int i = INDEX_ACCESSORY; i < INDEX_STONE; i++)
+    {
+        part = static_cast<Part>(i);
+        const Accessory& acc = static_cast<const Accessory&>(mCharacter->getItemByPart(part));
+        AccWidget* accWidget = new AccWidget(nullptr, &acc, PATH_CDN);
+        ui->vLayoutAccessory->addWidget(accWidget);
+        mAccWidgets.append(accWidget);
+    }
+
+    part = Part::STONE;
+    const AbilityStone& stone = static_cast<const AbilityStone&>(mCharacter->getItemByPart(part));
+    AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(nullptr, &stone, PATH_CDN);
+    ui->vLayoutAccessory->addWidget(stoneWidget);
+    mStoneWidget = stoneWidget;
+
+    part = Part::BRACELET;
+    const Bracelet& bracelet = static_cast<const Bracelet&>(mCharacter->getItemByPart(part));
+    BraceletWidget* braceletWidget = new BraceletWidget(nullptr, &bracelet, PATH_CDN);
+    ui->vLayoutOther->addWidget(braceletWidget);
+    mBraceletWidget = braceletWidget;
+}
+
+void Profile::slotUpdateGem()
+{
+
+}
+
+void Profile::slotUpdateEngrave()
+{
+    EngraveWidget* engraveWidget = new EngraveWidget(nullptr, &mCharacter->getEngrave());
+    ui->vLayoutOther->addWidget(engraveWidget);
+    mEngraveWidget = engraveWidget;
+}
+
+void Profile::slotUpdateCard()
+{
+    const CardSet& cardSet = mCharacter->getCardSet();
+
+    for (int i = 0; i < cardSet.count(); i++)
+    {
+        CardLabel* cardLabel = new CardLabel(nullptr, cardSet.getTitle(i), cardSet.getDesc(i));
+        ui->vLayoutCard->addWidget(cardLabel);
+        mCardLabels.append(cardLabel);
+    }
+}
+
+void Profile::slotUpdateSkill()
+{
+//    const QList<Skill>& skills = mCharacter->getSkills();
+
+//    for (const Skill& skill : skills)
+//    {
+//        QGroupBox* groupSkill = new QGroupBox();
+//        mSkillGroupBoxes.append(groupSkill);
+//        ui->vLayoutSkill->addWidget(groupSkill);
+
+//        QHBoxLayout* hLayoutSkill = new QHBoxLayout();
+//        mSkillLayouts.append(hLayoutSkill);
+//        groupSkill->setLayout(hLayoutSkill);
+//        hLayoutSkill->setAlignment(Qt::AlignLeft);
+
+//        // 스킬 아이콘
+//        QLabel* lbSkillIcon = new QLabel();
+//        mSkillLabels.append(lbSkillIcon);
+//        hLayoutSkill->addWidget(lbSkillIcon);
+//        mSkillIconLabel[skill.getIconPath()] = lbSkillIcon;
+//        requestIcon(mNetworkIconSkill, skill.getIconPath());
+
+//        // 스킬명, 레벨
+//        QLabel* lbSkillNameLevel = new QLabel(QString("%1 Lv.%2").arg(skill.getName()).arg(skill.getLevel()));
+//        mSkillLabels.append(lbSkillNameLevel);
+//        hLayoutSkill->addWidget(lbSkillNameLevel);
+//        lbSkillNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+//        lbSkillNameLevel->setFixedWidth(200);
+
+//        // 트라이포드
+//        QGroupBox* groupTripod = new QGroupBox("트라이포드");
+//        mSkillGroupBoxes.append(groupTripod);
+//        hLayoutSkill->addWidget(groupTripod);
+//        groupTripod->setFont(QFont("나눔스퀘어 네오 regular", 10));
+//        groupTripod->setFixedWidth(250);
+
+//        QVBoxLayout* vLayoutTripod = new QVBoxLayout();
+//        mSkillLayouts.append(vLayoutTripod);
+//        groupTripod->setLayout(vLayoutTripod);
+
+//        QList<Tripod> tripods = skill.getTripods();
+//        for (int i = 0; i < tripods.size(); i++)
+//        {
+//            const Tripod& tripod = tripods[i];
+//            QHBoxLayout* hLayoutTripod = new QHBoxLayout();
+//            mSkillLayouts.append(hLayoutTripod);
+//            vLayoutTripod->addLayout(hLayoutTripod);
+
+//            QLabel* lbTripodNameLevel = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
+//            mSkillLabels.append(lbTripodNameLevel);
+//            hLayoutTripod->addWidget(lbTripodNameLevel);
+//            lbTripodNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+//            lbTripodNameLevel->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
+//        }
+
+//        // 룬
+//        QGroupBox* groupRune = new QGroupBox("룬");
+//        mSkillGroupBoxes.append(groupRune);
+//        hLayoutSkill->addWidget(groupRune);
+//        groupRune->setFont(QFont("나눔스퀘어 네오 regular", 10));
+//        groupRune->setFixedWidth(200);
+
+//        QHBoxLayout* hLayoutRune = new QHBoxLayout();
+//        mSkillLayouts.append(hLayoutRune);
+//        groupRune->setLayout(hLayoutRune);
+
+//        QLabel* lbRuneIcon = new QLabel();
+//        mSkillLabels.append(lbRuneIcon);
+//        hLayoutRune->addWidget(lbRuneIcon);
+
+//        const Rune* rune = skill.getRune();
+//        if (rune != nullptr)
+//        {
+//            QPixmap pixmap(rune->getIconPath());
+//            lbRuneIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+//            QLabel* lbRuneName = new QLabel(rune->getName());
+//            mSkillLabels.append(lbRuneName);
+//            hLayoutRune->addWidget(lbRuneName);
+//            lbRuneName->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+//            lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(getColorByGrade(rune->getGrade())));
+//        }
+//    }
 }

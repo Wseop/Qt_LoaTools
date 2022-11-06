@@ -15,9 +15,14 @@ QString Accessory::getAttr() const
     return mAttr;
 }
 
-QString Accessory::getEngrave() const
+const QStringList &Accessory::getEngraves() const
 {
-    return mEngrave;
+    return mEngraves;
+}
+
+QString Accessory::getPenalty() const
+{
+    return mPenalty;
 }
 
 void Accessory::setQuality(int quality)
@@ -30,7 +35,12 @@ void Accessory::setAttr(QString attr)
     mAttr = attr;
 }
 
-void Accessory::setEngrave(QString engrave)
+void Accessory::addEngrave(QString engrave)
 {
-    mEngrave = engrave;
+    mEngraves << engrave;
+}
+
+void Accessory::setPenalty(QString penalty)
+{
+    mPenalty = penalty;
 }

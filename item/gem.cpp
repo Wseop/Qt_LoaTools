@@ -5,7 +5,7 @@ Gem::Gem() : Item(Part::GEM)
 
 }
 
-QString Gem::GetLevel() const
+int Gem::GetLevel() const
 {
     return mLevel;
 }
@@ -15,7 +15,12 @@ QString Gem::getAttr() const
     return mAttr;
 }
 
-void Gem::setLevel(QString level)
+QString Gem::getEffect() const
+{
+    return mEffect;
+}
+
+void Gem::setLevel(int level)
 {
     mLevel = level;
 }
@@ -23,4 +28,9 @@ void Gem::setLevel(QString level)
 void Gem::setAttr(QString attr)
 {
     mAttr = attr;
+}
+
+void Gem::setEffect(QString effect)
+{
+    mEffect = effect;
 }

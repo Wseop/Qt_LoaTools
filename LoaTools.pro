@@ -26,7 +26,13 @@ SOURCES += \
     engrave.cpp \
     main.cpp \
     loatools.cpp \
-    profile/skill.cpp
+    profile/skill.cpp \
+    profile/ui/abilitystone_widget.cpp \
+    profile/ui/acc_widget.cpp \
+    profile/ui/bracelet_widget.cpp \
+    profile/ui/card_label.cpp \
+    profile/ui/engrave_widget.cpp \
+    profile/ui/equip_widget.cpp
 
 HEADERS += \
     auction_calc/auction_calc.h \
@@ -45,7 +51,13 @@ HEADERS += \
     profile/profile.h \
     engrave.h \
     loatools.h \
-    profile/skill.h
+    profile/skill.h \
+    profile/ui/abilitystone_widget.h \
+    profile/ui/acc_widget.h \
+    profile/ui/bracelet_widget.h \
+    profile/ui/card_label.h \
+    profile/ui/engrave_widget.h \
+    profile/ui/equip_widget.h
 
 FORMS += \
     auction_calc/auctioncalc.ui \
@@ -54,6 +66,12 @@ FORMS += \
     profile/character_list.ui \
     profile/profile.ui \
     loatools.ui \
+    profile/ui/abilitystone_widget.ui \
+    profile/ui/acc_widget.ui \
+    profile/ui/bracelet_widget.ui \
+    profile/ui/card_label.ui \
+    profile/ui/engrave_widget.ui \
+    profile/ui/equip_widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

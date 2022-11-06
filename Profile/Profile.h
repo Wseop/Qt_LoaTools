@@ -18,6 +18,13 @@ class QLayout;
 class QHBoxLayout;
 class QVBoxLayout;
 class QGroupBox;
+class QProgressBar;
+class QJsonObject;
+
+class QNetworkAccessManager;
+class QNetworkReply;
+
+class CharacterList;
 
 class Profile : public QWidget
 {
@@ -30,91 +37,79 @@ public:
     void profileRequest(QString name);
 
 private:
-    void initEngraveList();
     void initMap();
     void initUI();
     void initConnect();
 
-    QVariant getValueFromJson(const QJsonObject& src, QStringList keys);
+    void parseTitle(const QString& profile);
+    void parseCharacterList(const QString& profile);
+    void parseGuildName(const QString& profile);
 
-    void parseTitle(QString& profile);
-    void parseCharacterList(QString& profile);
-    void parseGuildName(QString& profile);
-    void parseEquip();
-    void parseGem();
+    void parseItem();
+    void parseEquip(const QJsonObject& equipObj, Part part);
+    void parseAccessory(const QJsonObject& accObj, Part part);
+    void parseStone(const QJsonObject& stoneObj);
+    void parseBracelet(const QJsonObject& braceletObj);
+    void parseGem(const QJsonObject& gemObj);
+
     void parseEngrave();
-    void parseSkill();
     void parseCard();
+    void parseSkill();
 
-    void extractEngraveValue(QString engrave);
+    Grade extractGrade(QString str);
+    void extractEngraveValue(int type, QString engrave);
 
-    void updateTitle();
     void updateEquip();
     void updateGem();
-    void updateEngrave();
-    void updateSkill();
-    void updateCard();
 
-    void requestIcon(class QNetworkAccessManager* networkManager, QString iconPath);
-    void setQualityColor(Part part, int quality);
-    void setNameColor(QLabel* label, Grade grade);
-    Grade getItemGrade(const QJsonObject& obj);
     Grade getGradeByColor(QString color);
-    QString getColorByGrade(Grade grade);
 
     void clearAll();
 
 private:
     Ui::Profile *ui;
-    class QNetworkAccessManager* mNetworkProfile = nullptr;
-    class QNetworkAccessManager* mNetworkIconEquip = nullptr;
-    class QNetworkAccessManager* mNetworkIconGem = nullptr;
-    class QNetworkAccessManager* mNetworkIconSkill = nullptr;
-    class QJsonObject* mProfile = nullptr;
-    class CharacterList* mCharacterList = nullptr;
+    QNetworkAccessManager* mNetworkProfile = nullptr;
+    QJsonObject* mProfile = nullptr;
+    CharacterList* mCharacterList = nullptr;
     Character* mCharacter = nullptr;
 
     QRegularExpression mHtmlTag;
 
-    // Part Map
-    QMap<Part, QLabel*> mPartIcon;
-    QMap<QString, QList<Part>> mPathParts;
-    QMap<Part, class QProgressBar*> mPartQual;
-    QMap<Part, QLabel*> mPartName;
-    QMap<Part, QLabel*> mPartLevel;
-    QMap<Part, QLabel*> mPartSet;
-    QMap<Part, QLabel*> mPartAttr;
-    QMap<Part, QLabel*> mPartEngrave;
+    // Item
+    QList<class EquipWidget*> mEquipWidgets;
+    QList<class AccWidget*> mAccWidgets;
+    class AbilityStoneWidget* mStoneWidget = nullptr;
+    class BraceletWidget* mBraceletWidget = nullptr;
 
-    // Gem Map
-    QList<QLabel*> mGemIcons;
-    QMap<QString, QList<int>> mGemPathIndex;
-    QList<QLabel*> mGemLevels;
-    QList<QLabel*> mGemNames;
-    QList<QLabel*> mGemAttrs;
+    // Gem
 
     // Engrave
-    QList<QLabel*> mEngraveLabels;
-    QList<QHBoxLayout*> mEngraveLayouts;
-    QList<QHBoxLayout*> mPenaltyLayouts;
+    class EngraveWidget* mEngraveWidget = nullptr;
 
     // Card
-    QList<QVBoxLayout*> mCardLayoutList;
-    QList<QLabel*> mCardLabelList;
+    QList<class CardLabel*> mCardLabels;
 
     // Skill
-    QList<QGroupBox*> mSkillGroupBoxes;
-    QList<QLayout*> mSkillLayouts;
-    QList<QLabel*> mSkillLabels;
-    QMap<QString, QLabel*> mSkillIconLabel;
+
+signals:
+    void sigUpdateTitle();
+    void sigUpdateItem();
+    void sigUpdateGem();
+    void sigUpdateEngrave();
+    void sigUpdateCard();
+    void sigUpdateSkill();
 
 private slots:
     void slotProfileRequest();
-    void slotExtractProfile(class QNetworkReply* reply);
-    void slotSetIconEquip(class QNetworkReply* reply);
-    void slotSetIconGem(class QNetworkReply* reply);
-    void slotSetIconSkill(class QNetworkReply* reply);
+    void slotExtractProfile(QNetworkReply* reply);
     void slotShowCharacterList();
+
+    void slotUpdateTitle();
+    void slotUpdateItem();
+    void slotUpdateGem();
+    void slotUpdateEngrave();
+    void slotUpdateCard();
+    void slotUpdateSkill();
 };
 
 #endif // PROFILE_H

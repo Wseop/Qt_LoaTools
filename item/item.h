@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include <QString>
+#include <QStringList>
 
 enum class Grade
 {
@@ -13,6 +14,17 @@ enum class Grade
     RELIC,
     ANCIENT,
     ESTHER,
+};
+
+static QStringList gItemColor = {
+    "#000000",
+    "#8DF901",
+    "#00B0FA",
+    "#CE43FC",
+    "#F99200",
+    "#FA5D00",
+    "#E3C7A1",
+    "#3CF2E6"
 };
 
 enum class Part

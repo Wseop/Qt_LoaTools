@@ -5,12 +5,22 @@ AbilityStone::AbilityStone() : Item(Part::STONE)
 
 }
 
-QString AbilityStone::getEngrave() const
+const QStringList &AbilityStone::getEngraves() const
 {
-    return mEngrave;
+    return mEngraves;
 }
 
-void AbilityStone::setEngrave(QString engrave)
+QString AbilityStone::getPenalty() const
 {
-    mEngrave = engrave;
+    return mPenalty;
+}
+
+void AbilityStone::addEngrave(QString engrave)
+{
+    mEngraves << engrave;
+}
+
+void AbilityStone::setPenalty(QString penalty)
+{
+    mPenalty = penalty;
 }

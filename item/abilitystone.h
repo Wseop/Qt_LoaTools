@@ -2,18 +2,22 @@
 #define ABILITYSTONE_H
 
 #include "item.h"
+#include <QStringList>
 
 class AbilityStone : public Item
 {
 public:
     AbilityStone();
 
-    QString getEngrave() const;
+    const QStringList& getEngraves() const;
+    QString getPenalty() const;
 
-    void setEngrave(QString engrave);
+    void addEngrave(QString engrave);
+    void setPenalty(QString penalty);
 
 private:
-    QString mEngrave;
+    QStringList mEngraves;
+    QString mPenalty;
 };
 
 #endif // ABILITYSTONE_H

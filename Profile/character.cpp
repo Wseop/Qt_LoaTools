@@ -1,7 +1,8 @@
 #include "character.h"
 
 Character::Character()
-    : mWeapon(Equip(Part::WEAPON)),
+    : mItemLevelTotal(0),
+      mWeapon(Equip(Part::WEAPON)),
       mHead(Equip(Part::HEAD)),
       mTop(Equip(Part::TOP)),
       mBottom(Equip(Part::BOTTOM)),
@@ -45,7 +46,7 @@ QString Character::getGuild()
 
 double Character::getItemLevel()
 {
-    return mItemLevel;
+    return (double)mItemLevelTotal / 6;
 }
 
 const CardSet& Character::getCardSet()
@@ -123,9 +124,9 @@ void Character::setGuild(QString guild)
     mGuild = guild;
 }
 
-void Character::setItemLevel(double itemLevel)
+void Character::addItemLevel(int itemLevel)
 {
-    mItemLevel = itemLevel;
+    mItemLevelTotal += itemLevel;
 }
 
 void Character::setCardSet(CardSet cardSet)
@@ -133,8 +134,10 @@ void Character::setCardSet(CardSet cardSet)
     mCardSet = cardSet;
 }
 
-void Character::setItemByPart(const Item& item, Part part)
+void Character::setItem(const Item& item)
 {
+    Part part = item.getPart();
+
     if (part == Part::WEAPON)
         mWeapon = static_cast<const Equip&>(item);
     else if (part == Part::HEAD)
@@ -176,11 +179,6 @@ void Character::addEngrave(QString name, int value)
 void Character::addPenalty(QString name, int value)
 {
     mEngrave.addPenalty(name, value);
-}
-
-void Character::setEngrave(Engrave engrave)
-{
-    mEngrave = engrave;
 }
 
 void Character::addSkill(const Skill &skill)

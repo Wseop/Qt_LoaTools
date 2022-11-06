@@ -34,15 +34,14 @@ public:
     void setLevel(QString level);
     void setServer(QString server);
     void setGuild(QString guild);
-    void setItemLevel(double itemLevel);
+    void addItemLevel(int itemLevel);
     void setCardSet(CardSet cardSet);
 
-    void setItemByPart(const Item& item, Part part);
+    void setItem(const Item& item);
     void addGem(const Gem& gem);
 
     void addEngrave(QString name, int value);
     void addPenalty(QString name, int value);
-    void setEngrave(Engrave engrave);
 
     void addSkill(const Skill& skill);
 
@@ -52,7 +51,7 @@ private:
     QString mLevel;
     QString mServer;
     QString mGuild;
-    double mItemLevel;
+    int mItemLevelTotal;
     CardSet mCardSet;
 
     Equip mWeapon;
