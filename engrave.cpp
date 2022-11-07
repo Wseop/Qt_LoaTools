@@ -12,7 +12,7 @@ Engrave::Engrave()
 void Engrave::loadEngraveList()
 {
     // 각인 리스트 초기화
-    QString filePath = QDir::currentPath() + "/resources/EngraveList.txt";
+    QString filePath = QDir::currentPath() + "/resources/engrave_list.txt";
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
