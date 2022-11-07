@@ -18,6 +18,7 @@ AuctionCalc::AuctionCalc(QWidget *parent) :
 
 AuctionCalc::~AuctionCalc()
 {
+    delete mIntValidator;
     delete ui;
 }
 

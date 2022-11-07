@@ -17,6 +17,7 @@ MeteorTimer::MeteorTimer(QWidget *parent) :
 
 MeteorTimer::~MeteorTimer()
 {
+    delete mTimer;
     delete ui;
 }
 
