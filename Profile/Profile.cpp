@@ -9,6 +9,8 @@
 #include "ui/abilitystone_widget.h"
 #include "ui/bracelet_widget.h"
 #include "ui/engrave_widget.h"
+#include "ui/gem_widget.h"
+#include "ui/skill_widget.h"
 
 #include <QMessageBox>
 #include <QUrl>
@@ -72,6 +74,7 @@ void Profile::initUI()
     ui->vLayoutEquip->setAlignment(Qt::AlignTop);
     ui->vLayoutAccessory->setAlignment(Qt::AlignTop);
     ui->vLayoutOther->setAlignment(Qt::AlignTop);
+    ui->vLayoutGem->setAlignment(Qt::AlignTop);
 
     // Card
     ui->vLayoutCard->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
@@ -483,7 +486,7 @@ void Profile::parseGem(const QJsonObject &gemObj)
 
             if (valueObj.find("Element_000")->toString().contains("효과"))
             {
-                QString effect = valueObj.find("Element_001")->toString().remove(mHtmlTag);
+                QString effect = valueObj.find("Element_001")->toString();
                 effect = effect.replace("#FFD200", "#B9B919", Qt::CaseInsensitive);
                 gem.setEffect(effect);
             }
@@ -557,9 +560,6 @@ void Profile::parseSkill()
 {
     const QJsonObject& skill = mProfile->find("Skill")->toObject();
     QStringList keys = skill.keys();
-
-    QStringList iconKeys;
-    iconKeys << "value" << "slotData" << "iconPath";
 
     for (const QString& key : keys)
     {
@@ -731,7 +731,7 @@ void Profile::clearAll()
 
     if (mStoneWidget != nullptr)
     {
-        ui->vLayoutAccessory->removeWidget(mStoneWidget);
+        ui->vLayoutOther->removeWidget(mStoneWidget);
         delete mStoneWidget;
         mStoneWidget = nullptr;
     }
@@ -750,12 +750,26 @@ void Profile::clearAll()
         mEngraveWidget = nullptr;
     }
 
+    for (GemWidget* gemWidget : mGemWidgets)
+    {
+        ui->vLayoutGem->removeWidget(gemWidget);
+        delete gemWidget;
+    }
+    mGemWidgets.clear();
+
     for (CardLabel* cardLabel : mCardLabels)
     {
         ui->vLayoutCard->removeWidget(cardLabel);
         delete cardLabel;
     }
     mCardLabels.clear();
+
+    for (SkillWidget* skillWidget : mSkillWidgets)
+    {
+        ui->vLayoutSkill->removeWidget(skillWidget);
+        delete skillWidget;
+    }
+    mSkillWidgets.clear();
 }
 
 void Profile::slotProfileRequest()
@@ -863,7 +877,7 @@ void Profile::slotUpdateItem()
     part = Part::STONE;
     const AbilityStone& stone = static_cast<const AbilityStone&>(mCharacter->getItemByPart(part));
     AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(nullptr, &stone, PATH_CDN);
-    ui->vLayoutAccessory->addWidget(stoneWidget);
+    ui->vLayoutOther->addWidget(stoneWidget);
     mStoneWidget = stoneWidget;
 
     part = Part::BRACELET;
@@ -875,7 +889,14 @@ void Profile::slotUpdateItem()
 
 void Profile::slotUpdateGem()
 {
+    const QList<Gem>& gems = mCharacter->getGems();
 
+    for (const Gem& gem : gems)
+    {
+        GemWidget* gemWidget = new GemWidget(nullptr, &gem, PATH_CDN);
+        ui->vLayoutGem->addWidget(gemWidget);
+        mGemWidgets.append(gemWidget);
+    }
 }
 
 void Profile::slotUpdateEngrave()
@@ -899,85 +920,12 @@ void Profile::slotUpdateCard()
 
 void Profile::slotUpdateSkill()
 {
-//    const QList<Skill>& skills = mCharacter->getSkills();
+    const QList<Skill>& skills = mCharacter->getSkills();
 
-//    for (const Skill& skill : skills)
-//    {
-//        QGroupBox* groupSkill = new QGroupBox();
-//        mSkillGroupBoxes.append(groupSkill);
-//        ui->vLayoutSkill->addWidget(groupSkill);
-
-//        QHBoxLayout* hLayoutSkill = new QHBoxLayout();
-//        mSkillLayouts.append(hLayoutSkill);
-//        groupSkill->setLayout(hLayoutSkill);
-//        hLayoutSkill->setAlignment(Qt::AlignLeft);
-
-//        // 스킬 아이콘
-//        QLabel* lbSkillIcon = new QLabel();
-//        mSkillLabels.append(lbSkillIcon);
-//        hLayoutSkill->addWidget(lbSkillIcon);
-//        mSkillIconLabel[skill.getIconPath()] = lbSkillIcon;
-//        requestIcon(mNetworkIconSkill, skill.getIconPath());
-
-//        // 스킬명, 레벨
-//        QLabel* lbSkillNameLevel = new QLabel(QString("%1 Lv.%2").arg(skill.getName()).arg(skill.getLevel()));
-//        mSkillLabels.append(lbSkillNameLevel);
-//        hLayoutSkill->addWidget(lbSkillNameLevel);
-//        lbSkillNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-//        lbSkillNameLevel->setFixedWidth(200);
-
-//        // 트라이포드
-//        QGroupBox* groupTripod = new QGroupBox("트라이포드");
-//        mSkillGroupBoxes.append(groupTripod);
-//        hLayoutSkill->addWidget(groupTripod);
-//        groupTripod->setFont(QFont("나눔스퀘어 네오 regular", 10));
-//        groupTripod->setFixedWidth(250);
-
-//        QVBoxLayout* vLayoutTripod = new QVBoxLayout();
-//        mSkillLayouts.append(vLayoutTripod);
-//        groupTripod->setLayout(vLayoutTripod);
-
-//        QList<Tripod> tripods = skill.getTripods();
-//        for (int i = 0; i < tripods.size(); i++)
-//        {
-//            const Tripod& tripod = tripods[i];
-//            QHBoxLayout* hLayoutTripod = new QHBoxLayout();
-//            mSkillLayouts.append(hLayoutTripod);
-//            vLayoutTripod->addLayout(hLayoutTripod);
-
-//            QLabel* lbTripodNameLevel = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
-//            mSkillLabels.append(lbTripodNameLevel);
-//            hLayoutTripod->addWidget(lbTripodNameLevel);
-//            lbTripodNameLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-//            lbTripodNameLevel->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
-//        }
-
-//        // 룬
-//        QGroupBox* groupRune = new QGroupBox("룬");
-//        mSkillGroupBoxes.append(groupRune);
-//        hLayoutSkill->addWidget(groupRune);
-//        groupRune->setFont(QFont("나눔스퀘어 네오 regular", 10));
-//        groupRune->setFixedWidth(200);
-
-//        QHBoxLayout* hLayoutRune = new QHBoxLayout();
-//        mSkillLayouts.append(hLayoutRune);
-//        groupRune->setLayout(hLayoutRune);
-
-//        QLabel* lbRuneIcon = new QLabel();
-//        mSkillLabels.append(lbRuneIcon);
-//        hLayoutRune->addWidget(lbRuneIcon);
-
-//        const Rune* rune = skill.getRune();
-//        if (rune != nullptr)
-//        {
-//            QPixmap pixmap(rune->getIconPath());
-//            lbRuneIcon->setPixmap(pixmap.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
-//            QLabel* lbRuneName = new QLabel(rune->getName());
-//            mSkillLabels.append(lbRuneName);
-//            hLayoutRune->addWidget(lbRuneName);
-//            lbRuneName->setFont(QFont("나눔스퀘어 네오 Bold", 10));
-//            lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(getColorByGrade(rune->getGrade())));
-//        }
-//    }
+    for (const Skill& skill : skills)
+    {
+        SkillWidget* skillWidget = new SkillWidget(nullptr, &skill, PATH_CDN);
+        ui->vLayoutSkill->addWidget(skillWidget);
+        mSkillWidgets.append(skillWidget);
+    }
 }

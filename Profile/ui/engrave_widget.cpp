@@ -82,7 +82,6 @@ QHBoxLayout* EngraveWidget::createEngraveLayout(QString iconPath, QString engrav
 
     QLabel* lbIcon = new QLabel();
     lbIcon->setFixedSize(50, 50);
-    lbIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     engraveLayout->addWidget(lbIcon);
     mLabels.append(lbIcon);
     QPixmap icon;

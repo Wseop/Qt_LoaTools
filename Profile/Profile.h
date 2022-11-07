@@ -71,18 +71,14 @@ private:
 
     QRegularExpression mHtmlTag;
 
-    // Item
     QList<class EquipWidget*> mEquipWidgets;
     QList<class AccWidget*> mAccWidgets;
     class AbilityStoneWidget* mStoneWidget = nullptr;
     class BraceletWidget* mBraceletWidget = nullptr;
-
-    // Gem
-
+    QList<class GemWidget*> mGemWidgets;
     class EngraveWidget* mEngraveWidget = nullptr;
     QList<class CardLabel*> mCardLabels;
-
-    // Skill
+    QList<class SkillWidget*> mSkillWidgets;
 
 signals:
     void sigUpdateTitle();

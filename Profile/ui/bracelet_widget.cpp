@@ -34,7 +34,6 @@ void BraceletWidget::requestIcon(QString iconUrl)
 
 void BraceletWidget::setText()
 {
-    ui->groupBracelet->setTitle("팔찌");
     ui->lbName->setText(mBracelet->getName());
     ui->lbEffect->setText(mBracelet->getEffect());
 }

@@ -32,7 +32,9 @@ SOURCES += \
     profile/ui/bracelet_widget.cpp \
     profile/ui/card_label.cpp \
     profile/ui/engrave_widget.cpp \
-    profile/ui/equip_widget.cpp
+    profile/ui/equip_widget.cpp \
+    profile/ui/gem_widget.cpp \
+    profile/ui/skill_widget.cpp
 
 HEADERS += \
     auction_calc/auction_calc.h \
@@ -57,7 +59,9 @@ HEADERS += \
     profile/ui/bracelet_widget.h \
     profile/ui/card_label.h \
     profile/ui/engrave_widget.h \
-    profile/ui/equip_widget.h
+    profile/ui/equip_widget.h \
+    profile/ui/gem_widget.h \
+    profile/ui/skill_widget.h
 
 FORMS += \
     auction_calc/auctioncalc.ui \
@@ -71,7 +75,9 @@ FORMS += \
     profile/ui/bracelet_widget.ui \
     profile/ui/card_label.ui \
     profile/ui/engrave_widget.ui \
-    profile/ui/equip_widget.ui
+    profile/ui/equip_widget.ui \
+    profile/ui/gem_widget.ui \
+    profile/ui/skill_widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
