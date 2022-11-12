@@ -287,7 +287,8 @@ void EngraveSimulator::slotUpdateResult()
         else if (mEngrave.isValidEngrave(engrave))
         {
             mEngrave.addEngrave(engrave, mEngraveSPBMap[i]->value());
-            addedEngraveList << engrave;
+            if (!addedEngraveList.contains(engrave))
+                addedEngraveList << engrave;
         }
         else
         {
