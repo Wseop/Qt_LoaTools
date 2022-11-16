@@ -10,18 +10,18 @@ public:
     Accessory(Part part);
 
     int getQuality() const;
-    QString getAttr() const;
+    QString getAbility() const;
     const QStringList& getEngraves() const;
     QString getPenalty() const;
 
     void setQuality(int quality);
-    void setAttr(QString attr);
+    void setAbility(QString ability);
     void addEngrave(QString engrave);
     void setPenalty(QString penalty);
 
 private:
     int mQuality;
-    QString mAttr;
+    QString mAbility;
     QStringList mEngraves;
     QString mPenalty;
 };

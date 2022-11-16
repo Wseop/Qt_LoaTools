@@ -10,9 +10,9 @@ int Accessory::getQuality() const
     return mQuality;
 }
 
-QString Accessory::getAttr() const
+QString Accessory::getAbility() const
 {
-    return mAttr;
+    return mAbility;
 }
 
 const QStringList &Accessory::getEngraves() const
@@ -30,9 +30,9 @@ void Accessory::setQuality(int quality)
     mQuality = quality;
 }
 
-void Accessory::setAttr(QString attr)
+void Accessory::setAbility(QString ability)
 {
-    mAttr = attr;
+    mAbility = ability;
 }
 
 void Accessory::addEngrave(QString engrave)

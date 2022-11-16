@@ -317,8 +317,8 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
 
             if (valueObj.find("Element_000")->toString().contains("추가 효과"))
             {
-                QString attr = valueObj.find("Element_001")->toString();
-                acc.setAttr(attr);
+                QString ability = valueObj.find("Element_001")->toString();
+                acc.setAbility(ability);
             }
         }
         else if (type == "IndentStringGroup")

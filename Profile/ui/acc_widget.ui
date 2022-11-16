@@ -144,7 +144,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbAttr">
+         <widget class="QLabel" name="lbAbility">
           <property name="font">
            <font>
             <family>나눔스퀘어 네오 Bold</family>
@@ -153,7 +153,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Attr</string>
+           <string>Ability</string>
           </property>
          </widget>
         </item>

@@ -46,7 +46,7 @@ void AccWidget::setText()
 
     ui->barQual->setValue(mAcc->getQuality());
     ui->lbName->setText(mAcc->getName());
-    ui->lbAttr->setText(mAcc->getAttr());
+    ui->lbAbility->setText(mAcc->getAbility());
 
     QString engraveText;
     const QStringList& engraves = mAcc->getEngraves();
