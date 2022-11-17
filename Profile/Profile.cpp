@@ -286,13 +286,17 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
     mCharacter->setItem(static_cast<const Item&>(equip));
     mCharacter->addItemLevel(itemLevel);
-    if (part != Part::WEAPON || (part == Part::WEAPON && equip.getGrade() != Grade::ESTHER))
+
+    if (equip.getSetLevel() != "")
     {
-        mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(part));
-    }
-    if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON).getGrade() == Grade::ESTHER)
-    {
-        mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+        if (part != Part::WEAPON || (part == Part::WEAPON && equip.getGrade() != Grade::ESTHER))
+        {
+            mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(part));
+        }
+        if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON).getGrade() == Grade::ESTHER)
+        {
+            mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+        }
     }
 }
 
