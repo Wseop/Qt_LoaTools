@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     auction_calc/auction_calc.cpp \
     engrave_simulator//engrave_simulator.cpp \
+    http_client/http_client.cpp \
+    http_client/json_builder.cpp \
     item/abilitystone.cpp \
     item/accessory.cpp \
     item/bracelet.cpp \
@@ -39,6 +41,9 @@ SOURCES += \
 HEADERS += \
     auction_calc/auction_calc.h \
     engrave_simulator/engrave_simulator.h \
+    enum/class.h \
+    http_client/http_client.h \
+    http_client/json_builder.h \
     item/abilitystone.h \
     item/accessory.h \
     item/bracelet.h \

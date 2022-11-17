@@ -2,6 +2,9 @@
 #include "ui_profile.h"
 #include "character_list.h"
 #include "card_set.h"
+#include "enum/class.h"
+#include "http_client/http_client.h"
+#include "http_client/json_builder.h"
 
 #include "ui/card_label.h"
 #include "ui/equip_widget.h"
@@ -283,6 +286,14 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
     mCharacter->setItem(static_cast<const Item&>(equip));
     mCharacter->addItemLevel(itemLevel);
+    if (part != Part::WEAPON || (part == Part::WEAPON && equip.getGrade() != Grade::ESTHER))
+    {
+        mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(part));
+    }
+    if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON).getGrade() == Grade::ESTHER)
+    {
+        mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+    }
 }
 
 void Profile::parseAccessory(const QJsonObject &accObj, Part part)
@@ -640,6 +651,52 @@ void Profile::parseSkill()
     emit sigUpdateSkill();
 }
 
+void Profile::updateDB()
+{
+    if (mCharacter->getItemLevel() >= (double)1490)
+    {
+        QString name = mCharacter->getName();
+        QString cls = enumClassKtoE(mCharacter->getClass());
+
+        // DB update - Character
+        emit HttpClient::getInstance()->insertOrUpdateCharacter(
+                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel(), mCharacter->getSetEffects()));
+
+        // DB update - Ability
+        QStringList neckAbilities, earAbilities, ringAbilities;
+        QString abilityStr;
+
+        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::NECK)).getAbility();
+        neckAbilities << abilityStr.sliced(0, 2);
+        neckAbilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
+        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::EAR1)).getAbility();
+        earAbilities << abilityStr.sliced(0, 2);
+        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::EAR2)).getAbility();
+        earAbilities << abilityStr.sliced(0, 2);
+        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::RING1)).getAbility();
+        ringAbilities << abilityStr.sliced(0, 2);
+        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::RING2)).getAbility();
+        ringAbilities << abilityStr.sliced(0, 2);
+
+        emit HttpClient::getInstance()->insertOrUpdateAbility(
+                    JsonBuilder::buildAbility(name, cls, neckAbilities, earAbilities, ringAbilities));
+
+        // DB update - Engrave
+        const Engrave& engraveObj = mCharacter->getEngrave();
+        QStringList engraves;
+        QList<int> engraveLevels;
+
+        engraves = engraveObj.getActiveEngraveList();
+        for (const QString& engrave : engraves)
+        {
+            engraveLevels.append(engraveObj.getEngraveValue(engrave) / 5);
+        }
+
+        emit HttpClient::getInstance()->insertOrUpdateEngrave(
+                    JsonBuilder::buildEngrave(name, cls, engraves, engraveLevels));
+    }
+}
+
 Grade Profile::extractGrade(QString str)
 {
     if (str.contains("고급"))
@@ -831,6 +888,8 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         parseCard();
         parseSkill();
         parseTitle(responseData);
+
+        updateDB();
     }
 }
 

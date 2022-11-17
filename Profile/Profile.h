@@ -55,6 +55,8 @@ private:
     void parseCard();
     void parseSkill();
 
+    void updateDB();
+
     Grade extractGrade(QString str);
     void extractEngraveValue(int type, QString engrave);
 

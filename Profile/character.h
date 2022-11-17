@@ -22,6 +22,7 @@ public:
     QString getGuild();
     double getItemLevel();
     const CardSet& getCardSet();
+    const QStringList& getSetEffects();
 
     const Item& getItemByPart(Part part);
     const QList<Gem>& getGems();
@@ -36,6 +37,7 @@ public:
     void setGuild(QString guild);
     void addItemLevel(int itemLevel);
     void setCardSet(CardSet cardSet);
+    void addSetEffect(QString setEffect, int index);
 
     void setItem(const Item& item);
     void addGem(const Gem& gem);
@@ -53,6 +55,7 @@ private:
     QString mGuild;
     int mItemLevelTotal;
     CardSet mCardSet;
+    QStringList mSetEffects;
 
     Equip mWeapon;
     Equip mHead;

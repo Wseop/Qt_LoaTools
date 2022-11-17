@@ -16,7 +16,7 @@ Character::Character()
       mStone(AbilityStone()),
       mBracelet(Bracelet())
 {
-
+    mSetEffects.resize(6);
 }
 
 QString Character::getName()
@@ -52,6 +52,11 @@ double Character::getItemLevel()
 const CardSet& Character::getCardSet()
 {
     return mCardSet;
+}
+
+const QStringList &Character::getSetEffects()
+{
+    return mSetEffects;
 }
 
 const QList<Gem> &Character::getGems()
@@ -132,6 +137,11 @@ void Character::addItemLevel(int itemLevel)
 void Character::setCardSet(CardSet cardSet)
 {
     mCardSet = cardSet;
+}
+
+void Character::addSetEffect(QString setEffect, int index)
+{
+    mSetEffects[index] = setEffect;
 }
 
 void Character::setItem(const Item& item)
