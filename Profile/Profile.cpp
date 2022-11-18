@@ -293,7 +293,12 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
         {
             mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(part));
         }
-        if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON)->getGrade() == Grade::ESTHER)
+
+        const Equip* weapon = static_cast<const Equip*>(mCharacter->getItemByPart(Part::WEAPON));
+        if (weapon == nullptr)
+            return;
+
+        if (part == Part::HAND && weapon->getGrade() == Grade::ESTHER)
         {
             mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
         }
@@ -659,59 +664,54 @@ void Profile::updateDB()
 {
     if (mCharacter->getItemLevel() >= (double)1490)
     {
+        // 미장착 슬롯 체크
+        const Equip* equip = nullptr;
+        for (int part = static_cast<int>(Part::WEAPON); part <= static_cast<int>(Part::SHOULDER); part++)
+        {
+            equip = static_cast<const Equip*>(mCharacter->getItemByPart(static_cast<Part>(part)));
+            if (equip == nullptr)
+                return;
+        }
+
+        // Name, Class
         QString name = mCharacter->getName();
         QString cls = enumClassKtoE(mCharacter->getClass());
 
-        QStringList neckAbilities, earAbilities, ringAbilities;
+        // Abilities
+        QStringList abilities;
         QString abilityStr;
         const Accessory* accessory = nullptr;
-
         accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::NECK));
-        // 장착하지 않은 아이템이 하나라도 존재하면 DB에 추가 X
         if (accessory == nullptr)
             return;
         abilityStr = accessory->getAbility();
-        neckAbilities << abilityStr.sliced(0, 2);
-        neckAbilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
-        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::EAR1));
-        if (accessory == nullptr)
-            return;
-        abilityStr = accessory->getAbility();
-        earAbilities << abilityStr.sliced(0, 2);
-        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::EAR2));
-        if (accessory == nullptr)
-            return;
-        abilityStr = accessory->getAbility();
-        earAbilities << abilityStr.sliced(0, 2);
-        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::RING1));
-        if (accessory == nullptr)
-            return;
-        abilityStr = accessory->getAbility();
-        ringAbilities << abilityStr.sliced(0, 2);
-        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::RING2));
-        if (accessory == nullptr)
-            return;
-        abilityStr = accessory->getAbility();
-        ringAbilities << abilityStr.sliced(0, 2);
-
-        const Engrave& engraveObj = mCharacter->getEngrave();
-        QStringList engraves;
-        QList<int> engraveLevels;
-        engraves = engraveObj.getActiveEngraveList();
-        for (const QString& engrave : engraves)
+        abilities << abilityStr.sliced(0, 2);
+        abilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
+        for (int part = static_cast<int>(Part::EAR1); part <= static_cast<int>(Part::RING2); part++)
         {
-            engraveLevels.append(engraveObj.getEngraveValue(engrave) / 5);
+            accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(static_cast<Part>(part)));
+            if (accessory == nullptr)
+                return;
+            abilityStr = accessory->getAbility();
+            abilities << abilityStr.sliced(0, 2);
+        }
+
+        // Engraves
+        const Engrave& engraveObj = mCharacter->getEngrave();
+        QStringList engraveNames;
+        QList<int> engraveLevels;
+        engraveNames = engraveObj.getActiveEngraveList();
+        for (const QString& engraveName : engraveNames)
+        {
+            engraveLevels.append(engraveObj.getEngraveValue(engraveName) / 5);
         }
 
         // DB update - Character
         emit HttpClient::getInstance()->insertOrUpdateCharacter(
-                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel(), mCharacter->getSetEffects()));
-        // DB update - Ability
-        emit HttpClient::getInstance()->insertOrUpdateAbility(
-                    JsonBuilder::buildAbility(name, cls, neckAbilities, earAbilities, ringAbilities));
-        // DB update - Engrave
-        emit HttpClient::getInstance()->insertOrUpdateEngrave(
-                    JsonBuilder::buildEngrave(name, cls, engraves, engraveLevels));
+                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel()));
+        // DB update - Setting
+        emit HttpClient::getInstance()->insertOrUpdateSetting(
+                    JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, mCharacter->getSetEffects()));
     }
 }
 

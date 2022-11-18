@@ -31,17 +31,21 @@ CharacterList::~CharacterList()
     QStringList keys = mNameButton.keys();
     for (QString& key : keys)
         delete mNameButton[key];
+    mNameButton.clear();
 
     for (QLabel* label : mLabelList)
         delete label;
+    mLabelList.clear();
 
     keys = mServerLayout.keys();
     for (QString& key : keys)
         delete mServerLayout[key];
+    mServerLayout.clear();
 
     keys = mNameTitle.keys();
     for (QString& key : keys)
         delete mNameTitle[key];
+    mNameTitle.clear();
 }
 
 void CharacterList::initConnect()
@@ -102,6 +106,10 @@ void CharacterList::movePos(GridPos &pos)
 void CharacterList::slotParseItemLevel(QNetworkReply* reply)
 {
     QString profile = reply->readAll();
+
+    // 존재하지 않는 캐릭터 skip
+    if (profile.indexOf("$.Profile = ") == -1)
+        return;
 
     QString itemLevel;
     qsizetype startIndex, endIndex;

@@ -7,9 +7,8 @@
 class JsonBuilder
 {
 public:
-    static QJsonDocument buildCharacter(QString name, QString cls, double level, const QStringList& setEffects);
-    static QJsonDocument buildAbility(QString name, QString cls, QStringList neck, QStringList ear, QStringList ring);
-    static QJsonDocument buildEngrave(QString name, QString cls, QStringList engraves, QList<int> levels);
+    static QJsonDocument buildCharacter(QString name, QString cls, double level);
+    static QJsonDocument buildSetting(QString name, QString cls, QStringList abilities, QStringList engraveNames, QList<int> engraveLevels, QStringList setEffects);
 };
 
 #endif // JSONBUILDER_H

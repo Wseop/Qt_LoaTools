@@ -13,12 +13,10 @@ HttpClient::HttpClient()
     loadConfig();
 
     connect(this, SIGNAL(insertOrUpdateCharacter(QJsonDocument)), this, SLOT(slotInsertOrUpdateCharacter(QJsonDocument)));
-    connect(this, SIGNAL(insertOrUpdateAbility(QJsonDocument)), this, SLOT(slotInsertOrUpdateAbility(QJsonDocument)));
-    connect(this, SIGNAL(insertOrUpdateEngrave(QJsonDocument)), this, SLOT(slotInsertOrUpdateEngrave(QJsonDocument)));
+    connect(this, SIGNAL(insertOrUpdateSetting(QJsonDocument)), this, SLOT(slotInsertOrUpdateSetting(QJsonDocument)));
 
     connect(&m_networkCharacter, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
-    connect(&m_networkAbility, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
-    connect(&m_networkEngrave, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
+    connect(&m_networkSetting, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
 }
 
 HttpClient::~HttpClient()
@@ -61,22 +59,13 @@ void HttpClient::slotInsertOrUpdateCharacter(QJsonDocument jsonDoc)
     m_networkCharacter.post(request, jsonDoc.toJson());
 }
 
-void HttpClient::slotInsertOrUpdateAbility(QJsonDocument jsonDoc)
+void HttpClient::slotInsertOrUpdateSetting(QJsonDocument jsonDoc)
 {
-    QString url = m_serverUrl + "/ability";
+    QString url = m_serverUrl + "/setting";
     QNetworkRequest request((QUrl(url)));
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_networkAbility.post(request, jsonDoc.toJson());
-}
-
-void HttpClient::slotInsertOrUpdateEngrave(QJsonDocument jsonDoc)
-{
-    QString url = m_serverUrl + "/engrave";
-    QNetworkRequest request((QUrl(url)));
-    request.setRawHeader("Content-Type", "application/json");
-    request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_networkEngrave.post(request, jsonDoc.toJson());
+    m_networkSetting.post(request, jsonDoc.toJson());
 }
 
 void HttpClient::slotHandleReply(QNetworkReply *reply)

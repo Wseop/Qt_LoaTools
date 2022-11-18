@@ -21,13 +21,11 @@ public:
 
 signals:
     void insertOrUpdateCharacter(QJsonDocument jsonDoc);
-    void insertOrUpdateAbility(QJsonDocument jsonDoc);
-    void insertOrUpdateEngrave(QJsonDocument jsonDoc);
+    void insertOrUpdateSetting(QJsonDocument jsonDoc);
 
 private slots:
     void slotInsertOrUpdateCharacter(QJsonDocument jsonDoc);
-    void slotInsertOrUpdateAbility(QJsonDocument jsonDoc);
-    void slotInsertOrUpdateEngrave(QJsonDocument jsonDoc);
+    void slotInsertOrUpdateSetting(QJsonDocument jsonDoc);
 
     void slotHandleReply(QNetworkReply* reply);
 
@@ -35,8 +33,7 @@ private:
     static HttpClient* m_pClient;
 
     QNetworkAccessManager m_networkCharacter;
-    QNetworkAccessManager m_networkAbility;
-    QNetworkAccessManager m_networkEngrave;
+    QNetworkAccessManager m_networkSetting;
 
     QString m_serverUrl;
     QString m_insertKey;
