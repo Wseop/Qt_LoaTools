@@ -238,7 +238,7 @@ void Profile::parseItem()
 
 void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 {
-    Equip equip(part);
+    Equip* equip = new Equip(part);
     const QStringList& elementKeys = equipObj.keys();
 
     int itemLevel = 0;
@@ -250,7 +250,7 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
         if (type == "NameTagBox")
         {
             QString name = element.find("value")->toString().remove(mHtmlTag);
-            equip.setName(name);
+            equip->setName(name);
         }
         else if (type == "ItemTitle")
         {
@@ -260,10 +260,10 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
             QString levelTier = valueObj.find("leftStr2")->toString().remove(mHtmlTag);
             int quality = valueObj.find("qualityValue")->toInt();
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
-            equip.setGrade(grade);
-            equip.setLevelTier(levelTier);
-            equip.setQuality(quality);
-            equip.setIconPath(iconPath);
+            equip->setGrade(grade);
+            equip->setLevelTier(levelTier);
+            equip->setQuality(quality);
+            equip->setIconPath(iconPath);
 
             qsizetype indexStart = levelTier.indexOf("아이템 레벨") + 7;
             qsizetype indexEnd = levelTier.indexOf("(");
@@ -279,30 +279,30 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
             if (valueObj.find("Element_000")->toString().contains("세트 효과 레벨"))
             {
                 QString setLevel = valueObj.find("Element_001")->toString().remove(mHtmlTag);
-                equip.setSetLevel(setLevel);
+                equip->setSetLevel(setLevel);
             }
         }
     }
 
-    mCharacter->setItem(static_cast<const Item&>(equip));
+    mCharacter->setItem(static_cast<Item*>(equip));
     mCharacter->addItemLevel(itemLevel);
 
-    if (equip.getSetLevel() != "")
+    if (equip->getSetLevel() != "")
     {
-        if (part != Part::WEAPON || (part == Part::WEAPON && equip.getGrade() != Grade::ESTHER))
+        if (part != Part::WEAPON || (part == Part::WEAPON && equip->getGrade() != Grade::ESTHER))
         {
-            mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(part));
+            mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(part));
         }
-        if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON).getGrade() == Grade::ESTHER)
+        if (part == Part::HAND && mCharacter->getItemByPart(Part::WEAPON)->getGrade() == Grade::ESTHER)
         {
-            mCharacter->addSetEffect(equip.getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+            mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
         }
     }
 }
 
 void Profile::parseAccessory(const QJsonObject &accObj, Part part)
 {
-    Accessory acc(part);
+    Accessory* acc = new Accessory(part);
     const QStringList& elementKeys = accObj.keys();
 
     for (const QString& elementKey : elementKeys)
@@ -313,7 +313,7 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
         if (type == "NameTagBox")
         {
             QString name = element.find("value")->toString().remove(mHtmlTag);
-            acc.setName(name);
+            acc->setName(name);
         }
         else if (type == "ItemTitle")
         {
@@ -322,9 +322,9 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
             Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
             int quality = valueObj.find("qualityValue")->toInt();
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
-            acc.setGrade(grade);
-            acc.setQuality(quality);
-            acc.setIconPath(iconPath);
+            acc->setGrade(grade);
+            acc->setQuality(quality);
+            acc->setIconPath(iconPath);
         }
         else if (type == "ItemPartBox")
         {
@@ -333,7 +333,7 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
             if (valueObj.find("Element_000")->toString().contains("추가 효과"))
             {
                 QString ability = valueObj.find("Element_001")->toString();
-                acc.setAbility(ability);
+                acc->setAbility(ability);
             }
         }
         else if (type == "IndentStringGroup")
@@ -353,12 +353,12 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
                     engrave.replace("#FFFFAC", "#B9B919");
                     if (engrave.contains("감소"))
                     {
-                        acc.setPenalty(engrave);
+                        acc->setPenalty(engrave);
                         extractEngraveValue(1, engrave);
                     }
                     else
                     {
-                        acc.addEngrave(engrave);
+                        acc->addEngrave(engrave);
                         extractEngraveValue(0, engrave);
                     }
                 }
@@ -366,12 +366,12 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
         }
     }
 
-    mCharacter->setItem(static_cast<const Item&>(acc));
+    mCharacter->setItem(static_cast<Item*>(acc));
 }
 
 void Profile::parseStone(const QJsonObject &stoneObj)
 {
-    AbilityStone stone;
+    AbilityStone* stone = new AbilityStone();
     const QStringList& elementKeys = stoneObj.keys();
 
     for (const QString& elementKey : elementKeys)
@@ -382,7 +382,7 @@ void Profile::parseStone(const QJsonObject &stoneObj)
         if (type == "NameTagBox")
         {
             QString name = element.find("value")->toString().remove(mHtmlTag);
-            stone.setName(name);
+            stone->setName(name);
         }
         else if (type == "ItemTitle")
         {
@@ -390,8 +390,8 @@ void Profile::parseStone(const QJsonObject &stoneObj)
 
             Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
-            stone.setGrade(grade);
-            stone.setIconPath(iconPath);
+            stone->setGrade(grade);
+            stone->setIconPath(iconPath);
         }
         else if (type == "IndentStringGroup")
         {
@@ -410,12 +410,12 @@ void Profile::parseStone(const QJsonObject &stoneObj)
                     engrave.replace("#FFFFAC", "#B9B919");
                     if (engrave.contains("감소"))
                     {
-                        stone.setPenalty(engrave);
+                        stone->setPenalty(engrave);
                         extractEngraveValue(1, engrave);
                     }
                     else
                     {
-                        stone.addEngrave(engrave);
+                        stone->setPenalty(engrave);
                         extractEngraveValue(0, engrave);
                     }
                 }
@@ -423,12 +423,12 @@ void Profile::parseStone(const QJsonObject &stoneObj)
         }
     }
 
-    mCharacter->setItem(static_cast<const Item&>(stone));
+    mCharacter->setItem(static_cast<Item*>(stone));
 }
 
 void Profile::parseBracelet(const QJsonObject &braceletObj)
 {
-    Bracelet bracelet;
+    Bracelet* bracelet = new Bracelet();
     const QStringList& elementKeys = braceletObj.keys();
 
     for (const QString& elementKey : elementKeys)
@@ -439,7 +439,7 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
         if (type == "NameTagBox")
         {
             QString name = element.find("value")->toString().remove(mHtmlTag);
-            bracelet.setName(name);
+            bracelet->setName(name);
         }
         else if (type == "ItemTitle")
         {
@@ -447,8 +447,8 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
 
             Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
-            bracelet.setGrade(grade);
-            bracelet.setIconPath(iconPath);
+            bracelet->setGrade(grade);
+            bracelet->setIconPath(iconPath);
         }
         else if (type == "ItemPartBox")
         {
@@ -461,12 +461,12 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
                 effect = effect.replace("</img>", "-");
                 effect = effect.replace("#F9F7D0", "#B9B919", Qt::CaseInsensitive);
                 effect = effect.replace("#99FF99", "#0ADC64", Qt::CaseInsensitive);
-                bracelet.setEffect(effect);
+                bracelet->setEffect(effect);
             }
         }
     }
 
-    mCharacter->setItem(static_cast<const Item&>(bracelet));
+    mCharacter->setItem(static_cast<Item*>(bracelet));
 }
 
 void Profile::parseGem(const QJsonObject &gemObj)
@@ -573,12 +573,12 @@ void Profile::parseCard()
 
 void Profile::parseSkill()
 {
-    const QJsonObject& skill = mProfile->find("Skill")->toObject();
-    QStringList keys = skill.keys();
+    const QJsonObject& skillObj = mProfile->find("Skill")->toObject();
+    QStringList keys = skillObj.keys();
 
     for (const QString& key : keys)
     {
-        const QJsonObject& obj = skill.find(key)->toObject();
+        const QJsonObject& obj = skillObj.find(key)->toObject();
         QStringList elements = obj.keys();
 
         Skill skill;
@@ -662,40 +662,54 @@ void Profile::updateDB()
         QString name = mCharacter->getName();
         QString cls = enumClassKtoE(mCharacter->getClass());
 
-        // DB update - Character
-        emit HttpClient::getInstance()->insertOrUpdateCharacter(
-                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel(), mCharacter->getSetEffects()));
-
-        // DB update - Ability
         QStringList neckAbilities, earAbilities, ringAbilities;
         QString abilityStr;
+        const Accessory* accessory = nullptr;
 
-        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::NECK)).getAbility();
+        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::NECK));
+        // 장착하지 않은 아이템이 하나라도 존재하면 DB에 추가 X
+        if (accessory == nullptr)
+            return;
+        abilityStr = accessory->getAbility();
         neckAbilities << abilityStr.sliced(0, 2);
         neckAbilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
-        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::EAR1)).getAbility();
+        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::EAR1));
+        if (accessory == nullptr)
+            return;
+        abilityStr = accessory->getAbility();
         earAbilities << abilityStr.sliced(0, 2);
-        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::EAR2)).getAbility();
+        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::EAR2));
+        if (accessory == nullptr)
+            return;
+        abilityStr = accessory->getAbility();
         earAbilities << abilityStr.sliced(0, 2);
-        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::RING1)).getAbility();
+        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::RING1));
+        if (accessory == nullptr)
+            return;
+        abilityStr = accessory->getAbility();
         ringAbilities << abilityStr.sliced(0, 2);
-        abilityStr = static_cast<const Accessory&>(mCharacter->getItemByPart(Part::RING2)).getAbility();
+        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::RING2));
+        if (accessory == nullptr)
+            return;
+        abilityStr = accessory->getAbility();
         ringAbilities << abilityStr.sliced(0, 2);
 
-        emit HttpClient::getInstance()->insertOrUpdateAbility(
-                    JsonBuilder::buildAbility(name, cls, neckAbilities, earAbilities, ringAbilities));
-
-        // DB update - Engrave
         const Engrave& engraveObj = mCharacter->getEngrave();
         QStringList engraves;
         QList<int> engraveLevels;
-
         engraves = engraveObj.getActiveEngraveList();
         for (const QString& engrave : engraves)
         {
             engraveLevels.append(engraveObj.getEngraveValue(engrave) / 5);
         }
 
+        // DB update - Character
+        emit HttpClient::getInstance()->insertOrUpdateCharacter(
+                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel(), mCharacter->getSetEffects()));
+        // DB update - Ability
+        emit HttpClient::getInstance()->insertOrUpdateAbility(
+                    JsonBuilder::buildAbility(name, cls, neckAbilities, earAbilities, ringAbilities));
+        // DB update - Engrave
         emit HttpClient::getInstance()->insertOrUpdateEngrave(
                     JsonBuilder::buildEngrave(name, cls, engraves, engraveLevels));
     }
@@ -922,8 +936,10 @@ void Profile::slotUpdateItem()
     for (int i = INDEX_EQUIP; i < INDEX_ACCESSORY; i++)
     {
         part = static_cast<Part>(i);
-        const Equip& equip = static_cast<const Equip&>(mCharacter->getItemByPart(part));
-        EquipWidget* equipWidget = new EquipWidget(nullptr, &equip, PATH_CDN);
+        const Equip* equip = static_cast<const Equip*>(mCharacter->getItemByPart(part));
+        if (equip == nullptr)
+            continue;
+        EquipWidget* equipWidget = new EquipWidget(nullptr, equip, PATH_CDN);
         ui->vLayoutEquip->addWidget(equipWidget);
         mEquipWidgets.append(equipWidget);
     }
@@ -931,23 +947,31 @@ void Profile::slotUpdateItem()
     for (int i = INDEX_ACCESSORY; i < INDEX_STONE; i++)
     {
         part = static_cast<Part>(i);
-        const Accessory& acc = static_cast<const Accessory&>(mCharacter->getItemByPart(part));
-        AccWidget* accWidget = new AccWidget(nullptr, &acc, PATH_CDN);
+        const Accessory* acc = static_cast<const Accessory*>(mCharacter->getItemByPart(part));
+        if (acc == nullptr)
+            continue;
+        AccWidget* accWidget = new AccWidget(nullptr, acc, PATH_CDN);
         ui->vLayoutAccessory->addWidget(accWidget);
         mAccWidgets.append(accWidget);
     }
 
     part = Part::STONE;
-    const AbilityStone& stone = static_cast<const AbilityStone&>(mCharacter->getItemByPart(part));
-    AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(nullptr, &stone, PATH_CDN);
-    ui->vLayoutOther->addWidget(stoneWidget);
-    mStoneWidget = stoneWidget;
+    const AbilityStone* stone = static_cast<const AbilityStone*>(mCharacter->getItemByPart(part));
+    if (stone != nullptr)
+    {
+        AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(nullptr, stone, PATH_CDN);
+        ui->vLayoutOther->addWidget(stoneWidget);
+        mStoneWidget = stoneWidget;
+    }
 
     part = Part::BRACELET;
-    const Bracelet& bracelet = static_cast<const Bracelet&>(mCharacter->getItemByPart(part));
-    BraceletWidget* braceletWidget = new BraceletWidget(nullptr, &bracelet, PATH_CDN);
-    ui->vLayoutOther->addWidget(braceletWidget);
-    mBraceletWidget = braceletWidget;
+    const Bracelet* bracelet = static_cast<const Bracelet*>(mCharacter->getItemByPart(part));
+    if (bracelet != nullptr)
+    {
+        BraceletWidget* braceletWidget = new BraceletWidget(nullptr, bracelet, PATH_CDN);
+        ui->vLayoutOther->addWidget(braceletWidget);
+        mBraceletWidget = braceletWidget;
+    }
 }
 
 void Profile::slotUpdateGem()

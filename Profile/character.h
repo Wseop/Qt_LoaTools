@@ -14,6 +14,7 @@ class Character
 {
 public:
     Character();
+    ~Character();
 
     QString getName();
     QString getClass();
@@ -24,7 +25,7 @@ public:
     const CardSet& getCardSet();
     const QStringList& getSetEffects();
 
-    const Item& getItemByPart(Part part);
+    const Item* getItemByPart(Part part);
     const QList<Gem>& getGems();
 
     const Engrave& getEngrave();
@@ -39,7 +40,7 @@ public:
     void setCardSet(CardSet cardSet);
     void addSetEffect(QString setEffect, int index);
 
-    void setItem(const Item& item);
+    void setItem(Item* item);
     void addGem(const Gem& gem);
 
     void addEngrave(QString name, int value);
@@ -57,19 +58,19 @@ private:
     CardSet mCardSet;
     QStringList mSetEffects;
 
-    Equip mWeapon;
-    Equip mHead;
-    Equip mTop;
-    Equip mBottom;
-    Equip mHand;
-    Equip mShoulder;
-    Accessory mNeck;
-    Accessory mEar1;
-    Accessory mEar2;
-    Accessory mRing1;
-    Accessory mRing2;
-    AbilityStone mStone;
-    Bracelet mBracelet;
+    Equip* m_pWeapon = nullptr;
+    Equip* m_pHead = nullptr;
+    Equip* m_pTop = nullptr;
+    Equip* m_pBottom = nullptr;
+    Equip* m_pHand = nullptr;
+    Equip* m_pShoulder = nullptr;
+    Accessory* m_pNeck = nullptr;
+    Accessory* m_pEar1 = nullptr;
+    Accessory* m_pEar2 = nullptr;
+    Accessory* m_pRing1 = nullptr;
+    Accessory* m_pRing2 = nullptr;
+    AbilityStone* m_pStone = nullptr;
+    Bracelet* m_pBracelet = nullptr;
     QList<Gem> mGems;
 
     Engrave mEngrave;

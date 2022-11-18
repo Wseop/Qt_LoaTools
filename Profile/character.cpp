@@ -1,22 +1,33 @@
 #include "character.h"
 
 Character::Character()
-    : mItemLevelTotal(0),
-      mWeapon(Equip(Part::WEAPON)),
-      mHead(Equip(Part::HEAD)),
-      mTop(Equip(Part::TOP)),
-      mBottom(Equip(Part::BOTTOM)),
-      mHand(Equip(Part::HAND)),
-      mShoulder(Equip(Part::SHOULDER)),
-      mNeck(Accessory(Part::NECK)),
-      mEar1(Accessory(Part::EAR1)),
-      mEar2(Accessory(Part::EAR2)),
-      mRing1(Accessory(Part::RING1)),
-      mRing2(Accessory(Part::RING2)),
-      mStone(AbilityStone()),
-      mBracelet(Bracelet())
+    : mItemLevelTotal(0)
 {
     mSetEffects.resize(6);
+}
+
+Character::~Character()
+{
+    delete m_pWeapon;
+    delete m_pHead;
+    delete m_pTop;
+    delete m_pBottom;
+    delete m_pHand;
+    delete m_pShoulder;
+    delete m_pNeck;
+    delete m_pEar1;
+    delete m_pEar2;
+    delete m_pRing1;
+    delete m_pRing2;
+    delete m_pStone;
+    delete m_pBracelet;
+
+    for (Skill& skill : mSkills)
+    {
+        const Rune* rune = skill.getRune();
+        if (rune != nullptr)
+            delete rune;
+    }
 }
 
 QString Character::getName()
@@ -74,34 +85,36 @@ const QList<Skill> &Character::getSkills()
     return mSkills;
 }
 
-const Item& Character::getItemByPart(Part part)
+const Item *Character::getItemByPart(Part part)
 {
     if (part == Part::WEAPON)
-        return static_cast<Item&>(mWeapon);
+        return static_cast<Item*>(m_pWeapon);
     else if (part == Part::HEAD)
-        return static_cast<Item&>(mHead);
+        return static_cast<Item*>(m_pHead);
     else if (part == Part::TOP)
-        return static_cast<Item&>(mTop);
+        return static_cast<Item*>(m_pTop);
     else if (part == Part::BOTTOM)
-        return static_cast<Item&>(mBottom);
+        return static_cast<Item*>(m_pBottom);
     else if (part == Part::HAND)
-        return static_cast<Item&>(mHand);
+        return static_cast<Item*>(m_pHand);
     else if (part == Part::SHOULDER)
-        return static_cast<Item&>(mShoulder);
+        return static_cast<Item*>(m_pShoulder);
     else if (part == Part::NECK)
-        return static_cast<Item&>(mNeck);
+        return static_cast<Item*>(m_pNeck);
     else if (part == Part::EAR1)
-        return static_cast<Item&>(mEar1);
+        return static_cast<Item*>(m_pEar1);
     else if (part == Part::EAR2)
-        return static_cast<Item&>(mEar2);
+        return static_cast<Item*>(m_pEar2);
     else if (part == Part::RING1)
-        return static_cast<Item&>(mRing1);
+        return static_cast<Item*>(m_pRing1);
     else if (part == Part::RING2)
-        return static_cast<Item&>(mRing2);
+        return static_cast<Item*>(m_pRing2);
     else if (part == Part::STONE)
-        return static_cast<Item&>(mStone);
+        return static_cast<Item*>(m_pStone);
     else if (part == Part::BRACELET)
-        return static_cast<Item&>(mBracelet);
+        return static_cast<Item*>(m_pBracelet);
+    else
+        return nullptr;
 }
 
 void Character::setName(QString name)
@@ -144,36 +157,36 @@ void Character::addSetEffect(QString setEffect, int index)
     mSetEffects[index] = setEffect;
 }
 
-void Character::setItem(const Item& item)
+void Character::setItem(Item *item)
 {
-    Part part = item.getPart();
+    Part part = item->getPart();
 
     if (part == Part::WEAPON)
-        mWeapon = static_cast<const Equip&>(item);
+        m_pWeapon = static_cast<Equip*>(item);
     else if (part == Part::HEAD)
-        mHead = static_cast<const Equip&>(item);
+        m_pHead = static_cast<Equip*>(item);
     else if (part == Part::TOP)
-        mTop = static_cast<const Equip&>(item);
+        m_pTop = static_cast<Equip*>(item);
     else if (part == Part::BOTTOM)
-        mBottom = static_cast<const Equip&>(item);
+        m_pBottom = static_cast<Equip*>(item);
     else if (part == Part::HAND)
-        mHand = static_cast<const Equip&>(item);
+        m_pHand = static_cast<Equip*>(item);
     else if (part == Part::SHOULDER)
-        mShoulder = static_cast<const Equip&>(item);
+        m_pShoulder = static_cast<Equip*>(item);
     else if (part == Part::NECK)
-        mNeck = static_cast<const Accessory&>(item);
+        m_pNeck = static_cast<Accessory*>(item);
     else if (part == Part::EAR1)
-        mEar1 = static_cast<const Accessory&>(item);
+        m_pEar1 = static_cast<Accessory*>(item);
     else if (part == Part::EAR2)
-        mEar2 = static_cast<const Accessory&>(item);
+        m_pEar2 = static_cast<Accessory*>(item);
     else if (part == Part::RING1)
-        mRing1 = static_cast<const Accessory&>(item);
+        m_pRing1 = static_cast<Accessory*>(item);
     else if (part == Part::RING2)
-        mRing2 = static_cast<const Accessory&>(item);
+        m_pRing2 = static_cast<Accessory*>(item);
     else if (part == Part::STONE)
-        mStone = static_cast<const AbilityStone&>(item);
+        m_pStone = static_cast<AbilityStone*>(item);
     else if (part == Part::BRACELET)
-        mBracelet = static_cast<const Bracelet&>(item);
+        m_pBracelet = static_cast<Bracelet*>(item);
 }
 
 void Character::addGem(const Gem &gem)
