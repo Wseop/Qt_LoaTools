@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>232</height>
+    <width>504</width>
+    <height>272</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,18 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="pbMeteorTimer">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
@@ -37,12 +49,25 @@
          </font>
         </property>
         <property name="text">
-         <string>메테오 타이머</string>
+         <string>메테오
+타이머</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pbAuctionCalc">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>나눔스퀘어 네오 ExtraBold</family>
@@ -51,7 +76,8 @@
          </font>
         </property>
         <property name="text">
-         <string>경매 손익 계산</string>
+         <string>경매
+손익 계산</string>
         </property>
        </widget>
       </item>
@@ -70,33 +96,97 @@
       <string>캐릭터</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="1">
-       <widget class="QPushButton" name="pbEngrave">
-        <property name="font">
-         <font>
-          <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>16</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>각인 시뮬레이터</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
-       <widget class="QPushButton" name="pbProfile">
-        <property name="font">
-         <font>
-          <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>16</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>캐릭터 조회</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="hLayoutCharacter1">
+          <item>
+           <widget class="QPushButton" name="pbProfile">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>나눔스퀘어 네오 ExtraBold</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>캐릭터
+조회</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbEngrave">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>나눔스퀘어 네오 ExtraBold</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>각인
+시뮬레이터</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbSettingAdviser">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>나눔스퀘어 네오 ExtraBold</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>직업별
+세팅 조회</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="hLayoutCharacter2"/>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

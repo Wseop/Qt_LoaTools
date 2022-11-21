@@ -19,21 +19,40 @@ public:
     static HttpClient* getInstance();
     static void destroyInstance();
 
+public:
+    const QNetworkAccessManager& getNetworkManagerCharacter();
+    const QNetworkAccessManager& getNetworkManagerSetting();
+
 signals:
     void insertOrUpdateCharacter(QJsonDocument jsonDoc);
     void insertOrUpdateSetting(QJsonDocument jsonDoc);
 
+    void readCharacters();
+    void readCharactersByClass(QString cls);
+    void readCharacterByName(QString name);
+    void readSettings();
+    void readSettingsByClass(QString cls);
+    void readSettingByName(QString name);
+
 private slots:
     void slotInsertOrUpdateCharacter(QJsonDocument jsonDoc);
     void slotInsertOrUpdateSetting(QJsonDocument jsonDoc);
+    void slotHandleReplyPost(QNetworkReply* reply);
 
-    void slotHandleReply(QNetworkReply* reply);
+    void slotReadCharacters();
+    void slotReadCharactersByClass(QString cls);
+    void slotReadCharacterByName(QString name);
+    void slotReadSettings();
+    void slotReadSettingsByClass(QString cls);
+    void slotReadSettingByName(QString name);
 
 private:
     static HttpClient* m_pClient;
 
-    QNetworkAccessManager m_networkCharacter;
-    QNetworkAccessManager m_networkSetting;
+    QNetworkAccessManager m_postManagerCharacter;
+    QNetworkAccessManager m_postManagerSetting;
+    QNetworkAccessManager m_getManagerCharacter;
+    QNetworkAccessManager m_getManagerSetting;
 
     QString m_serverUrl;
     QString m_insertKey;

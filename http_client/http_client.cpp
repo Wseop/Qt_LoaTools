@@ -1,5 +1,4 @@
 #include "http_client.h"
-#include "http_client/json_builder.h"
 
 #include <QSettings>
 #include <QDir>
@@ -15,8 +14,16 @@ HttpClient::HttpClient()
     connect(this, SIGNAL(insertOrUpdateCharacter(QJsonDocument)), this, SLOT(slotInsertOrUpdateCharacter(QJsonDocument)));
     connect(this, SIGNAL(insertOrUpdateSetting(QJsonDocument)), this, SLOT(slotInsertOrUpdateSetting(QJsonDocument)));
 
-    connect(&m_networkCharacter, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
-    connect(&m_networkSetting, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReply(QNetworkReply*)));
+    connect(this, SIGNAL(readCharacters()), this, SLOT(slotReadCharacters()));
+    connect(this, SIGNAL(readCharactersByClass(QString)), this, SLOT(slotReadCharactersByClass(QString)));
+    connect(this, SIGNAL(readCharacterByName(QString)), this, SLOT(slotReadCharacterByName(QString)));
+
+    connect(this, SIGNAL(readSettings()), this, SLOT(slotReadSettings()));
+    connect(this, SIGNAL(readSettingsByClass(QString)), this, SLOT(slotReadSettingsByClass(QString)));
+    connect(this, SIGNAL(readSettingByName(QString)), this, SLOT(slotReadSettingByName(QString)));
+
+    connect(&m_postManagerCharacter, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplyPost(QNetworkReply*)));
+    connect(&m_postManagerSetting, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplyPost(QNetworkReply*)));
 }
 
 HttpClient::~HttpClient()
@@ -50,13 +57,23 @@ void HttpClient::destroyInstance()
     m_pClient = nullptr;
 }
 
+const QNetworkAccessManager &HttpClient::getNetworkManagerCharacter()
+{
+    return m_getManagerCharacter;
+}
+
+const QNetworkAccessManager &HttpClient::getNetworkManagerSetting()
+{
+    return m_getManagerSetting;
+}
+
 void HttpClient::slotInsertOrUpdateCharacter(QJsonDocument jsonDoc)
 {
     QString url = m_serverUrl + "/character";
     QNetworkRequest request((QUrl(url)));
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_networkCharacter.post(request, jsonDoc.toJson());
+    m_postManagerCharacter.post(request, jsonDoc.toJson());
 }
 
 void HttpClient::slotInsertOrUpdateSetting(QJsonDocument jsonDoc)
@@ -65,10 +82,52 @@ void HttpClient::slotInsertOrUpdateSetting(QJsonDocument jsonDoc)
     QNetworkRequest request((QUrl(url)));
     request.setRawHeader("Content-Type", "application/json");
     request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_networkSetting.post(request, jsonDoc.toJson());
+    m_postManagerSetting.post(request, jsonDoc.toJson());
 }
 
-void HttpClient::slotHandleReply(QNetworkReply *reply)
+void HttpClient::slotReadCharacters()
+{
+    QString url = m_serverUrl + "/character";
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerCharacter.get(request);
+}
+
+void HttpClient::slotReadCharactersByClass(QString cls)
+{
+    QString url = m_serverUrl + "/character/Class-" + cls;
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerCharacter.get(request);
+}
+
+void HttpClient::slotReadCharacterByName(QString name)
+{
+    QString url = m_serverUrl + "/character/" + name;
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerCharacter.get(request);
+}
+
+void HttpClient::slotReadSettings()
+{
+    QString url = m_serverUrl + "/setting";
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerSetting.get(request);
+}
+
+void HttpClient::slotReadSettingsByClass(QString cls)
+{
+    QString url = m_serverUrl + "/setting/Class-" + cls;
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerSetting.get(request);
+}
+
+void HttpClient::slotReadSettingByName(QString name)
+{
+    QString url = m_serverUrl + "/setting/" + name;
+    QNetworkRequest request((QUrl(url)));
+    m_getManagerSetting.get(request);
+}
+
+void HttpClient::slotHandleReplyPost(QNetworkReply *reply)
 {
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     QString log = QString("%1 : Status %2").arg(reply->url().path()).arg(statusCode);
