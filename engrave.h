@@ -11,8 +11,8 @@ class Engrave
 public:
     Engrave();
 
-    QStringList getEngraveList();
-    QStringList getPenaltyList();
+    const QStringList& getEngraveList();
+    const QStringList& getPenaltyList();
     bool isValidEngrave(QString engrave);
     bool isValidPenalty(QString penalty);
     QString getEngravePath(QString engrave) const;
@@ -27,14 +27,18 @@ public:
     void clearEngrave();
     void clearPenalty();
 
+    bool isClassEngrave(QString engraveName);
+
 private:
     void loadEngraveList();
 
 private:
-    QStringList mEngraveList;
-    QStringList mPenaltyList;
-    QMap<QString, int> mEngraveValue;
-    QMap<QString, int> mPenaltyValue;
+    QStringList m_engraves;
+    QStringList m_penalties;
+    QMap<QString, int> m_engraveValue;
+    QMap<QString, int> m_penaltyValue;
+
+    QStringList m_classEngraves;
 };
 
 #endif // ENGRAVE_H
