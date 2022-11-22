@@ -1,0 +1,104 @@
+#include "setting_code.h"
+#include "enum/ability.h"
+#include "enum/set_effect.h"
+
+#include <QJsonArray>
+#include <utility>
+#include <algorithm>
+
+Engrave SettingCode::m_sEngrave;
+
+QString SettingCode::generateSettingCode(const QJsonObject &setting)
+{
+    return
+            generateAbilityCode(setting.find("Abilities")->toArray()) +
+            generateSetEffectCode(setting.find("SetEffects")->toArray()) +
+            generateEngraveCode(setting.find("EngraveNames")->toArray(),
+                                setting.find("EngraveLevels")->toArray());
+}
+
+QString SettingCode::generateAbilityCode(const QJsonArray &abilities)
+{
+    QString abilityCode;
+    int value1, value2;
+
+    // Neck
+    value1 = Ability::kstrToEnum(abilities[0].toString());
+    value2 = Ability::kstrToEnum(abilities[1].toString());
+    // 오름차순으로 code 생성
+    if (value1 > value2)
+        std::swap(value1, value2);
+    abilityCode += QString("%1%2").arg(value1).arg(value2);
+
+    // Ear
+    value1 = Ability::kstrToEnum(abilities[2].toString());
+    value2 = Ability::kstrToEnum(abilities[3].toString());
+    if (value1 > value2)
+        std::swap(value1, value2);
+    abilityCode += QString("%1%2").arg(value1).arg(value2);
+
+    // Ring
+    value1 = Ability::kstrToEnum(abilities[4].toString());
+    value2 = Ability::kstrToEnum(abilities[5].toString());
+    if (value1 > value2)
+        std::swap(value1, value2);
+    abilityCode += QString("%1%2").arg(value1).arg(value2);
+
+    return abilityCode;
+}
+
+QString SettingCode::generateSetEffectCode(const QJsonArray &setEffects)
+{
+    QString setEffectCode;
+    QList<int> setEffectNumber;
+
+    for (const QJsonValue& setEffect : setEffects)
+        setEffectNumber.append(SetEffect::kstrToEnum(setEffect.toString()));
+    std::sort(setEffectNumber.begin(), setEffectNumber.end());
+
+    for (const int& setEffect : setEffectNumber)
+        setEffectCode += QString("%1").arg(setEffect);
+
+    return setEffectCode;
+}
+
+QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const QJsonArray &engraveLevels)
+{
+    // Mapping engrave name & value
+    QMap<QString, int> engraveValue;
+    for (int i = 0; i < engraveNames.size(); i++)
+        engraveValue[engraveNames[i].toString()] = engraveLevels[i].toInt();
+
+    // 각인명을 고유번호(index)로 변환하여 추가 후 오름차순 정렬
+    QList<int> classEngraveNumber;
+    QList<int> normalEngraveNumber;
+    for (const QJsonValue& engraveName : engraveNames)
+    {
+        QString engraveNameStr = engraveName.toString();
+
+        if (m_sEngrave.isClassEngrave(engraveNameStr))
+            classEngraveNumber.append(m_sEngrave.indexOf(engraveNameStr));
+        else if (m_sEngrave.isValidEngrave(engraveNameStr))
+            normalEngraveNumber.append(m_sEngrave.indexOf(engraveNameStr));
+    }
+    std::sort(classEngraveNumber.begin(), classEngraveNumber.end());
+    std::sort(normalEngraveNumber.begin(), normalEngraveNumber.end());
+
+    // 각인 코드 생성 (직업각인코드 + 직업각인레벨코드 + 일반각인코드 + 일반각인레벨코드)
+    QString classEngraveNameCode;
+    QString classEngraveLevelCode;
+    for (const int& classEngraveIndex : classEngraveNumber)
+    {
+        classEngraveNameCode += QString("%1").arg(classEngraveIndex, 3, 10, QChar('0'));
+        classEngraveLevelCode += QString("%1").arg(engraveValue[m_sEngrave.getEngraveByIndex(classEngraveIndex)]);
+    }
+    QString normalEngraveNameCode;
+    QString normalEngraveLevelCode;
+    for (const int& normalEngraveIndex : normalEngraveNumber)
+    {
+        normalEngraveNameCode += QString("%1").arg(normalEngraveIndex, 3, 10, QChar('0'));
+        normalEngraveLevelCode += QString("%1").arg(engraveValue[m_sEngrave.getEngraveByIndex(normalEngraveIndex)]);
+    }
+
+    return classEngraveNameCode + classEngraveLevelCode + normalEngraveNameCode + normalEngraveLevelCode;
+}

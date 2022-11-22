@@ -146,3 +146,13 @@ bool Engrave::isClassEngrave(QString engraveName)
 {
     return m_classEngraves.contains(engraveName);
 }
+
+int Engrave::indexOf(QString engraveName)
+{
+    return m_engraves.indexOf(engraveName);
+}
+
+QString Engrave::getEngraveByIndex(int index)
+{
+    return m_engraves[index];
+}

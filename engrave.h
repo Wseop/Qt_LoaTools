@@ -28,6 +28,8 @@ public:
     void clearPenalty();
 
     bool isClassEngrave(QString engraveName);
+    int indexOf(QString engraveName);
+    QString getEngraveByIndex(int index);
 
 private:
     void loadEngraveList();
