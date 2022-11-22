@@ -30,6 +30,8 @@ private slots:
     void slotShowClassSelector();
     void slotHandleReplySetSettings(QNetworkReply* reply);
 
+    void slotTest();
+
 private:
     Ui::SettingAdviser *ui;
 
@@ -37,6 +39,7 @@ private:
     class ClassSelector* m_pClassSelector = nullptr;
 
     Class m_selectedClass;
+    QList<QPair<QString, int>> m_settingCodes;
 };
 
 #endif // SETTING_ADVISER_H

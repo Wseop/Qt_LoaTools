@@ -8,6 +8,9 @@
 #include <QNetworkReply>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QPair>
+
+#include <algorithm>
 
 SettingAdviser::SettingAdviser(QWidget *parent) :
     QWidget(parent),
@@ -43,6 +46,8 @@ void SettingAdviser::initConnect()
 {
     connect(ui->pbSelectClass, SIGNAL(pressed()), this, SLOT(slotShowClassSelector()));
     connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
+
+    connect(ui->pbTest, SIGNAL(pressed()), this, SLOT(slotTest()));
 }
 
 void SettingAdviser::readSettingsByClass(QString cls)
@@ -60,5 +65,27 @@ void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
 {
     QJsonArray jsonSettings = QJsonDocument::fromJson(reply->readAll()).array();
 
-    qDebug() << SettingCode::generateSettingCode(jsonSettings[0].toObject());
+    // setting code 생성 및 추가
+    m_settingCodes.clear();
+    QMap<QString, int> settingCodeCount;
+    for (const QJsonValue& jsonValue : jsonSettings)
+    {
+        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        settingCodeCount[settingCode] += 1;
+    }
+
+    // value 기준 내림차순 정렬
+    QList<QPair<QString, int>> m_settingCodes(settingCodeCount.keyValueBegin(), settingCodeCount.keyValueEnd());
+    std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](QPair<QString, int> a, QPair<QString, int> b) {
+        return a.second > b.second;
+    });
+
+    qDebug() << jsonSettings.size();
+    qDebug() << m_settingCodes.size();
+    qDebug() << m_settingCodes[0].first << ":" << m_settingCodes[0].second;
+}
+
+void SettingAdviser::slotTest()
+{
+
 }
