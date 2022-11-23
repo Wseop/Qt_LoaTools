@@ -29,7 +29,7 @@ QStringList SettingCode::getAbility(const QString &settingCode)
     return abilities;
 }
 
-QString SettingCode::getSetEffect(const QString &settingCode)
+QStringList SettingCode::getSetEffect(const QString &settingCode)
 {
     qsizetype startIndex = settingCode.indexOf("S") + 1;
     qsizetype endIndex = settingCode.indexOf("C");
@@ -39,14 +39,14 @@ QString SettingCode::getSetEffect(const QString &settingCode)
     for (const QChar& setEffect : setEffectCode)
         setEffectCounts[setEffect.unicode() - '0']++;
 
-    QString setEffects;
+    QStringList setEffects;
     for (int i = 0; i < setEffectCounts.size(); i++)
     {
         int count = setEffectCounts[i];
         if (count == 0)
             continue;
 
-        setEffects += QString("%1%2").arg(count).arg(SetEffect::enumToKStr(i)) + " ";
+        setEffects << QString("%1%2").arg(count).arg(SetEffect::enumToKStr(i));
     }
 
     return setEffects;

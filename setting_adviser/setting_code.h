@@ -12,7 +12,7 @@ public:
     static QString generateSettingCode(const QJsonObject& setting);
 
     static QStringList getAbility(const QString& settingCode);
-    static QString getSetEffect(const QString& settingCode);
+    static QStringList getSetEffect(const QString& settingCode);
     static QList<QPair<QString, int>> getClassEngrave(const QString& settingCode);
     static QList<QPair<QString, int>> getNormalEngrave(const QString& settingCode);
 

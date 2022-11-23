@@ -71,17 +71,81 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="hLayoutSettings">
-     <item>
-      <layout class="QVBoxLayout" name="vLayoutSetting1"/>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="vLayoutSetting2"/>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="vLayoutSetting3"/>
-     </item>
-    </layout>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1056</width>
+        <height>584</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="hLayoutSettings">
+         <item>
+          <widget class="QGroupBox" name="groupSetting1">
+           <property name="font">
+            <font>
+             <family>나눔스퀘어 네오 Regular</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutSetting1"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupSetting2">
+           <property name="font">
+            <font>
+             <family>나눔스퀘어 네오 Regular</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutSetting2"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupSetting3">
+           <property name="font">
+            <font>
+             <family>나눔스퀘어 네오 Regular</family>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="title">
+            <string>쌍직각</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QVBoxLayout" name="vLayoutSetting3"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
  </widget>

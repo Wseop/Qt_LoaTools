@@ -2,6 +2,7 @@
 #define SETTING_ADVISER_H
 
 #include "enum/class.h"
+#include "engrave.h"
 
 #include <QWidget>
 
@@ -25,6 +26,7 @@ private:
     void initConnect();
 
     void readSettingsByClass(QString cls);
+    void renderSettings();
 
 private slots:
     void slotShowClassSelector();
@@ -33,11 +35,16 @@ private slots:
 private:
     Ui::SettingAdviser *ui;
 
+    const int RENDER_COUNT = 30;
+
     QWidget* m_pParent = nullptr;
     class ClassSelector* m_pClassSelector = nullptr;
 
     Class m_selectedClass;
     QList<QPair<QString, int>> m_settingCodes;
+    Engrave m_engrave;
+
+    QMap<class SettingWidget*, class QVBoxLayout*> m_mapSettingWidgetLayout;
 };
 
 #endif // SETTING_ADVISER_H

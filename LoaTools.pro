@@ -39,7 +39,8 @@ SOURCES += \
     profile/ui/skill_widget.cpp \
     setting_adviser/class_selector.cpp \
     setting_adviser/setting_adviser.cpp \
-    setting_adviser/setting_code.cpp
+    setting_adviser/setting_code.cpp \
+    setting_adviser/ui/setting_widget.cpp
 
 HEADERS += \
     auction_calc/auction_calc.h \
@@ -74,7 +75,8 @@ HEADERS += \
     profile/ui/skill_widget.h \
     setting_adviser/class_selector.h \
     setting_adviser/setting_adviser.h \
-    setting_adviser/setting_code.h
+    setting_adviser/setting_code.h \
+    setting_adviser/ui/setting_widget.h
 
 FORMS += \
     auction_calc/auctioncalc.ui \
@@ -92,7 +94,8 @@ FORMS += \
     profile/ui/gem_widget.ui \
     profile/ui/skill_widget.ui \
     setting_adviser/class_selector.ui \
-    setting_adviser/setting_adviser.ui
+    setting_adviser/setting_adviser.ui \
+    setting_adviser/ui/setting_widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
