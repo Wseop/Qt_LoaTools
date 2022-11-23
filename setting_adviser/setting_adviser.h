@@ -30,8 +30,6 @@ private slots:
     void slotShowClassSelector();
     void slotHandleReplySetSettings(QNetworkReply* reply);
 
-    void slotTest();
-
 private:
     Ui::SettingAdviser *ui;
 

@@ -10,11 +10,112 @@ Engrave SettingCode::m_sEngrave;
 
 QString SettingCode::generateSettingCode(const QJsonObject &setting)
 {
-    return
-            generateAbilityCode(setting.find("Abilities")->toArray()) +
+    return  generateAbilityCode(setting.find("Abilities")->toArray()) +
             generateSetEffectCode(setting.find("SetEffects")->toArray()) +
             generateEngraveCode(setting.find("EngraveNames")->toArray(),
                                 setting.find("EngraveLevels")->toArray());
+}
+
+QStringList SettingCode::getAbility(const QString &settingCode)
+{
+    qsizetype startIndex = settingCode.indexOf("A") + 1;
+    qsizetype endIndex = settingCode.indexOf("S");
+    QString abilityCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    QStringList abilities;
+    for (const QChar& ability : abilityCode)
+        abilities << Ability::enumToKStr(ability.unicode() - '0');
+
+    return abilities;
+}
+
+QString SettingCode::getSetEffect(const QString &settingCode)
+{
+    qsizetype startIndex = settingCode.indexOf("S") + 1;
+    qsizetype endIndex = settingCode.indexOf("C");
+    QString setEffectCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    QList<int> setEffectCounts(SetEffect::size(), 0);
+    for (const QChar& setEffect : setEffectCode)
+        setEffectCounts[setEffect.unicode() - '0']++;
+
+    QString setEffects;
+    for (int i = 0; i < setEffectCounts.size(); i++)
+    {
+        int count = setEffectCounts[i];
+        if (count == 0)
+            continue;
+
+        setEffects += QString("%1%2").arg(count).arg(SetEffect::enumToKStr(i)) + " ";
+    }
+
+    return setEffects;
+}
+
+// 직업각인과 각인레벨 Map에 mapping 후 레벨을 기준으로 내림차순 정렬하여 반환
+QList<QPair<QString, int>> SettingCode::getClassEngrave(const QString &settingCode)
+{
+    // 직업각인 코드 parsing
+    qsizetype startIndex = settingCode.indexOf("C") + 1;
+    qsizetype endIndex = settingCode.indexOf("CL");
+    QString classEngraveCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    // 직업각인레벨 코드 parsing
+    startIndex = endIndex + 2;
+    endIndex = settingCode.indexOf("N");
+    QString classEngraveLevelCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    int index = 0;
+    QMap<QString, int> classEngraveLevelMap;
+    while (index < classEngraveLevelCode.size())
+    {
+        int engraveCode = classEngraveCode.sliced(index * 3, 3).toInt();
+        QString engraveName = m_sEngrave.getEngraveByIndex(engraveCode);
+        int engraveLevel = classEngraveLevelCode[index].unicode() - '0';
+
+        classEngraveLevelMap[engraveName] = engraveLevel;
+        index++;
+    }
+
+    QList<QPair<QString, int>> classEngraves(classEngraveLevelMap.keyValueBegin(), classEngraveLevelMap.keyValueEnd());
+    std::sort(classEngraves.begin(), classEngraves.end(), [](QPair<QString, int> a, QPair<QString, int> b) {
+        return a.second > b.second;
+    });
+
+    return classEngraves;
+}
+
+// 일반각인과 각인레벨 Map에 mapping 후 레벨을 기준으로 내림차순 정렬하여 반환
+QList<QPair<QString, int>> SettingCode::getNormalEngrave(const QString &settingCode)
+{
+    // 일반각인 코드 parsing
+    qsizetype startIndex = settingCode.indexOf("N") + 1;
+    qsizetype endIndex = settingCode.indexOf("NL");
+    QString normalEngraveCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    // 일반각인레벨 코드 parsing
+    startIndex = endIndex + 2;
+    endIndex = settingCode.size();
+    QString normalEngraveLevelCode = settingCode.sliced(startIndex, endIndex - startIndex);
+
+    int index = 0;
+    QMap<QString, int> normalEngraveLevelMap;
+    while (index < normalEngraveLevelCode.size())
+    {
+        int engraveCode = normalEngraveCode.sliced(index * 3, 3).toInt();
+        QString engraveName = m_sEngrave.getEngraveByIndex(engraveCode);
+        int engraveLevel = normalEngraveLevelCode[index].unicode() - '0';
+
+        normalEngraveLevelMap[engraveName] = engraveLevel;
+        index++;
+    }
+
+    QList<QPair<QString, int>> normalEngraves(normalEngraveLevelMap.keyValueBegin(), normalEngraveLevelMap.keyValueEnd());
+    std::sort(normalEngraves.begin(), normalEngraves.end(), [](QPair<QString, int> a, QPair<QString, int> b) {
+        return a.second > b.second;
+    });
+
+    return normalEngraves;
 }
 
 QString SettingCode::generateAbilityCode(const QJsonArray &abilities)
@@ -44,7 +145,7 @@ QString SettingCode::generateAbilityCode(const QJsonArray &abilities)
         std::swap(value1, value2);
     abilityCode += QString("%1%2").arg(value1).arg(value2);
 
-    return abilityCode;
+    return "A" + abilityCode;
 }
 
 QString SettingCode::generateSetEffectCode(const QJsonArray &setEffects)
@@ -59,7 +160,7 @@ QString SettingCode::generateSetEffectCode(const QJsonArray &setEffects)
     for (const int& setEffect : setEffectNumber)
         setEffectCode += QString("%1").arg(setEffect);
 
-    return setEffectCode;
+    return "S" + setEffectCode;
 }
 
 QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const QJsonArray &engraveLevels)
@@ -100,5 +201,8 @@ QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const Q
         normalEngraveLevelCode += QString("%1").arg(engraveValue[m_sEngrave.getEngraveByIndex(normalEngraveIndex)]);
     }
 
-    return classEngraveNameCode + classEngraveLevelCode + normalEngraveNameCode + normalEngraveLevelCode;
+    return  "C" + classEngraveNameCode +
+            "CL" + classEngraveLevelCode +
+            "N" + normalEngraveNameCode +
+            "NL" + normalEngraveLevelCode;
 }

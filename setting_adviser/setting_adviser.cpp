@@ -46,8 +46,6 @@ void SettingAdviser::initConnect()
 {
     connect(ui->pbSelectClass, SIGNAL(pressed()), this, SLOT(slotShowClassSelector()));
     connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
-
-    connect(ui->pbTest, SIGNAL(pressed()), this, SLOT(slotTest()));
 }
 
 void SettingAdviser::readSettingsByClass(QString cls)
@@ -79,13 +77,4 @@ void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
     std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](QPair<QString, int> a, QPair<QString, int> b) {
         return a.second > b.second;
     });
-
-    qDebug() << jsonSettings.size();
-    qDebug() << m_settingCodes.size();
-    qDebug() << m_settingCodes[0].first << ":" << m_settingCodes[0].second;
-}
-
-void SettingAdviser::slotTest()
-{
-
 }

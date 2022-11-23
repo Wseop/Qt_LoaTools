@@ -73,15 +73,7 @@
    <item>
     <layout class="QHBoxLayout" name="hLayoutSettings">
      <item>
-      <layout class="QVBoxLayout" name="vLayoutSetting1">
-       <item>
-        <widget class="QPushButton" name="pbTest">
-         <property name="text">
-          <string>PushButton</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <layout class="QVBoxLayout" name="vLayoutSetting1"/>
      </item>
      <item>
       <layout class="QVBoxLayout" name="vLayoutSetting2"/>
