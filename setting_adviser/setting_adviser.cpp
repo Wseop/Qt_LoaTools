@@ -69,7 +69,7 @@ void SettingAdviser::renderSettings()
     }
     m_mapSettingWidgetLayout.clear();
 
-    QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1캐릭터").arg(m_numOfCharacters);
+    QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1 캐릭터").arg(m_numOfCharacters);
     ui->lbTotal->setText(totalText);
     ui->lbInfo->setText("(직업 각인 별 최대 10개의 세팅이 표기되며, 카던 및 pvp 세팅이 포함되어 있을 수 있습니다.)");
 
@@ -142,6 +142,8 @@ void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
     for (const QJsonValue& jsonValue : jsonSettings)
     {
         QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        if (settingCode.contains("-1"))
+            continue;
         settingCodeCount[settingCode] += 1;
     }
 

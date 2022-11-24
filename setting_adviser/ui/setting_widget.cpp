@@ -173,4 +173,31 @@ void SettingWidget::renderNormalEngrave()
         lbEngrave->setFont(QFont("나눔스퀘어 네오 Bold", 10));
         lbEngrave->setText(QString("%1 Lv.%2").arg(normalEngrave.first).arg(normalEngrave.second));
     }
+
+    if (is97Stone())
+    {
+        QString title = ui->groupSetting->title();
+        title += " - (97돌 필요)";
+        ui->groupSetting->setTitle(title);
+    }
+}
+
+bool SettingWidget::is97Stone()
+{
+    // 9,7 or 10,6 어빌리티 스톤 세팅인 경우 true 반환
+    QList<int> engraveLevels;
+    for (const auto& normalEngrave : m_normalEngraves)
+        engraveLevels.append(normalEngrave.second);
+    for (const auto& classEngrave : m_classEngraves)
+        engraveLevels.append(classEngrave.second);
+
+    std::sort(engraveLevels.begin(), engraveLevels.end(), [](int a, int b) {
+        return a > b;
+    });
+
+    QString engraveLevelStr;
+    for (const int& engraveLevel : engraveLevels)
+        engraveLevelStr += QString("%1").arg(engraveLevel);
+
+    return engraveLevelStr == "333332";
 }

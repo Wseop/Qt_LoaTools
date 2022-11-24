@@ -31,6 +31,8 @@ private:
     void renderClassEngrave();
     void renderNormalEngrave();
 
+    bool is97Stone();
+
 private:
     Ui::SettingWidget *ui;
 
