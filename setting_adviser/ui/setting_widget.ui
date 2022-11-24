@@ -30,13 +30,16 @@
      </property>
      <property name="font">
       <font>
-       <family>나눔스퀘어_ac Bold</family>
-       <pointsize>12</pointsize>
+       <family>나눔스퀘어 네오 ExtraBold</family>
+       <pointsize>14</pointsize>
        <bold>true</bold>
       </font>
      </property>
      <property name="title">
       <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
@@ -342,7 +345,7 @@
          </font>
         </property>
         <property name="title">
-         <string>각인</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

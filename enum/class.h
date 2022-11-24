@@ -31,6 +31,11 @@ enum class Class
     Aeromancer
 };
 
+static int getNumOfClass()
+{
+    return static_cast<int>(Class::Aeromancer);
+}
+
 static Class strToEnumClass(QString str)
 {
     if (str == "Destroyer")
@@ -135,6 +140,61 @@ static QString enumClassToStr(Class cls)
         return "Aeromancer";
     default:
         return "None";
+    }
+}
+
+static QString enumClassToKStr(Class cls)
+{
+    switch (cls)
+    {
+    case Class::Destroyer:
+        return "디스트로이어";
+    case Class::Warlord:
+        return "워로드";
+    case Class::Berserker:
+        return "버서커";
+    case Class::Holyknight:
+        return "홀리나이트";
+    case Class::Striker:
+        return "스트라이커";
+    case Class::Battlemaster:
+        return "배틀마스터";
+    case Class::Infighter:
+        return "인파이터";
+    case Class::Soulmaster:
+        return "기공사";
+    case Class::Lancemaster:
+        return "창술사";
+    case Class::DevilHunter:
+        return "데빌헌터";
+    case Class::Blaster:
+        return "블래스터";
+    case Class::Hawkeye:
+        return "호크아이";
+    case Class::Scouter:
+        return "스카우터";
+    case Class::Gunslinger:
+        return "건슬링어";
+    case Class::Bard:
+        return "바드";
+    case Class::Summoner:
+        return "서머너";
+    case Class::Arcana:
+        return "아르카나";
+    case Class::Sorceress:
+        return "소서리스";
+    case Class::Blade:
+        return "블레이드";
+    case Class::Demonic:
+        return "데모닉";
+    case Class::Reaper:
+        return "리퍼";
+    case Class::Artist:
+        return "도화가";
+    case Class::Aeromancer:
+        return "기상술사";
+    default:
+        return "";
     }
 }
 

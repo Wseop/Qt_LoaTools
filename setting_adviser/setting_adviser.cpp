@@ -50,15 +50,10 @@ void SettingAdviser::setSelectedClass(QString cls)
 void SettingAdviser::initConnect()
 {
     connect(ui->pbSelectClass, SIGNAL(pressed()), this, SLOT(slotShowClassSelector()));
-    connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
+    connect(ui->pbTopSetting, SIGNAL(pressed()), this, SLOT(slotRequestAllSettings()));
 }
 
-void SettingAdviser::readSettingsByClass(QString cls)
-{
-    emit HttpClient::getInstance()->readSettingsByClass(cls);
-}
-
-void SettingAdviser::renderSettings()
+void SettingAdviser::clearData()
 {
     // 기존 data clear
     QList<SettingWidget*> widgets = m_mapSettingWidgetLayout.keys();
@@ -68,10 +63,23 @@ void SettingAdviser::renderSettings()
         delete widget;
     }
     m_mapSettingWidgetLayout.clear();
+}
+
+void SettingAdviser::readSettingsByClass(QString cls)
+{
+    connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
+    emit HttpClient::getInstance()->readSettingsByClass(cls);
+}
+
+void SettingAdviser::renderSettings()
+{
+    clearData();
 
     QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1 캐릭터").arg(m_numOfCharacters);
     ui->lbTotal->setText(totalText);
     ui->lbInfo->setText("(직업 각인 별 최대 10개의 세팅이 표기되며, 카던 및 pvp 세팅이 포함되어 있을 수 있습니다.)");
+
+    ui->groupSetting3->setTitle("쌍직각");
 
     int layoutCount[3] = {0, 0, 0};
     for (int i = 0; i < m_settingCodes.size(); i++)
@@ -98,11 +106,13 @@ void SettingAdviser::renderSettings()
         {
             layout = ui->vLayoutSetting1;
             layoutIndex = 0;
+            ui->groupSetting1->setTitle(classEngraves[0].first);
         }
         else
         {
             layout = ui->vLayoutSetting2;
             layoutIndex = 1;
+            ui->groupSetting2->setTitle(classEngraves[0].first);
         }
         layoutCount[layoutIndex]++;
 
@@ -115,6 +125,50 @@ void SettingAdviser::renderSettings()
             widget->setIndex(layoutCount[layoutIndex]);
             widget->setNumOfCharacters(m_settingCodes[i].second);
             widget->setAdoptRatio(((double)m_settingCodes[i].second / m_numOfCharacters));
+            widget->setAbilities(abilities);
+            widget->setSetEffects(setEffects);
+            widget->setClassEngraves(classEngraves);
+            widget->setNormalEngraves(normalEngraves);
+            layout->addWidget(widget);
+            m_mapSettingWidgetLayout[widget] = layout;
+        }
+    }
+}
+
+void SettingAdviser::renderTopSettings()
+{
+    clearData();
+
+    ui->lbTotal->clear();
+    ui->lbInfo->clear();
+    ui->groupSetting1->setTitle("1순위");
+    ui->groupSetting2->setTitle("2순위");
+    ui->groupSetting3->setTitle("3순위");
+
+    for (int i = static_cast<int>(Class::Destroyer); i <= static_cast<int>(Class::Aeromancer); i++)
+    {
+        const QList<SettingCodeCount> topSettingCodes = m_topSettingCodes[i];
+
+        for (int j = 0; j < 3; j++)
+        {
+            QString settingCode = topSettingCodes[j].first;
+            double adoptRatio = (double)topSettingCodes[j].second / m_classCounts[i];
+            QString title = enumClassToKStr(static_cast<Class>(i)) + QString(" (%1순위 - 채용률 %2%)").arg(j + 1).arg(adoptRatio * 100, 0, 'f', 2, QChar(' '));
+            QStringList abilities = SettingCode::getAbility(settingCode);
+            QStringList setEffects = SettingCode::getSetEffect(settingCode);
+            QList<QPair<QString, int>> classEngraves = SettingCode::getClassEngrave(settingCode);
+            QList<QPair<QString, int>> normalEngraves = SettingCode::getNormalEngrave(settingCode);
+
+            QVBoxLayout* layout = nullptr;
+            if (j == 0)
+                layout = ui->vLayoutSetting1;
+            else if (j == 1)
+                layout = ui->vLayoutSetting2;
+            else
+                layout = ui->vLayoutSetting3;
+
+            SettingWidget* widget = new SettingWidget();
+            widget->setTitle(title);
             widget->setAbilities(abilities);
             widget->setSetEffects(setEffects);
             widget->setClassEngraves(classEngraves);
@@ -148,10 +202,62 @@ void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
     }
 
     // value 기준 내림차순 정렬
-    m_settingCodes = QList<QPair<QString, int>>(settingCodeCount.keyValueBegin(), settingCodeCount.keyValueEnd());
-    std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](QPair<QString, int> a, QPair<QString, int> b) {
+    m_settingCodes = QList<SettingCodeCount>(settingCodeCount.keyValueBegin(), settingCodeCount.keyValueEnd());
+    std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](SettingCodeCount a, SettingCodeCount b) {
         return a.second > b.second;
     });
 
+    disconnect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
     renderSettings();
+}
+
+void SettingAdviser::slotRequestAllSettings()
+{
+    connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetTopSettings(QNetworkReply*)));
+    emit HttpClient::getInstance()->readSettings();
+    ui->pbTopSetting->setDisabled(true);
+    ui->pbSelectClass->setDisabled(true);
+    ui->lbSelectedClass->clear();
+    ui->lbTotal->clear();
+    ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
+}
+
+void SettingAdviser::slotHandleReplySetTopSettings(QNetworkReply *reply)
+{
+    QJsonArray jsonSettings = QJsonDocument::fromJson(reply->readAll()).array();
+
+    m_topSettingCodes.clear();
+    m_topSettingCodes = QList<QList<SettingCodeCount>>(getNumOfClass() + 1);
+    m_classCounts.clear();
+    m_classCounts = QList<int>(getNumOfClass() + 1);
+
+    QList<QMap<QString, int>> settingCodeCounts(getNumOfClass() + 1);
+    for (const QJsonValue& jsonValue : jsonSettings)
+    {
+        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        if (settingCode.contains("-1"))
+            continue;
+
+        Class cls = strToEnumClass(jsonValue.toObject().find("Class")->toString());
+        settingCodeCounts[static_cast<int>(cls)][settingCode] += 1;
+        m_classCounts[static_cast<int>(cls)] += 1;
+    }
+
+    QList<QList<SettingCodeCount>> topSettingCodes(getNumOfClass() + 1);
+    for (int i = static_cast<int>(Class::Destroyer); i <= static_cast<int>(Class::Aeromancer); i++)
+    {
+        auto& topSettingCode = topSettingCodes[i];
+        topSettingCode = QList<SettingCodeCount>(settingCodeCounts[i].keyValueBegin(), settingCodeCounts[i].keyValueEnd());
+        std::sort(topSettingCode.begin(), topSettingCode.end(), [](SettingCodeCount a, SettingCodeCount b) {
+            return a.second > b.second;
+        });
+
+        for (int j = 0; j < 3; j++)
+            m_topSettingCodes[i].append(topSettingCode[j]);
+    }
+
+    ui->pbTopSetting->setEnabled(true);
+    ui->pbSelectClass->setEnabled(true);
+    disconnect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetTopSettings(QNetworkReply*)));
+    renderTopSettings();
 }

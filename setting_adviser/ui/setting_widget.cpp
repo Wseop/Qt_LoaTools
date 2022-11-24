@@ -6,6 +6,8 @@ SettingWidget::SettingWidget(QWidget *parent) :
     ui(new Ui::SettingWidget)
 {
     ui->setupUi(this);
+    ui->groupSetting->setStyleSheet("QGroupBox{border:2px solid gray;border-radius:5px;margin-top: 4ex;}"
+                                    "QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:3 3px;}");
 }
 
 SettingWidget::~SettingWidget()
@@ -71,6 +73,11 @@ void SettingWidget::setAdoptRatio(double adoptRatio)
 
     QString titleText = QString("%1) 채용률 : %2% (%3 캐릭터)").arg(m_index).arg(m_adoptRatio * 100, 0, 'f', 2, QChar(' ')).arg(m_numOfCharacters);
     ui->groupSetting->setTitle(titleText);
+}
+
+void SettingWidget::setTitle(QString title)
+{
+    ui->groupSetting->setTitle(title);
 }
 
 void SettingWidget::setAbilities(QStringList abilities)

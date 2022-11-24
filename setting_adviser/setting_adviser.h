@@ -12,6 +12,8 @@ class SettingAdviser;
 
 class QNetworkReply;
 
+using SettingCodeCount = QPair<QString, int>;
+
 class SettingAdviser : public QWidget
 {
     Q_OBJECT
@@ -24,13 +26,17 @@ public:
 
 private:
     void initConnect();
+    void clearData();
 
     void readSettingsByClass(QString cls);
     void renderSettings();
+    void renderTopSettings();
 
 private slots:
     void slotShowClassSelector();
     void slotHandleReplySetSettings(QNetworkReply* reply);
+    void slotRequestAllSettings();
+    void slotHandleReplySetTopSettings(QNetworkReply* reply);
 
 private:
     Ui::SettingAdviser *ui;
@@ -42,7 +48,9 @@ private:
 
     Class m_selectedClass;
     int m_numOfCharacters;
-    QList<QPair<QString, int>> m_settingCodes;
+    QList<SettingCodeCount> m_settingCodes;
+    QList<QList<SettingCodeCount>> m_topSettingCodes;
+    QList<int> m_classCounts;
     Engrave m_engrave;
 
     QMap<class SettingWidget*, class QVBoxLayout*> m_mapSettingWidgetLayout;

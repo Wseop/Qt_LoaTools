@@ -20,6 +20,7 @@ public:
     void setIndex(int index);
     void setNumOfCharacters(int numOfCharacters);
     void setAdoptRatio(double adoptRatio);
+    void setTitle(QString title);
     void setAbilities(QStringList abilities);
     void setSetEffects(QStringList setEffects);
     void setClassEngraves(QList<QPair<QString, int>> classEngraves);
