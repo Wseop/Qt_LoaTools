@@ -55,6 +55,24 @@ SettingWidget::~SettingWidget()
     delete ui;
 }
 
+void SettingWidget::setIndex(int index)
+{
+    m_index = index;
+}
+
+void SettingWidget::setNumOfCharacters(int numOfCharacters)
+{
+    m_numOfCharacters = numOfCharacters;
+}
+
+void SettingWidget::setAdoptRatio(double adoptRatio)
+{
+    m_adoptRatio = adoptRatio;
+
+    QString titleText = QString("%1) 채용률 : %2% (%3 캐릭터)").arg(m_index).arg(m_adoptRatio * 100, 0, 'f', 2, QChar(' ')).arg(m_numOfCharacters);
+    ui->groupSetting->setTitle(titleText);
+}
+
 void SettingWidget::setAbilities(QStringList abilities)
 {
     m_abilities = abilities;

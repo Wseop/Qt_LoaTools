@@ -17,6 +17,9 @@ public:
     explicit SettingWidget(QWidget *parent = nullptr);
     ~SettingWidget();
 
+    void setIndex(int index);
+    void setNumOfCharacters(int numOfCharacters);
+    void setAdoptRatio(double adoptRatio);
     void setAbilities(QStringList abilities);
     void setSetEffects(QStringList setEffects);
     void setClassEngraves(QList<QPair<QString, int>> classEngraves);
@@ -31,6 +34,9 @@ private:
 private:
     Ui::SettingWidget *ui;
 
+    int m_index;
+    int m_numOfCharacters;
+    double m_adoptRatio;
     QStringList m_abilities;
     QStringList m_setEffects;
     QList<QPair<QString, int>> m_classEngraves;

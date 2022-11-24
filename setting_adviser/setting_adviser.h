@@ -35,12 +35,13 @@ private slots:
 private:
     Ui::SettingAdviser *ui;
 
-    const int RENDER_COUNT = 30;
+    const int MAX_RENDER_COUNT = 10;
 
     QWidget* m_pParent = nullptr;
     class ClassSelector* m_pClassSelector = nullptr;
 
     Class m_selectedClass;
+    int m_numOfCharacters;
     QList<QPair<QString, int>> m_settingCodes;
     Engrave m_engrave;
 

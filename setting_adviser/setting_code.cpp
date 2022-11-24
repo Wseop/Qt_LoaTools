@@ -191,14 +191,20 @@ QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const Q
     for (const int& classEngraveIndex : classEngraveNumber)
     {
         classEngraveNameCode += QString("%1").arg(classEngraveIndex, 3, 10, QChar('0'));
-        classEngraveLevelCode += QString("%1").arg(engraveValue[m_sEngrave.getEngraveByIndex(classEngraveIndex)]);
+        int level = engraveValue[m_sEngrave.getEngraveByIndex(classEngraveIndex)];
+        if (level > 3)
+            level = 3;
+        classEngraveLevelCode += QString("%1").arg(level);
     }
     QString normalEngraveNameCode;
     QString normalEngraveLevelCode;
     for (const int& normalEngraveIndex : normalEngraveNumber)
     {
         normalEngraveNameCode += QString("%1").arg(normalEngraveIndex, 3, 10, QChar('0'));
-        normalEngraveLevelCode += QString("%1").arg(engraveValue[m_sEngrave.getEngraveByIndex(normalEngraveIndex)]);
+        int level = engraveValue[m_sEngrave.getEngraveByIndex(normalEngraveIndex)];
+        if (level > 3)
+            level = 3;
+        normalEngraveLevelCode += QString("%1").arg(level);
     }
 
     return  "C" + classEngraveNameCode +

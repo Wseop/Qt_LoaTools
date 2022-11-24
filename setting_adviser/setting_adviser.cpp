@@ -23,6 +23,7 @@ SettingAdviser::SettingAdviser(QWidget *parent) :
     this->setWindowTitle("직업별 세팅 조회");
     this->showMaximized();
 
+    ui->hLayoutTop->setAlignment(Qt::AlignLeft);
     ui->verticalLayout->setAlignment(Qt::AlignTop);
     ui->vLayoutSetting1->setAlignment(Qt::AlignTop);
     ui->vLayoutSetting2->setAlignment(Qt::AlignTop);
@@ -68,7 +69,12 @@ void SettingAdviser::renderSettings()
     }
     m_mapSettingWidgetLayout.clear();
 
-    for (int i = 0; i < RENDER_COUNT; i++)
+    QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1캐릭터").arg(m_numOfCharacters);
+    ui->lbTotal->setText(totalText);
+    ui->lbInfo->setText("(직업 각인 별 최대 10개의 세팅이 표기되며, 카던 및 pvp 세팅이 포함되어 있을 수 있습니다.)");
+
+    int layoutCount[3] = {0, 0, 0};
+    for (int i = 0; i < m_settingCodes.size(); i++)
     {
         QString settingCode = m_settingCodes[i].first;
 
@@ -77,22 +83,45 @@ void SettingAdviser::renderSettings()
         QList<QPair<QString, int>> classEngraves = SettingCode::getClassEngrave(settingCode);
         QList<QPair<QString, int>> normalEngraves = SettingCode::getNormalEngrave(settingCode);
 
+        if (classEngraves.size() == 0)
+            continue;
+
         // 직업 각인에 따라, 추가할 layout 지정
         QVBoxLayout* layout = nullptr;
+        int layoutIndex = 0;
         if (classEngraves.size() == 2)
+        {
             layout = ui->vLayoutSetting3;
+            layoutIndex = 2;
+        }
         else if (m_engrave.indexOf(classEngraves[0].first) & 1)
+        {
             layout = ui->vLayoutSetting1;
+            layoutIndex = 0;
+        }
         else
+        {
             layout = ui->vLayoutSetting2;
+            layoutIndex = 1;
+        }
+        layoutCount[layoutIndex]++;
 
-        SettingWidget* widget = new SettingWidget();
-        widget->setAbilities(abilities);
-        widget->setSetEffects(setEffects);
-        widget->setClassEngraves(classEngraves);
-        widget->setNormalEngraves(normalEngraves);
-        layout->addWidget(widget);
-        m_mapSettingWidgetLayout[widget] = layout;
+        if (layoutCount[0] > 10 && layoutCount[1] > 10 && layoutCount[2] > 10)
+            break;
+
+        if (layoutCount[layoutIndex] <= 10)
+        {
+            SettingWidget* widget = new SettingWidget();
+            widget->setIndex(layoutCount[layoutIndex]);
+            widget->setNumOfCharacters(m_settingCodes[i].second);
+            widget->setAdoptRatio(((double)m_settingCodes[i].second / m_numOfCharacters));
+            widget->setAbilities(abilities);
+            widget->setSetEffects(setEffects);
+            widget->setClassEngraves(classEngraves);
+            widget->setNormalEngraves(normalEngraves);
+            layout->addWidget(widget);
+            m_mapSettingWidgetLayout[widget] = layout;
+        }
     }
 }
 
@@ -106,6 +135,7 @@ void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
 {
     QJsonArray jsonSettings = QJsonDocument::fromJson(reply->readAll()).array();
 
+    m_numOfCharacters = jsonSettings.size();
     // setting code 생성 및 추가
     m_settingCodes.clear();
     QMap<QString, int> settingCodeCount;

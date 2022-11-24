@@ -28,6 +28,13 @@
        <height>300</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>나눔스퀘어_ac Bold</family>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="title">
       <string/>
      </property>
@@ -50,8 +57,9 @@
           </property>
           <property name="font">
            <font>
-            <family>나눔스퀘어 네오 Regular</family>
+            <family>나눔스퀘어 네오 ExtraBold</family>
             <pointsize>10</pointsize>
+            <bold>true</bold>
            </font>
           </property>
           <property name="title">
@@ -260,8 +268,9 @@
           </property>
           <property name="font">
            <font>
-            <family>나눔스퀘어 네오 Regular</family>
+            <family>나눔스퀘어 네오 ExtraBold</family>
             <pointsize>10</pointsize>
+            <bold>true</bold>
            </font>
           </property>
           <property name="title">
@@ -304,8 +313,9 @@
           </property>
           <property name="font">
            <font>
-            <family>나눔스퀘어 네오 Regular</family>
+            <family>나눔스퀘어 네오 ExtraBold</family>
             <pointsize>10</pointsize>
+            <bold>true</bold>
            </font>
           </property>
           <property name="title">
@@ -321,13 +331,14 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>100</height>
+          <height>120</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <family>나눔스퀘어 네오 Regular</family>
+          <family>나눔스퀘어 네오 ExtraBold</family>
           <pointsize>10</pointsize>
+          <bold>true</bold>
          </font>
         </property>
         <property name="title">
