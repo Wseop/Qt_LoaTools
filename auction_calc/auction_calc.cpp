@@ -2,6 +2,7 @@
 #include "ui_auctioncalc.h"
 
 #include <QIntValidator>
+#include <QFontDatabase>
 
 AuctionCalc::AuctionCalc(QWidget *parent) :
     QWidget(parent),
@@ -41,6 +42,24 @@ void AuctionCalc::initUI()
 
     // 숫자만 입력 가능하도록 설정
     ui->lePrice->setValidator(mIntValidator);
+
+    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
+    QFont fontNanumBold9 = QFont(familyNanumBold, 9);
+    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+    QFont fontNanumExtraBold10 = QFont(QFontDatabase::applicationFontFamilies(3).at(0), 10);
+
+    ui->lbInfo->setFont(fontNanumBold9);
+    ui->lbPrice->setFont(fontNanumBold10);
+    ui->lePrice->setFont(fontNanumBold10);
+    ui->lbBid->setFont(fontNanumBold10);
+    ui->lbBid4->setFont(fontNanumBold10);
+    ui->lbBid8->setFont(fontNanumBold10);
+    ui->lbDivideN->setFont(fontNanumBold10);
+    ui->lbDivideN4->setFont(fontNanumBold10);
+    ui->lbDivideN8->setFont(fontNanumBold10);
+    ui->lbP4->setFont(fontNanumBold10);
+    ui->lbP8->setFont(fontNanumBold10);
+    ui->pbCalc->setFont(fontNanumExtraBold10);
 }
 
 void AuctionCalc::initConnect()

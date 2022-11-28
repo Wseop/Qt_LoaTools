@@ -3,6 +3,7 @@
 #include "setting_adviser/setting_adviser.h"
 
 #include <QCloseEvent>
+#include <QFontDatabase>
 
 ClassSelector::ClassSelector(QWidget *parent, QWidget* ret) :
     QWidget(parent),
@@ -40,6 +41,32 @@ void ClassSelector::initStyleSheet()
     ui->lbMagician->setStyleSheet(styleSheet);
     ui->lbAssassin->setStyleSheet(styleSheet);
     ui->lbSpecialist->setStyleSheet(styleSheet);
+
+    QFont fontNanumBold12 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12);
+    QFont fontNanumExtraBold12 = QFont(QFontDatabase::applicationFontFamilies(3).at(0), 12);
+    ui->pbDestroyer->setFont(fontNanumBold12);
+    ui->pbWarlord->setFont(fontNanumBold12);
+    ui->pbBerserker->setFont(fontNanumBold12);
+    ui->pbHolyknight->setFont(fontNanumBold12);
+    ui->pbStriker->setFont(fontNanumBold12);
+    ui->pbBattlemaster->setFont(fontNanumBold12);
+    ui->pbInfighter->setFont(fontNanumBold12);
+    ui->pbSoulmaster->setFont(fontNanumBold12);
+    ui->pbLancemaster->setFont(fontNanumBold12);
+    ui->pbDevilHunter->setFont(fontNanumBold12);
+    ui->pbBlaster->setFont(fontNanumBold12);
+    ui->pbHawkeye->setFont(fontNanumBold12);
+    ui->pbScouter->setFont(fontNanumBold12);
+    ui->pbGunslinger->setFont(fontNanumBold12);
+    ui->pbBard->setFont(fontNanumBold12);
+    ui->pbSummoner->setFont(fontNanumBold12);
+    ui->pbArcana->setFont(fontNanumBold12);
+    ui->pbSorceress->setFont(fontNanumBold12);
+    ui->pbBlade->setFont(fontNanumBold12);
+    ui->pbDemonic->setFont(fontNanumBold12);
+    ui->pbReaper->setFont(fontNanumBold12);
+    ui->pbArtist->setFont(fontNanumBold12);
+    ui->pbAeromancer->setFont(fontNanumBold12);
 }
 
 void ClassSelector::initConnect()

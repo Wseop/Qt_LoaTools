@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QFontDatabase>
 
 EquipWidget::EquipWidget(QWidget *parent, const Equip* equip, QString iconUrl) :
     QWidget(parent),
@@ -58,6 +59,14 @@ void EquipWidget::setText()
 
 void EquipWidget::setStyleSheet()
 {
+    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
+    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10);
+    ui->groupEquip->setFont(fontNanumRegular10);
+    ui->lbLevelTier->setFont(fontNanumBold10);
+    ui->lbName->setFont(fontNanumBold10);
+    ui->lbSetLevel->setFont(fontNanumBold10);
+    ui->barQual->setFont(fontNanumBold10);
+
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->barQual->setStyleSheet(QString("QProgressBar::chunk { background-color: %1 }").arg(getQualColor()));
     ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mEquip->getGrade())]));

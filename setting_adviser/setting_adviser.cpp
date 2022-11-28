@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QPair>
+#include <QFontDatabase>
 
 #include <algorithm>
 
@@ -28,6 +29,20 @@ SettingAdviser::SettingAdviser(QWidget *parent) :
     ui->vLayoutSetting1->setAlignment(Qt::AlignTop);
     ui->vLayoutSetting2->setAlignment(Qt::AlignTop);
     ui->vLayoutSetting3->setAlignment(Qt::AlignTop);
+
+    QString familyNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
+    QFont fontNanumExtraBold12 = QFont(familyNanumExtraBold, 12);
+    QFont fontNanumExtraBold16 = QFont(familyNanumExtraBold, 16);
+    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10);
+
+    ui->lbInfo->setFont(fontNanumExtraBold12);
+    ui->lbSelectedClass->setFont(fontNanumExtraBold12);
+    ui->lbTotal->setFont(fontNanumExtraBold12);
+    ui->groupSetting1->setFont(fontNanumExtraBold16);
+    ui->groupSetting2->setFont(fontNanumExtraBold16);
+    ui->groupSetting3->setFont(fontNanumExtraBold16);
+    ui->pbSelectClass->setFont(fontNanumBold10);
+    ui->pbTopSetting->setFont(fontNanumBold10);
 
     initConnect();
 }

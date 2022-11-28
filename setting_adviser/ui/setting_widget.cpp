@@ -1,6 +1,8 @@
 #include "setting_widget.h"
 #include "ui_setting_widget.h"
 
+#include <QFontDatabase>
+
 SettingWidget::SettingWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingWidget)
@@ -8,6 +10,28 @@ SettingWidget::SettingWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->groupSetting->setStyleSheet("QGroupBox{border:2px solid gray;border-radius:5px;margin-top: 4ex;}"
                                     "QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:3 3px;}");
+
+    QString familyNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
+    QFont fontNanumExtraBold10 = QFont(familyNanumExtraBold, 10);
+    QFont fontNanumExtraBold12 = QFont(familyNanumExtraBold, 12);
+    QFont fontNanumExtraBold14 = QFont(familyNanumExtraBold, 14);
+    QFont fontNanumBold12 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12);
+
+    ui->groupEngrave->setFont(fontNanumExtraBold10);
+    ui->groupAbility->setFont(fontNanumExtraBold10);
+    ui->groupClassEngrave->setFont(fontNanumExtraBold10);
+    ui->groupSetEffect->setFont(fontNanumExtraBold10);
+    ui->label_5->setFont(fontNanumExtraBold12);
+    ui->label_2->setFont(fontNanumExtraBold12);
+    ui->label_8->setFont(fontNanumExtraBold12);
+    ui->groupSetting->setFont(fontNanumExtraBold14);
+    ui->lbEar1->setFont(fontNanumBold12);
+    ui->lbEar2->setFont(fontNanumBold12);
+    ui->lbNeck1->setFont(fontNanumBold12);
+    ui->lbNeck2->setFont(fontNanumBold12);
+    ui->lbRing1->setFont(fontNanumBold12);
+    ui->lbRing2->setFont(fontNanumBold12);
+    ui->lbSetEffect->setFont(fontNanumBold12);
 }
 
 SettingWidget::~SettingWidget()
@@ -151,7 +175,7 @@ void SettingWidget::renderClassEngrave()
         layout->addWidget(lbEngrave);
         m_mapClassEngrave[lbEngrave] = layout;
         lbEngrave->setContentsMargins(10, 0, 0, 0);
-        lbEngrave->setFont(QFont("나눔스퀘어 네오 Bold", 12));
+        lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12));
         lbEngrave->setText(QString("%1 Lv.%2").arg(classEngrave.first).arg(classEngrave.second));
     }
 }
@@ -177,7 +201,7 @@ void SettingWidget::renderNormalEngrave()
         layout->addWidget(lbEngrave);
         m_mapNormalEngrave[lbEngrave] = layout;
         lbEngrave->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        lbEngrave->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+        lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
         lbEngrave->setText(QString("%1 Lv.%2").arg(normalEngrave.first).arg(normalEngrave.second));
     }
 

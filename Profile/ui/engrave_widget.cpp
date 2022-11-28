@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFontDatabase>
 
 EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
     QWidget(parent),
@@ -12,6 +13,8 @@ EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
     mEngrave(engrave)
 {
     ui->setupUi(this);
+
+    ui->groupEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10));
 
     createEngraveLayouts(engrave->getActiveEngraveList());
     createPenaltyLayouts(engrave->getActivePenaltyList());
@@ -94,14 +97,16 @@ QHBoxLayout* EngraveWidget::createEngraveLayout(QString iconPath, QString engrav
         lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
 
+    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2), 10);
+
     QLabel* lbEngraveName = new QLabel(engrave);
-    lbEngraveName->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+    lbEngraveName->setFont(fontNanumBold10);
     lbEngraveName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     engraveLayout->addWidget(lbEngraveName);
     mLabels.append(lbEngraveName);
 
     QLabel* lbEngraveValue = new QLabel(QString("Lv. %1").arg(level));
-    lbEngraveValue->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+    lbEngraveValue->setFont(fontNanumBold10);
     lbEngraveValue->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     engraveLayout->addWidget(lbEngraveValue);
     mLabels.append(lbEngraveValue);

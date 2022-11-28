@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QFontDatabase>
 
 SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
     QWidget(parent),
@@ -17,6 +18,11 @@ SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
     connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateSkillIcon(QNetworkReply*)));
 
     ui->hLayoutSkill->setAlignment(Qt::AlignLeft);
+
+    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
+    ui->groupSkill->setFont(fontNanumRegular10);
+    ui->groupRune->setFont(fontNanumRegular10);
+    ui->groupTripod->setFont(fontNanumRegular10);
 
     requestSkillIcon(iconUrl);
     setSkillName();
@@ -45,6 +51,7 @@ void SkillWidget::requestSkillIcon(QString iconUrl)
 
 void SkillWidget::setSkillName()
 {
+    ui->lbSkillName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
     ui->lbSkillName->setText(QString("%1 Lv.%2").arg(mSkill->getName()).arg(mSkill->getLevel()));
 }
 
@@ -56,7 +63,7 @@ void SkillWidget::setTripods()
     {
         const Tripod& tripod = tripods[i];
         QLabel* lbTripod = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
-        lbTripod->setFont(QFont("나눔스퀘어 네오 Bold", 10));
+        lbTripod->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
         lbTripod->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
         ui->vLayoutTripod->addWidget(lbTripod);
         mTripods.append(lbTripod);
@@ -79,6 +86,7 @@ void SkillWidget::setRuneName()
     if (rune == nullptr)
         return;
 
+    ui->lbRuneName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
     ui->lbRuneName->setText(rune->getName());
     ui->lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(rune->getGrade())]));
 }

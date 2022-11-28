@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QFontDatabase>
 
 BraceletWidget::BraceletWidget(QWidget *parent, const Bracelet* bracelet, QString iconUrl) :
     QWidget(parent),
@@ -40,6 +41,16 @@ void BraceletWidget::setText()
 
 void BraceletWidget::setStyleSheet()
 {
+    QString familyNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
+    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
+    QFont fontNanumRegular10 = QFont(familyNanumRegular, 10);
+    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+
+    ui->groupBracelet->setFont(fontNanumRegular10);
+    ui->lbIcon->setFont(fontNanumBold10);
+    ui->lbName->setFont(fontNanumBold10);
+    ui->lbEffect->setFont(fontNanumBold10);
+
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mBracelet->getGrade())]));
 }

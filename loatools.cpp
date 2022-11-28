@@ -6,12 +6,26 @@
 #include "profile/profile.h"
 #include "setting_adviser/setting_adviser.h"
 
+#include <QFontDatabase>
+
 LoaTools::LoaTools(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LoaTools)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
+
+    QString fontNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
+    QString fontNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
+
+    ui->pbAuctionCalc->setFont(QFont(fontNanumExtraBold, 16));
+    ui->pbEngrave->setFont(QFont(fontNanumExtraBold, 16));
+    ui->pbMeteorTimer->setFont(QFont(fontNanumExtraBold, 16));
+    ui->pbProfile->setFont(QFont(fontNanumExtraBold, 16));
+    ui->pbSettingAdviser->setFont(QFont(fontNanumExtraBold, 16));
+
+    ui->groupCharacter->setFont(QFont(fontNanumRegular, 10));
+    ui->groupRaid->setFont(QFont(fontNanumRegular, 10));
 
     ui->hLayoutCharacter1->setAlignment(Qt::AlignLeft);
     ui->hLayoutCharacter2->setAlignment(Qt::AlignLeft);

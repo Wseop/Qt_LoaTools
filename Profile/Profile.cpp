@@ -28,6 +28,7 @@
 #include <QTabWidget>
 #include <QFile>
 #include <QDir>
+#include <QFontDatabase>
 
 Profile::Profile(QWidget *parent) :
     QWidget(parent),
@@ -57,6 +58,35 @@ void Profile::profileRequest(QString name)
 
 void Profile::initUI()
 {   
+    QString familyNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
+    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
+
+    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+    QFont fontNanumBold12 = QFont(familyNanumBold, 12);
+    QFont fontNanumBold16 = QFont(familyNanumBold, 16);
+    QFont fontNanumBold20 = QFont(familyNanumBold, 20);
+    QFont fontNanumRegular10 = QFont(familyNanumRegular, 10);
+
+    ui->leName->setFont(fontNanumBold10);
+    ui->pbSearch->setFont(fontNanumBold10);
+    ui->pbCharacterList->setFont(fontNanumBold10);
+    ui->groupGuild->setFont(fontNanumBold10);
+    ui->groupBoxItemLevel->setFont(fontNanumBold10);
+    ui->groupCard->setFont(fontNanumBold10);
+    ui->tabProfile->setFont(fontNanumBold10);
+    ui->tabEquip->setFont(fontNanumBold10);
+    ui->tabSkill->setFont(fontNanumBold10);
+
+    ui->lbClassLevel->setFont(fontNanumBold12);
+    ui->lbName->setFont(fontNanumBold12);
+
+    ui->lbServer->setFont(fontNanumBold16);
+    ui->lbGuild->setFont(fontNanumBold16);
+
+    ui->lbItemLevel->setFont(fontNanumBold20);
+
+    ui->groupGem->setFont(fontNanumRegular10);
+
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     ui->tabProfile->hide();

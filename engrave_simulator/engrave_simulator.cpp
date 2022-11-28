@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QFontDatabase>
 
 EngraveSimulator::EngraveSimulator(QWidget *parent) :
     QWidget(parent),
@@ -77,6 +78,34 @@ void EngraveSimulator::initMap()
 
 void EngraveSimulator::initUI()
 {
+    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
+    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+    QFont fontNanumBold11 = QFont(familyNanumBold, 11);
+    ui->lbLvAtt->setFont(fontNanumBold10);
+    ui->lbLvAttSpd->setFont(fontNanumBold10);
+    ui->lbLvDef->setFont(fontNanumBold10);
+    ui->lbLvSpd->setFont(fontNanumBold10);
+    ui->lbEar1->setFont(fontNanumBold11);
+    ui->lbEar2->setFont(fontNanumBold11);
+    ui->lbEngrave1->setFont(fontNanumBold11);
+    ui->lbEngrave2->setFont(fontNanumBold11);
+    ui->lbEquip->setFont(fontNanumBold11);
+    ui->lbNeck->setFont(fontNanumBold11);
+    ui->lbPenalty->setFont(fontNanumBold11);
+    ui->lbRing1->setFont(fontNanumBold11);
+    ui->lbRing2->setFont(fontNanumBold11);
+    ui->lbStone->setFont(fontNanumBold11);
+    ui->pbClearAll->setFont(fontNanumBold11);
+    ui->lbNameAtt->setFont(fontNanumBold11);
+    ui->lbNameAttSpd->setFont(fontNanumBold11);
+    ui->lbNameDef->setFont(fontNanumBold11);
+    ui->lbNameSpd->setFont(fontNanumBold11);
+
+    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
+
+    ui->groupEngrave->setFont(fontNanumRegular10);
+    ui->groupPenalty->setFont(fontNanumRegular10);
+
     // layout 연결
     ui->groupEngrave->setLayout(mEngraveLayout);
 
@@ -101,21 +130,25 @@ void EngraveSimulator::initUI()
     {
         mEngraveLEMap[i]->setFixedWidth(155);
         mEngraveLEMap[i]->setCompleter(cplEngrave);
+        mEngraveLEMap[i]->setFont(fontNanumRegular10);
     }
     for (int i = 0; i < mPenaltyCBMap.size(); i++)
     {
         mPenaltyCBMap[i]->setFixedWidth(155);
         mPenaltyCBMap[i]->addItems(mEngrave.getPenaltyList());
+        mPenaltyCBMap[i]->setFont(fontNanumRegular10);
     }
 
     // SpinBox 초기화 (UI)
     for (int i = 0; i < mEngraveSPBMap.size(); i++)
     {
         mEngraveSPBMap[i]->setFixedWidth(45);
+        mEngraveSPBMap[i]->setFont(fontNanumRegular10);
     }
     for (int i = 0; i < mPenaltySPBMap.size(); i++)
     {
         mPenaltySPBMap[i]->setFixedWidth(45);
+        mPenaltySPBMap[i]->setFont(fontNanumRegular10);
     }
     for (int index = INDEX_ACC_START; index <= INDEX_ACC_END; index++)
     {
@@ -213,8 +246,8 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-    lbName->setFont(QFont("나눔스퀘어 네오 Bold", 12, QFont::Bold));
-    lbLevel->setFont(QFont("나눔스퀘어 네오 Bold", 10, QFont::Bold));
+    lbName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12));
+    lbLevel->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
     if (level >= 1)
         lbLevel->setStyleSheet("QLabel { color : blue }");
 

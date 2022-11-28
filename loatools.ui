@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupRaid">
      <property name="font">
       <font>
        <family>나눔스퀘어 네오 Regular</family>
@@ -85,7 +85,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupCharacter">
      <property name="font">
       <font>
        <family>나눔스퀘어 네오 Regular</family>

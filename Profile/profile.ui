@@ -414,7 +414,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>799</width>
-                <height>642</height>
+                <height>643</height>
                </rect>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -506,7 +506,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>783</width>
-                <height>642</height>
+                <height>643</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="vLayoutSkill"/>

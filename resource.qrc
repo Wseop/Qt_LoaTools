@@ -109,4 +109,11 @@
         <file>resources/runes/10.png</file>
         <file>resources/runes/11.png</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file>resources/fonts/NanumSquareNeo-aLt.ttf</file>
+        <file>resources/fonts/NanumSquareNeo-bRg.ttf</file>
+        <file>resources/fonts/NanumSquareNeo-cBd.ttf</file>
+        <file>resources/fonts/NanumSquareNeo-dEb.ttf</file>
+        <file>resources/fonts/NanumSquareNeo-eHv.ttf</file>
+    </qresource>
 </RCC>

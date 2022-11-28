@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QFontDatabase>
 
 AbilityStoneWidget::AbilityStoneWidget(QWidget *parent, const AbilityStone* stone, QString iconUrl) :
     QWidget(parent),
@@ -46,6 +47,10 @@ void AbilityStoneWidget::setText()
 
 void AbilityStoneWidget::setStyleSheet()
 {
+    ui->groupStone->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10));
+    ui->lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    ui->lbName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mStone->getGrade())]));
 }
