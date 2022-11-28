@@ -5,6 +5,7 @@
 #include "enum/class.h"
 #include "http_client/http_client.h"
 #include "http_client/json_builder.h"
+#include "db/db.h"
 
 #include "ui/card_label.h"
 #include "ui/equip_widget.h"
@@ -737,11 +738,12 @@ void Profile::updateDB()
         }
 
         // DB update - Character
-        emit HttpClient::getInstance()->insertOrUpdateCharacter(
-                    JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel()));
+        QJsonObject characterObj = JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel()).object();
+        emit DB::getInstance()->insertDocument(Collection::Character, characterObj);
+
         // DB update - Setting
-        emit HttpClient::getInstance()->insertOrUpdateSetting(
-                    JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, mCharacter->getSetEffects()));
+        QJsonObject settingObj = JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, mCharacter->getSetEffects()).object();
+        emit DB::getInstance()->insertDocument(Collection::Setting, settingObj);
     }
 }
 

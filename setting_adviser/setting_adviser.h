@@ -28,15 +28,15 @@ private:
     void initConnect();
     void clearData();
 
-    void readSettingsByClass(QString cls);
+    void requestSettingsBySelectedClass();
     void renderSettings();
     void renderTopSettings();
 
 private slots:
-    void slotShowClassSelector();
-    void slotHandleReplySetSettings(QNetworkReply* reply);
+    void slotHandleSettingsBySelectedClass(QJsonArray* jsonSettings);
     void slotRequestAllSettings();
-    void slotHandleReplySetTopSettings(QNetworkReply* reply);
+    void slotShowClassSelector();
+    void slotHandleAllSettings(QJsonArray* jsonSettings);
 
 private:
     Ui::SettingAdviser *ui;

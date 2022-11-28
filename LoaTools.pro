@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     auction_calc/auction_calc.cpp \
+    db/db.cpp \
     engrave_simulator//engrave_simulator.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
@@ -44,9 +45,11 @@ SOURCES += \
 
 HEADERS += \
     auction_calc/auction_calc.h \
+    db/db.h \
     engrave_simulator/engrave_simulator.h \
     enum/ability.h \
     enum/class.h \
+    enum/collection.h \
     enum/set_effect.h \
     http_client/http_client.h \
     http_client/json_builder.h \
@@ -104,3 +107,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
+
+win32: LIBS += -L$$PWD/../../mongo-cxx-driver/lib/ -llibbsoncxx.dll
+
+INCLUDEPATH += $$PWD/../../mongo-cxx-driver/include
+DEPENDPATH += $$PWD/../../mongo-cxx-driver/include
+
+win32: LIBS += -L$$PWD/../../mongo-cxx-driver/lib/ -llibmongocxx.dll
+
+INCLUDEPATH += $$PWD/../../mongo-cxx-driver/include
+DEPENDPATH += $$PWD/../../mongo-cxx-driver/include

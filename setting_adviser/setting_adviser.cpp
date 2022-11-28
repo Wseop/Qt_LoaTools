@@ -5,6 +5,7 @@
 #include "setting_code.h"
 #include "enum/class.h"
 #include "ui/setting_widget.h"
+#include "db/db.h"
 
 #include <QNetworkReply>
 #include <QJsonArray>
@@ -59,7 +60,7 @@ void SettingAdviser::setSelectedClass(QString cls)
 
     m_selectedClass = strToEnumClass(classStr);
     ui->lbSelectedClass->setText(cls);
-    readSettingsByClass(classStr);
+    requestSettingsBySelectedClass();
 }
 
 void SettingAdviser::initConnect()
@@ -80,10 +81,48 @@ void SettingAdviser::clearData()
     m_mapSettingWidgetLayout.clear();
 }
 
-void SettingAdviser::readSettingsByClass(QString cls)
+void SettingAdviser::requestSettingsBySelectedClass()
 {
-    connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
-    emit HttpClient::getInstance()->readSettingsByClass(cls);
+    connect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleSettingsBySelectedClass(QJsonArray*)));
+    emit DB::getInstance()->requestDocumentsByClass(Collection::Setting, m_selectedClass);
+}
+
+void SettingAdviser::slotRequestAllSettings()
+{
+    ui->pbTopSetting->setDisabled(true);
+    ui->pbSelectClass->setDisabled(true);
+    ui->lbSelectedClass->clear();
+    ui->lbTotal->clear();
+    ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
+
+    connect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleAllSettings(QJsonArray*)));
+    emit DB::getInstance()->requestAllDocuments(Collection::Setting);
+}
+
+void SettingAdviser::slotHandleSettingsBySelectedClass(QJsonArray* jsonSettings)
+{
+    disconnect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleSettingsBySelectedClass(QJsonArray*)));
+
+    m_numOfCharacters = jsonSettings->size();
+    // setting code 생성 및 추가
+    m_settingCodes.clear();
+    QMap<QString, int> settingCodeCount;
+    for (const QJsonValue& jsonValue : *jsonSettings)
+    {
+        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        if (settingCode.contains("-1"))
+            continue;
+        settingCodeCount[settingCode] += 1;
+    }
+
+    // value 기준 내림차순 정렬
+    m_settingCodes = QList<SettingCodeCount>(settingCodeCount.keyValueBegin(), settingCodeCount.keyValueEnd());
+    std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](SettingCodeCount a, SettingCodeCount b) {
+        return a.second > b.second;
+    });
+
+    renderSettings();
+    delete jsonSettings;
 }
 
 void SettingAdviser::renderSettings()
@@ -200,46 +239,9 @@ void SettingAdviser::slotShowClassSelector()
     m_pClassSelector->show();
 }
 
-void SettingAdviser::slotHandleReplySetSettings(QNetworkReply* reply)
+void SettingAdviser::slotHandleAllSettings(QJsonArray* jsonSettings)
 {
-    QJsonArray jsonSettings = QJsonDocument::fromJson(reply->readAll()).array();
-
-    m_numOfCharacters = jsonSettings.size();
-    // setting code 생성 및 추가
-    m_settingCodes.clear();
-    QMap<QString, int> settingCodeCount;
-    for (const QJsonValue& jsonValue : jsonSettings)
-    {
-        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
-        if (settingCode.contains("-1"))
-            continue;
-        settingCodeCount[settingCode] += 1;
-    }
-
-    // value 기준 내림차순 정렬
-    m_settingCodes = QList<SettingCodeCount>(settingCodeCount.keyValueBegin(), settingCodeCount.keyValueEnd());
-    std::sort(m_settingCodes.begin(), m_settingCodes.end(), [](SettingCodeCount a, SettingCodeCount b) {
-        return a.second > b.second;
-    });
-
-    disconnect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetSettings(QNetworkReply*)));
-    renderSettings();
-}
-
-void SettingAdviser::slotRequestAllSettings()
-{
-    connect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetTopSettings(QNetworkReply*)));
-    emit HttpClient::getInstance()->readSettings();
-    ui->pbTopSetting->setDisabled(true);
-    ui->pbSelectClass->setDisabled(true);
-    ui->lbSelectedClass->clear();
-    ui->lbTotal->clear();
-    ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
-}
-
-void SettingAdviser::slotHandleReplySetTopSettings(QNetworkReply *reply)
-{
-    QJsonArray jsonSettings = QJsonDocument::fromJson(reply->readAll()).array();
+    disconnect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleAllSettings(QJsonArray*)));
 
     m_topSettingCodes.clear();
     m_topSettingCodes = QList<QList<SettingCodeCount>>(getNumOfClass() + 1);
@@ -247,7 +249,7 @@ void SettingAdviser::slotHandleReplySetTopSettings(QNetworkReply *reply)
     m_classCounts = QList<int>(getNumOfClass() + 1);
 
     QList<QMap<QString, int>> settingCodeCounts(getNumOfClass() + 1);
-    for (const QJsonValue& jsonValue : jsonSettings)
+    for (const QJsonValue& jsonValue : *jsonSettings)
     {
         QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
         if (settingCode.contains("-1"))
@@ -273,6 +275,6 @@ void SettingAdviser::slotHandleReplySetTopSettings(QNetworkReply *reply)
 
     ui->pbTopSetting->setEnabled(true);
     ui->pbSelectClass->setEnabled(true);
-    disconnect(&HttpClient::getInstance()->getNetworkManagerSetting(), SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplySetTopSettings(QNetworkReply*)));
     renderTopSettings();
+    delete jsonSettings;
 }
