@@ -450,7 +450,7 @@ void Profile::parseStone(const QJsonObject &stoneObj)
                     }
                     else
                     {
-                        stone->setPenalty(engrave);
+                        stone->addEngrave(engrave);
                         extractEngraveValue(0, engrave);
                     }
                 }
