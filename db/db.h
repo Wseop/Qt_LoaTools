@@ -39,8 +39,8 @@ signals:
     void updateDocument(Collection collection, QJsonObject docObj);
     void deleteDocument(Collection collection, QString name);
 
-    void finished(QJsonArray*);
-    void finished(QJsonObject*);
+    void finished(QVariantList);
+    void finished(QJsonObject);
 
 private slots:
     void slotRequestAllDocuments(Collection collection);

@@ -59,7 +59,11 @@ void SettingAdviser::setSelectedClass(QString cls)
     QString classStr = enumClassKtoE(cls);
 
     m_selectedClass = strToEnumClass(classStr);
-    ui->lbSelectedClass->setText(cls);
+
+    ui->lbSelectedClass->clear();
+    ui->lbTotal->clear();
+    ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
+
     requestSettingsBySelectedClass();
 }
 
@@ -83,7 +87,7 @@ void SettingAdviser::clearData()
 
 void SettingAdviser::requestSettingsBySelectedClass()
 {
-    connect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleSettingsBySelectedClass(QJsonArray*)));
+    connect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
     emit DB::getInstance()->requestDocumentsByClass(Collection::Setting, m_selectedClass);
 }
 
@@ -95,21 +99,21 @@ void SettingAdviser::slotRequestAllSettings()
     ui->lbTotal->clear();
     ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
 
-    connect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleAllSettings(QJsonArray*)));
+    connect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
     emit DB::getInstance()->requestAllDocuments(Collection::Setting);
 }
 
-void SettingAdviser::slotHandleSettingsBySelectedClass(QJsonArray* jsonSettings)
+void SettingAdviser::slotHandleSettingsBySelectedClass(QVariantList jsonSettings)
 {
-    disconnect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleSettingsBySelectedClass(QJsonArray*)));
+    disconnect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
 
-    m_numOfCharacters = jsonSettings->size();
+    m_numOfCharacters = jsonSettings.size();
     // setting code 생성 및 추가
     m_settingCodes.clear();
     QMap<QString, int> settingCodeCount;
-    for (const QJsonValue& jsonValue : *jsonSettings)
+    for (const QVariant& jsonValue : jsonSettings)
     {
-        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        QString settingCode = SettingCode::generateSettingCode(jsonValue.toJsonObject());
         if (settingCode.contains("-1"))
             continue;
         settingCodeCount[settingCode] += 1;
@@ -122,13 +126,13 @@ void SettingAdviser::slotHandleSettingsBySelectedClass(QJsonArray* jsonSettings)
     });
 
     renderSettings();
-    delete jsonSettings;
 }
 
 void SettingAdviser::renderSettings()
 {
     clearData();
 
+    ui->lbSelectedClass->setText(enumClassToKStr(m_selectedClass));
     QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1 캐릭터").arg(m_numOfCharacters);
     ui->lbTotal->setText(totalText);
     ui->lbInfo->setText("(직업 각인 별 최대 10개의 세팅이 표기되며, 카던 및 pvp 세팅이 포함되어 있을 수 있습니다.)");
@@ -239,9 +243,9 @@ void SettingAdviser::slotShowClassSelector()
     m_pClassSelector->show();
 }
 
-void SettingAdviser::slotHandleAllSettings(QJsonArray* jsonSettings)
+void SettingAdviser::slotHandleAllSettings(QVariantList jsonSettings)
 {
-    disconnect(DB::getInstance(), SIGNAL(finished(QJsonArray*)), this, SLOT(slotHandleAllSettings(QJsonArray*)));
+    disconnect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
 
     m_topSettingCodes.clear();
     m_topSettingCodes = QList<QList<SettingCodeCount>>(getNumOfClass() + 1);
@@ -249,13 +253,13 @@ void SettingAdviser::slotHandleAllSettings(QJsonArray* jsonSettings)
     m_classCounts = QList<int>(getNumOfClass() + 1);
 
     QList<QMap<QString, int>> settingCodeCounts(getNumOfClass() + 1);
-    for (const QJsonValue& jsonValue : *jsonSettings)
+    for (const QVariant& jsonValue : jsonSettings)
     {
-        QString settingCode = SettingCode::generateSettingCode(jsonValue.toObject());
+        QString settingCode = SettingCode::generateSettingCode(jsonValue.toJsonObject());
         if (settingCode.contains("-1"))
             continue;
 
-        Class cls = strToEnumClass(jsonValue.toObject().find("Class")->toString());
+        Class cls = strToEnumClass(jsonValue.toJsonObject().find("Class")->toString());
         settingCodeCounts[static_cast<int>(cls)][settingCode] += 1;
         m_classCounts[static_cast<int>(cls)] += 1;
     }
@@ -276,5 +280,4 @@ void SettingAdviser::slotHandleAllSettings(QJsonArray* jsonSettings)
     ui->pbTopSetting->setEnabled(true);
     ui->pbSelectClass->setEnabled(true);
     renderTopSettings();
-    delete jsonSettings;
 }

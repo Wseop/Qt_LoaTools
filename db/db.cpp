@@ -121,43 +121,43 @@ mongocxx::collection DB::getCollection(Collection collection)
 
 void DB::slotRequestAllDocuments(Collection collection)
 {
-    QJsonArray* ret = new QJsonArray();
+    QJsonArray ret;
 
     mongocxx::cursor cursor = getCollection(collection).find({});
     for (auto doc : cursor)
     {
         QString docStr = bsoncxx::to_json(doc).c_str();
         QJsonObject docObj(QJsonDocument::fromJson(docStr.toUtf8()).object());
-        ret->append(docObj);
+        ret.append(docObj);
     }
 
-    emit finished(ret);
+    emit finished(ret.toVariantList());
 }
 
 void DB::slotRequestDocumentsByClass(Collection collection, Class cls)
 {
-    QJsonArray* ret = new QJsonArray();
+    QJsonArray ret;
 
     mongocxx::cursor cursor = getCollection(collection).find(document{} << "Class" << enumClassToStr(cls).toStdString() << finalize);
     for (auto doc : cursor)
     {
         QString docStr = bsoncxx::to_json(doc).c_str();
         QJsonObject docObj(QJsonDocument::fromJson(docStr.toUtf8()).object());
-        ret->append(docObj);
+        ret.append(docObj);
     }
 
-    emit finished(ret);
+    emit finished(ret.toVariantList());
 }
 
 void DB::slotRequestDocumentByName(Collection collection, QString name)
 {
-    QJsonObject* ret = nullptr;
+    QJsonObject ret;
 
     auto doc = getCollection(collection).find_one(document{} << "Name" << name.toStdString() << finalize);
     if (doc)
     {
         QString docStr = bsoncxx::to_json(*doc).c_str();
-        ret = new QJsonObject(QJsonDocument::fromJson(docStr.toUtf8()).object());
+        ret = QJsonDocument::fromJson(docStr.toUtf8()).object();
     }
 
     emit finished(ret);

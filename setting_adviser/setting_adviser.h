@@ -33,10 +33,10 @@ private:
     void renderTopSettings();
 
 private slots:
-    void slotHandleSettingsBySelectedClass(QJsonArray* jsonSettings);
+    void slotHandleSettingsBySelectedClass(QVariantList jsonSettings);
     void slotRequestAllSettings();
     void slotShowClassSelector();
-    void slotHandleAllSettings(QJsonArray* jsonSettings);
+    void slotHandleAllSettings(QVariantList jsonSettings);
 
 private:
     Ui::SettingAdviser *ui;
