@@ -11,7 +11,7 @@ class RankingBoard : public QWidget
 {
     Q_OBJECT
 
-public:
+private:
     explicit RankingBoard(QWidget *parent = nullptr);
     ~RankingBoard();
 

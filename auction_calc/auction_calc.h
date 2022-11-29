@@ -11,7 +11,7 @@ class AuctionCalc : public QWidget
 {
     Q_OBJECT
 
-public:
+private:
     explicit AuctionCalc(QWidget *parent = nullptr);
     ~AuctionCalc();
 

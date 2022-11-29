@@ -14,7 +14,7 @@ class MeteorTimer : public QWidget
 
     const int MAX_COUNT = 100;
 
-public:
+private:
     explicit MeteorTimer(QWidget *parent = nullptr);
     ~MeteorTimer();
 

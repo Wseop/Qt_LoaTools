@@ -18,10 +18,11 @@ class SettingAdviser : public QWidget
 {
     Q_OBJECT
 
-public:
+private:
     explicit SettingAdviser(QWidget *parent = nullptr);
     ~SettingAdviser();
 
+public:
     void setSelectedClass(QString cls);
 
 public:
