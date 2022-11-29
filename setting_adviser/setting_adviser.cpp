@@ -20,7 +20,7 @@ SettingAdviser* SettingAdviser::m_pSettingAdviser = nullptr;
 SettingAdviser::SettingAdviser(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingAdviser),
-    m_pClassSelector(new ClassSelector(nullptr, this))
+    m_pClassSelector(new ClassSelector(this, ParentClass::SettingAdviser))
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -57,11 +57,9 @@ SettingAdviser::~SettingAdviser()
     destroyInstance();
 }
 
-void SettingAdviser::setSelectedClass(QString cls)
+void SettingAdviser::setSelectedClass(Class cls)
 {
-    QString classStr = enumClassKtoE(cls);
-
-    m_selectedClass = strToEnumClass(classStr);
+    m_selectedClass = cls;
 
     ui->lbSelectedClass->clear();
     ui->lbTotal->clear();

@@ -23,7 +23,7 @@ private:
     ~SettingAdviser();
 
 public:
-    void setSelectedClass(QString cls);
+    void setSelectedClass(Class cls);
 
 public:
     static SettingAdviser* getInstance();

@@ -3,6 +3,13 @@
 
 #include <QWidget>
 
+enum class ParentClass
+{
+    None,
+    SettingAdviser,
+    RankingBoard,
+};
+
 namespace Ui {
 class ClassSelector;
 }
@@ -12,7 +19,7 @@ class ClassSelector : public QWidget
     Q_OBJECT
 
 public:
-    explicit ClassSelector(QWidget *parent = nullptr, QWidget* ret = nullptr);
+    explicit ClassSelector(QWidget *parent = nullptr, ParentClass parentClass = ParentClass::None);
     ~ClassSelector();
 
 protected:
@@ -26,6 +33,7 @@ private:
     Ui::ClassSelector *ui;
 
     QWidget* m_pParent = nullptr;
+    ParentClass m_parentClass;
 };
 
 #endif // CLASS_SELECTOR_H

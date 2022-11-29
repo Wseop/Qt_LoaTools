@@ -1,14 +1,15 @@
 #include "class_selector.h"
 #include "ui_class_selector.h"
 #include "setting_adviser/setting_adviser.h"
+#include "ranking_board/ranking_board.h"
 
 #include <QCloseEvent>
 #include <QFontDatabase>
 
-ClassSelector::ClassSelector(QWidget *parent, QWidget* ret) :
-    QWidget(parent),
+ClassSelector::ClassSelector(QWidget *parent, ParentClass parentClass) :
     ui(new Ui::ClassSelector),
-    m_pParent(ret)
+    m_pParent(parent),
+    m_parentClass(parentClass)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -70,98 +71,144 @@ void ClassSelector::initStyleSheet()
 }
 
 void ClassSelector::initConnect()
-{
+{   
     connect(ui->pbDestroyer, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("디스트로이어");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Destroyer);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Destroyer);
     });
     connect(ui->pbWarlord, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("워로드");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Warlord);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Warlord);
     });
     connect(ui->pbBerserker, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("버서커");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Berserker);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Berserker);
     });
     connect(ui->pbHolyknight, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("홀리나이트");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Holyknight);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Holyknight);
     });
     connect(ui->pbStriker, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("스트라이커");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Striker);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Striker);
     });
     connect(ui->pbBattlemaster, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("배틀마스터");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Battlemaster);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Battlemaster);
     });
     connect(ui->pbInfighter, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("인파이터");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Infighter);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Infighter);
     });
     connect(ui->pbSoulmaster, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("기공사");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Soulmaster);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Soulmaster);
     });
     connect(ui->pbLancemaster, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("창술사");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Lancemaster);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Lancemaster);
     });
     connect(ui->pbDevilHunter, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("데빌헌터");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::DevilHunter);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::DevilHunter);
     });
     connect(ui->pbBlaster, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("블래스터");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Blaster);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Blaster);
     });
     connect(ui->pbHawkeye, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("호크아이");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Hawkeye);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Hawkeye);
     });
     connect(ui->pbScouter, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("스카우터");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Scouter);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Scouter);
     });
     connect(ui->pbGunslinger, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("건슬링어");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Gunslinger);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Gunslinger);
     });
     connect(ui->pbBard, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("바드");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Bard);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Bard);
     });
     connect(ui->pbSummoner, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("서머너");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Summoner);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Summoner);
     });
     connect(ui->pbArcana, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("아르카나");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Arcana);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Arcana);
     });
     connect(ui->pbSorceress, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("소서리스");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Sorceress);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Sorceress);
     });
     connect(ui->pbBlade, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("블레이드");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Blade);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Blade);
     });
     connect(ui->pbDemonic, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("데모닉");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Demonic);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Demonic);
     });
     connect(ui->pbReaper, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("리퍼");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Reaper);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Reaper);
     });
     connect(ui->pbArtist, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("도화가");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Artist);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Artist);
     });
     connect(ui->pbAeromancer, &QPushButton::pressed, [&]() {
-        SettingAdviser* pSettingAdviser = static_cast<SettingAdviser*>(m_pParent);
-        pSettingAdviser->setSelectedClass("기상술사");
+        if (m_parentClass == ParentClass::SettingAdviser)
+            SettingAdviser::getInstance()->setSelectedClass(Class::Aeromancer);
+        else if (m_parentClass == ParentClass::RankingBoard)
+            RankingBoard::getInstance()->setSelectedClass(Class::Aeromancer);
     });
     connect(ui->pbDestroyer, SIGNAL(pressed()), this, SLOT(close()));
     connect(ui->pbWarlord, SIGNAL(pressed()), this, SLOT(close()));
