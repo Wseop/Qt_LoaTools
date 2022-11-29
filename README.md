@@ -39,6 +39,3 @@
   "SetEffects":["사멸", "사멸", "악몽", "악몽", "악몽", "악몽"]
 }
 ```
-## 기타
-### 폰트
-* [나눔스퀘어 네오](https://campaign.naver.com/nanumsquare_neo/#download) 폰트로 제작되었습니다. 
