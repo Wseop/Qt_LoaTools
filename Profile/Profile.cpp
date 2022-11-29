@@ -66,7 +66,6 @@ void Profile::initUI()
     QFont fontNanumBold12 = QFont(familyNanumBold, 12);
     QFont fontNanumBold16 = QFont(familyNanumBold, 16);
     QFont fontNanumBold20 = QFont(familyNanumBold, 20);
-    QFont fontNanumRegular10 = QFont(familyNanumRegular, 10);
 
     ui->leName->setFont(fontNanumBold10);
     ui->pbSearch->setFont(fontNanumBold10);
@@ -85,8 +84,6 @@ void Profile::initUI()
     ui->lbGuild->setFont(fontNanumBold16);
 
     ui->lbItemLevel->setFont(fontNanumBold20);
-
-    ui->groupGem->setFont(fontNanumRegular10);
 
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 

@@ -440,33 +440,11 @@
                 </layout>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupGem">
-                 <property name="maximumSize">
-                  <size>
-                   <width>480</width>
-                   <height>16777215</height>
-                  </size>
+                <layout class="QVBoxLayout" name="vLayoutGem">
+                 <property name="spacing">
+                  <number>0</number>
                  </property>
-                 <property name="font">
-                  <font>
-                   <family>나눔스퀘어 네오 Regular</family>
-                   <pointsize>10</pointsize>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="title">
-                  <string>보석</string>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_2">
-                  <item>
-                   <layout class="QVBoxLayout" name="vLayoutGem">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                   </layout>
-                  </item>
-                 </layout>
-                </widget>
+                </layout>
                </item>
               </layout>
              </widget>
