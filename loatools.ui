@@ -26,7 +26,7 @@
      <property name="title">
       <string>레이드</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="hLayoutGroupRaid">
       <item>
        <widget class="QPushButton" name="pbMeteorTimer">
         <property name="minimumSize">
@@ -128,7 +128,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pbEngrave">
+           <widget class="QPushButton" name="pbRankingBoard">
             <property name="minimumSize">
              <size>
               <width>150</width>
@@ -141,16 +141,9 @@
               <height>16777215</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>나눔스퀘어 네오 ExtraBold</family>
-              <pointsize>16</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
             <property name="text">
-             <string>각인
-시뮬레이터</string>
+             <string>캐릭터
+랭킹</string>
             </property>
            </widget>
           </item>
@@ -184,7 +177,35 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="hLayoutCharacter2"/>
+         <layout class="QHBoxLayout" name="hLayoutCharacter2">
+          <item>
+           <widget class="QPushButton" name="pbEngrave">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>나눔스퀘어 네오 ExtraBold</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>각인
+시뮬레이터</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>

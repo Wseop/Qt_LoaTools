@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QFontDatabase>
 
+EngraveSimulator* EngraveSimulator::m_pEngraveSimulator = nullptr;
+
 EngraveSimulator::EngraveSimulator(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EngraveSimulator),
@@ -25,6 +27,24 @@ EngraveSimulator::EngraveSimulator(QWidget *parent) :
 EngraveSimulator::~EngraveSimulator()
 {
     delete ui;
+    destroyInstance();
+}
+
+EngraveSimulator *EngraveSimulator::getInstance()
+{
+    if (m_pEngraveSimulator == nullptr)
+        m_pEngraveSimulator = new EngraveSimulator();
+
+    return m_pEngraveSimulator;
+}
+
+void EngraveSimulator::destroyInstance()
+{
+    if (m_pEngraveSimulator == nullptr)
+        return;
+
+    delete m_pEngraveSimulator;
+    m_pEngraveSimulator = nullptr;
 }
 
 void EngraveSimulator::initMap()

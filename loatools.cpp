@@ -5,6 +5,7 @@
 #include "engrave_simulator/engrave_simulator.h"
 #include "profile/profile.h"
 #include "setting_adviser/setting_adviser.h"
+#include "ranking_board/ranking_board.h"
 
 #include <QFontDatabase>
 
@@ -23,12 +24,14 @@ LoaTools::LoaTools(QWidget *parent)
     ui->pbMeteorTimer->setFont(QFont(fontNanumExtraBold, 16));
     ui->pbProfile->setFont(QFont(fontNanumExtraBold, 16));
     ui->pbSettingAdviser->setFont(QFont(fontNanumExtraBold, 16));
+    ui->pbRankingBoard->setFont(QFont(fontNanumExtraBold, 16));
 
     ui->groupCharacter->setFont(QFont(fontNanumRegular, 10));
     ui->groupRaid->setFont(QFont(fontNanumRegular, 10));
 
     ui->hLayoutCharacter1->setAlignment(Qt::AlignLeft);
     ui->hLayoutCharacter2->setAlignment(Qt::AlignLeft);
+    ui->hLayoutGroupRaid->setAlignment(Qt::AlignLeft);
 
     initConnect();
 }
@@ -45,39 +48,35 @@ void LoaTools::initConnect()
     connect(ui->pbEngrave, SIGNAL(pressed()), this, SLOT(slotOpenEngraveSimulator()));
     connect(ui->pbProfile, SIGNAL(pressed()), this, SLOT(slotOpenProfile()));
     connect(ui->pbSettingAdviser, SIGNAL(pressed()), this, SLOT(slotOpenSettingAdviser()));
+    connect(ui->pbRankingBoard, SIGNAL(pressed()), this, SLOT(slotOpenRankingBoard()));
 }
 
 void LoaTools::slotOpenMeteorTimer()
 {
-    if (m_meteorTimer == nullptr)
-        m_meteorTimer = new MeteorTimer();
-    m_meteorTimer->show();
+    MeteorTimer::getInstance()->show();
 }
 
 void LoaTools::slotOpenAuctionCalc()
 {
-    if (m_auctionCalc == nullptr)
-        m_auctionCalc = new AuctionCalc();
-    m_auctionCalc->show();
+    AuctionCalc::getInstance()->show();
 }
 
 void LoaTools::slotOpenEngraveSimulator()
 {
-    if (m_engrave == nullptr)
-        m_engrave = new EngraveSimulator();
-    m_engrave->show();
+    EngraveSimulator::getInstance()->show();
 }
 
 void LoaTools::slotOpenProfile()
 {
-    if (m_profile == nullptr)
-        m_profile = new Profile();
-    m_profile->show();
+    Profile::getInstance()->show();
 }
 
 void LoaTools::slotOpenSettingAdviser()
 {
-    if (m_settingAdviser == nullptr)
-        m_settingAdviser = new SettingAdviser();
-    m_settingAdviser->show();
+    SettingAdviser::getInstance()->show();
+}
+
+void LoaTools::slotOpenRankingBoard()
+{
+    RankingBoard::getInstance()->show();
 }

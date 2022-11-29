@@ -18,10 +18,16 @@ public:
     explicit MeteorTimer(QWidget *parent = nullptr);
     ~MeteorTimer();
 
+public:
+    static MeteorTimer* getInstance();
+    static void destroyInstance();
+
 private:
     Ui::MeteorTimer *ui;
     QTimer* mTimer;
     int mCount;
+
+    static MeteorTimer* m_pMeteorTimer;
 
 private:
     void initConnect();

@@ -15,6 +15,8 @@
 
 #include <algorithm>
 
+SettingAdviser* SettingAdviser::m_pSettingAdviser = nullptr;
+
 SettingAdviser::SettingAdviser(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingAdviser),
@@ -52,6 +54,7 @@ SettingAdviser::~SettingAdviser()
 {
     delete m_pClassSelector;
     delete ui;
+    destroyInstance();
 }
 
 void SettingAdviser::setSelectedClass(QString cls)
@@ -65,6 +68,23 @@ void SettingAdviser::setSelectedClass(QString cls)
     ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
 
     requestSettingsBySelectedClass();
+}
+
+SettingAdviser *SettingAdviser::getInstance()
+{
+    if (m_pSettingAdviser == nullptr)
+        m_pSettingAdviser = new SettingAdviser();
+
+    return m_pSettingAdviser;
+}
+
+void SettingAdviser::destroyInstance()
+{
+    if (m_pSettingAdviser == nullptr)
+        return;
+
+    delete m_pSettingAdviser;
+    m_pSettingAdviser = nullptr;
 }
 
 void SettingAdviser::initConnect()

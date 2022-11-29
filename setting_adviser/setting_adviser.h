@@ -24,6 +24,10 @@ public:
 
     void setSelectedClass(QString cls);
 
+public:
+    static SettingAdviser* getInstance();
+    static void destroyInstance();
+
 private:
     void initConnect();
     void clearData();
@@ -54,6 +58,8 @@ private:
     Engrave m_engrave;
 
     QMap<class SettingWidget*, class QVBoxLayout*> m_mapSettingWidgetLayout;
+
+    static SettingAdviser* m_pSettingAdviser;
 };
 
 #endif // SETTING_ADVISER_H

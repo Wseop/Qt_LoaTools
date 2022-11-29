@@ -3,6 +3,8 @@
 
 #include <QFontDatabase>
 
+MeteorTimer* MeteorTimer::m_pMeteorTimer = nullptr;
+
 MeteorTimer::MeteorTimer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MeteorTimer),
@@ -31,6 +33,24 @@ MeteorTimer::~MeteorTimer()
 {
     delete mTimer;
     delete ui;
+    destroyInstance();
+}
+
+MeteorTimer *MeteorTimer::getInstance()
+{
+    if (m_pMeteorTimer == nullptr)
+        m_pMeteorTimer = new MeteorTimer();
+
+    return m_pMeteorTimer;
+}
+
+void MeteorTimer::destroyInstance()
+{
+    if (m_pMeteorTimer == nullptr)
+        return;
+
+    delete m_pMeteorTimer;
+    m_pMeteorTimer = nullptr;
 }
 
 void MeteorTimer::initConnect()

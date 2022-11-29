@@ -19,6 +19,10 @@ public:
     explicit EngraveSimulator(QWidget *parent = nullptr);
     ~EngraveSimulator();
 
+public:
+    static EngraveSimulator* getInstance();
+    static void destroyInstance();
+
 private:
     void initMap();
     void initUI();
@@ -52,6 +56,8 @@ private:
 
     QList<class QLabel*> mLabelList;
     QList<class QVBoxLayout*> mVBoxLayoutList;
+
+    static EngraveSimulator* m_pEngraveSimulator;
 
 private slots:
     void slotClearInput();

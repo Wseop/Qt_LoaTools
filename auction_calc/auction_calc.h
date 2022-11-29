@@ -15,6 +15,10 @@ public:
     explicit AuctionCalc(QWidget *parent = nullptr);
     ~AuctionCalc();
 
+public:
+    static AuctionCalc* getInstance();
+    static void destroyInstance();
+
 private:
     void initUI();
     void initConnect();
@@ -27,6 +31,8 @@ private:
 
     Ui::AuctionCalc *ui;
     class QIntValidator* mIntValidator;
+
+    static AuctionCalc* m_pAuctionCalc;
 
 private slots:
     void slotCalc();

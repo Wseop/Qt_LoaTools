@@ -38,6 +38,7 @@ SOURCES += \
     profile/ui/equip_widget.cpp \
     profile/ui/gem_widget.cpp \
     profile/ui/skill_widget.cpp \
+    ranking_board/ranking_board.cpp \
     setting_adviser/class_selector.cpp \
     setting_adviser/setting_adviser.cpp \
     setting_adviser/setting_code.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     profile/ui/equip_widget.h \
     profile/ui/gem_widget.h \
     profile/ui/skill_widget.h \
+    ranking_board/ranking_board.h \
     setting_adviser/class_selector.h \
     setting_adviser/setting_adviser.h \
     setting_adviser/setting_code.h \
@@ -96,6 +98,7 @@ FORMS += \
     profile/ui/equip_widget.ui \
     profile/ui/gem_widget.ui \
     profile/ui/skill_widget.ui \
+    ranking_board/ranking_board.ui \
     setting_adviser/class_selector.ui \
     setting_adviser/setting_adviser.ui \
     setting_adviser/ui/setting_widget.ui

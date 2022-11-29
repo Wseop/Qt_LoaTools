@@ -31,6 +31,8 @@
 #include <QDir>
 #include <QFontDatabase>
 
+Profile* Profile::m_pProfile = nullptr;
+
 Profile::Profile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Profile),
@@ -49,12 +51,30 @@ Profile::Profile(QWidget *parent) :
 Profile::~Profile()
 {
     delete ui;
+    destroyInstance();
 }
 
 void Profile::profileRequest(QString name)
 {
     ui->leName->setText(name);
     emit ui->pbSearch->pressed();
+}
+
+Profile *Profile::getInstance()
+{
+    if (m_pProfile == nullptr)
+        m_pProfile = new Profile();
+
+    return m_pProfile;
+}
+
+void Profile::destroyInstance()
+{
+    if (m_pProfile == nullptr)
+        return ;
+
+    delete m_pProfile;
+    m_pProfile = nullptr;
 }
 
 void Profile::initUI()

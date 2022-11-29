@@ -32,5 +32,6 @@ private slots:
     void slotOpenEngraveSimulator();
     void slotOpenProfile();
     void slotOpenSettingAdviser();
+    void slotOpenRankingBoard();
 };
 #endif // LOATOOLS_H

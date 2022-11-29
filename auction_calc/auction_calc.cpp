@@ -4,6 +4,8 @@
 #include <QIntValidator>
 #include <QFontDatabase>
 
+AuctionCalc* AuctionCalc::m_pAuctionCalc = nullptr;
+
 AuctionCalc::AuctionCalc(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AuctionCalc),
@@ -21,6 +23,24 @@ AuctionCalc::~AuctionCalc()
 {
     delete mIntValidator;
     delete ui;
+    destroyInstance();
+}
+
+AuctionCalc *AuctionCalc::getInstance()
+{
+    if (m_pAuctionCalc == nullptr)
+        m_pAuctionCalc = new AuctionCalc;
+
+    return m_pAuctionCalc;
+}
+
+void AuctionCalc::destroyInstance()
+{
+    if (m_pAuctionCalc == nullptr)
+        return;
+
+    delete m_pAuctionCalc;
+    m_pAuctionCalc = nullptr;
 }
 
 void AuctionCalc::initUI()

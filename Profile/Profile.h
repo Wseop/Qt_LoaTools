@@ -36,6 +36,10 @@ public:
 
     void profileRequest(QString name);
 
+public:
+    static Profile* getInstance();
+    static void destroyInstance();
+
 private:
     void initUI();
     void initConnect();
@@ -81,6 +85,8 @@ private:
     class EngraveWidget* mEngraveWidget = nullptr;
     QList<class CardLabel*> mCardLabels;
     QList<class SkillWidget*> mSkillWidgets;
+
+    static Profile* m_pProfile;
 
 signals:
     void sigUpdateTitle();
