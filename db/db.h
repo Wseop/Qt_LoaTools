@@ -31,8 +31,8 @@ public:
     mongocxx::collection getCollection(Collection collection);
 
 signals:
-    void requestAllDocuments(Collection collection);
-    void requestDocumentsByClass(Collection collection, Class cls);
+    void requestAllDocuments(Collection collection, int order, QString orderField);
+    void requestDocumentsByClass(Collection collection, Class cls, int order, QString orderField);
     void requestDocumentByName(Collection collection, QString name);
 
     void insertDocument(Collection collection, QJsonObject docObj);
@@ -43,8 +43,8 @@ signals:
     void finished(QJsonObject);
 
 private slots:
-    void slotRequestAllDocuments(Collection collection);
-    void slotRequestDocumentsByClass(Collection collection, Class cls);
+    void slotRequestAllDocuments(Collection collection, int order, QString orderField);
+    void slotRequestDocumentsByClass(Collection collection, Class cls, int order, QString orderField);
     void slotRequestDocumentByName(Collection collection, QString name);
 
     void slotInsertDocument(Collection collection, QJsonObject docObj);

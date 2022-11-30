@@ -5,6 +5,7 @@
 
 #include <mongocxx/uri.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/options/find.hpp>
 #include <bsoncxx/json.hpp>
 
 using namespace bsoncxx::builder::stream;
@@ -18,8 +19,8 @@ DB::DB()
     connect(this, SIGNAL(updateDocument(Collection, QJsonObject)), this, SLOT(slotUpdateDocument(Collection, QJsonObject)));
     connect(this, SIGNAL(deleteDocument(Collection, QString)), this, SLOT(slotDeleteDocument(Collection, QString)));
 
-    connect(this, SIGNAL(requestAllDocuments(Collection)), this, SLOT(slotRequestAllDocuments(Collection)));
-    connect(this, SIGNAL(requestDocumentsByClass(Collection,Class)), this, SLOT(slotRequestDocumentsByClass(Collection,Class)));
+    connect(this, SIGNAL(requestAllDocuments(Collection, int, QString)), this, SLOT(slotRequestAllDocuments(Collection, int, QString)));
+    connect(this, SIGNAL(requestDocumentsByClass(Collection,Class,int,QString)), this, SLOT(slotRequestDocumentsByClass(Collection,Class,int,QString)));
     connect(this, SIGNAL(requestDocumentByName(Collection,QString)), this, SLOT(slotRequestDocumentByName(Collection,QString)));
 }
 
@@ -119,11 +120,23 @@ mongocxx::collection DB::getCollection(Collection collection)
     }
 }
 
-void DB::slotRequestAllDocuments(Collection collection)
+void DB::slotRequestAllDocuments(Collection collection, int order, QString orderField)
 {
     QJsonArray ret;
 
-    mongocxx::cursor cursor = getCollection(collection).find({});
+    auto options = mongocxx::options::find{};
+    if (order == -1)
+    {
+        auto order = document{} << orderField.toStdString() << -1 << finalize;
+        options.sort(order.view());
+    }
+    else if (order == 1)
+    {
+        auto order = document{} << orderField.toStdString() << 1 << finalize;
+        options.sort(order.view());
+    }
+
+    mongocxx::cursor cursor = getCollection(collection).find({}, options);
     for (auto doc : cursor)
     {
         QString docStr = bsoncxx::to_json(doc).c_str();
@@ -134,11 +147,23 @@ void DB::slotRequestAllDocuments(Collection collection)
     emit finished(ret.toVariantList());
 }
 
-void DB::slotRequestDocumentsByClass(Collection collection, Class cls)
+void DB::slotRequestDocumentsByClass(Collection collection, Class cls, int order, QString orderField)
 {
     QJsonArray ret;
 
-    mongocxx::cursor cursor = getCollection(collection).find(document{} << "Class" << enumClassToStr(cls).toStdString() << finalize);
+    auto options = mongocxx::options::find{};
+    if (order == -1)
+    {
+        auto order = document{} << orderField.toStdString() << -1 << finalize;
+        options.sort(order.view());
+    }
+    else if (order == 1)
+    {
+        auto order = document{} << orderField.toStdString() << 1 << finalize;
+        options.sort(order.view());
+    }
+
+    mongocxx::cursor cursor = getCollection(collection).find(document{} << "Class" << enumClassToStr(cls).toStdString() << finalize, options);
     for (auto doc : cursor)
     {
         QString docStr = bsoncxx::to_json(doc).c_str();
