@@ -15,12 +15,12 @@ int main(int argc, char *argv[])
     QFontDatabase::addApplicationFont(":/fonts/resources/fonts/NanumSquareNeo-dEb.ttf");
     QFontDatabase::addApplicationFont(":/fonts/resources/fonts/NanumSquareNeo-eHv.ttf");
 
-    LoaTools w;
-    w.show();
-
     QThread* dbThread = new QThread();
     DB::getInstance()->moveToThread(dbThread);
     dbThread->start();
+
+    LoaTools w;
+    w.show();
 
     return a.exec();
 }
