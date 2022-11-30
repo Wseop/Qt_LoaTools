@@ -125,16 +125,10 @@ void DB::slotRequestAllDocuments(Collection collection, int order, QString order
     QJsonArray ret;
 
     auto options = mongocxx::options::find{};
-    if (order == -1)
-    {
-        auto order = document{} << orderField.toStdString() << -1 << finalize;
-        options.sort(order.view());
-    }
-    else if (order == 1)
-    {
-        auto order = document{} << orderField.toStdString() << 1 << finalize;
-        options.sort(order.view());
-    }
+    document orderDoc{};
+    if (order == 1 || order == -1)
+        orderDoc << orderField.toStdString() << order;
+    options.sort(orderDoc.view());
 
     mongocxx::cursor cursor = getCollection(collection).find({}, options);
     for (auto doc : cursor)
@@ -152,16 +146,10 @@ void DB::slotRequestDocumentsByClass(Collection collection, Class cls, int order
     QJsonArray ret;
 
     auto options = mongocxx::options::find{};
-    if (order == -1)
-    {
-        auto order = document{} << orderField.toStdString() << -1 << finalize;
-        options.sort(order.view());
-    }
-    else if (order == 1)
-    {
-        auto order = document{} << orderField.toStdString() << 1 << finalize;
-        options.sort(order.view());
-    }
+    document orderDoc{};
+    if (order == 1 || order == -1)
+        orderDoc << orderField.toStdString() << order;
+    options.sort(orderDoc.view());
 
     mongocxx::cursor cursor = getCollection(collection).find(document{} << "Class" << enumClassToStr(cls).toStdString() << finalize, options);
     for (auto doc : cursor)
