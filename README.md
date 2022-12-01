@@ -8,6 +8,9 @@
 * 직업 선택 시, 유저들이 가장 많이 채용한 세팅을 직업각인별로 최대 10개까지 제공
 * 전체 직업의 Top3 세팅 조회 기능 제공
 > 유효한 세팅 제공을 위해 현재 database에 1600레벨 이상 캐릭터(약 90,000개)만 등록되어 있음
+### [캐릭터 랭킹](https://github.com/Wseop/Qt_LoaTools/tree/master/ranking_board)
+* database에 등록된 캐릭터의 랭킹 제공 (아이템 레벨 기준)
+* 전체 랭킹, 직업별 랭킹 조회 가능
 ### [각인 시뮬레이터](https://github.com/Wseop/Qt_LoaTools/tree/master/engrave_simulator)
 * 아이템의 각인 수치에 따라 가능한 각인 값을 시각화하여 제공
 ### [메테오 타이머](https://github.com/Wseop/Qt_LoaTools/tree/master/meteor_timer)
