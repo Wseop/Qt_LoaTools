@@ -1,6 +1,9 @@
 #include "ranking_board.h"
 #include "ui_ranking_board.h"
 #include "db/db.h"
+#include "db/db_request.h"
+
+#include <QJsonObject>
 
 RankingBoard* RankingBoard::m_pRankingBoard = nullptr;
 
@@ -8,6 +11,7 @@ RankingBoard::RankingBoard(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RankingBoard),
     RENDER_COUNT(100),
+    m_pDBRequest(new DBRequest()),
     m_rankIndex(1),
     m_characterIndex(0),
     m_selectedItemLevel(1655),
@@ -109,8 +113,8 @@ void RankingBoard::requestAllCharacters()
     ui->lbSelectedClass->setText("전체 랭킹");
     disableInput();
 
-    connect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
-    emit DB::getInstance()->requestAllDocuments(Collection::Character, -1, "Level");
+    connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
+    emit m_pDBRequest->requestAllDocuments(Collection::Character, -1, "Level");
 }
 
 QLabel *RankingBoard::createLabel(QString text)
@@ -210,7 +214,7 @@ void RankingBoard::slotRenderAll()
 
 void RankingBoard::slotHandleCharacters(QVariantList characters)
 {
-    disconnect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
+    disconnect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
 
     m_characters = characters;
     enableInput();

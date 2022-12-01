@@ -48,6 +48,7 @@ private:
 
     const int MAX_RENDER_COUNT = 10;
 
+    class DBRequest* m_pDBRequest;
     QWidget* m_pParent = nullptr;
     class ClassSelector* m_pClassSelector = nullptr;
 

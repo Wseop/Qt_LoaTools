@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     auction_calc/auction_calc.cpp \
     db/db.cpp \
+    db/db_request.cpp \
     engrave_simulator//engrave_simulator.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
@@ -47,6 +48,7 @@ SOURCES += \
 HEADERS += \
     auction_calc/auction_calc.h \
     db/db.h \
+    db/db_request.h \
     engrave_simulator/engrave_simulator.h \
     enum/ability.h \
     enum/class.h \

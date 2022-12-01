@@ -6,6 +6,7 @@
 #include "http_client/http_client.h"
 #include "http_client/json_builder.h"
 #include "db/db.h"
+#include "db/db_request.h"
 
 #include "ui/card_label.h"
 #include "ui/equip_widget.h"
@@ -37,6 +38,7 @@ Profile::Profile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Profile),
     mNetworkProfile(new QNetworkAccessManager()),
+    m_pDBRequest(new DBRequest()),
     mHtmlTag("<[^>]*>")
 {
     ui->setupUi(this);
@@ -756,11 +758,11 @@ void Profile::updateDB()
 
         // DB update - Character
         QJsonObject characterObj = JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel()).object();
-        emit DB::getInstance()->insertDocument(Collection::Character, characterObj);
+        emit m_pDBRequest->insertDocument(Collection::Character, characterObj);
 
         // DB update - Setting
         QJsonObject settingObj = JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, mCharacter->getSetEffects()).object();
-        emit DB::getInstance()->insertDocument(Collection::Setting, settingObj);
+        emit m_pDBRequest->insertDocument(Collection::Setting, settingObj);
     }
 }
 

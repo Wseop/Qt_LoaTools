@@ -75,6 +75,7 @@ private:
     QJsonObject* mProfile = nullptr;
     CharacterList* mCharacterList = nullptr;
     Character* mCharacter = nullptr;
+    class DBRequest* m_pDBRequest;
 
     QRegularExpression mHtmlTag;
 

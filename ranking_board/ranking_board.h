@@ -60,6 +60,7 @@ private:
 
     const int RENDER_COUNT;
 
+    class DBRequest* m_pDBRequest;
     QVariantList m_characters;
     int m_rankIndex;
     int m_characterIndex;

@@ -6,6 +6,7 @@
 #include "enum/class.h"
 #include "ui/setting_widget.h"
 #include "db/db.h"
+#include "db/db_request.h"
 
 #include <QNetworkReply>
 #include <QJsonArray>
@@ -20,6 +21,7 @@ SettingAdviser* SettingAdviser::m_pSettingAdviser = nullptr;
 SettingAdviser::SettingAdviser(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingAdviser),
+    m_pDBRequest(new DBRequest()),
     m_pClassSelector(new ClassSelector(this, ParentClass::SettingAdviser))
 {
     ui->setupUi(this);
@@ -105,8 +107,8 @@ void SettingAdviser::clearData()
 
 void SettingAdviser::requestSettingsBySelectedClass()
 {
-    connect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
-    emit DB::getInstance()->requestDocumentsByClass(Collection::Setting, m_selectedClass, 0, "");
+    connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
+    emit m_pDBRequest->requestDocumentsByClass(Collection::Setting, m_selectedClass, 0, "");
 }
 
 void SettingAdviser::slotRequestAllSettings()
@@ -117,13 +119,13 @@ void SettingAdviser::slotRequestAllSettings()
     ui->lbTotal->clear();
     ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
 
-    connect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
-    emit DB::getInstance()->requestAllDocuments(Collection::Setting, 0, "");
+    connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
+    emit m_pDBRequest->requestAllDocuments(Collection::Setting, 0, "");
 }
 
 void SettingAdviser::slotHandleSettingsBySelectedClass(QVariantList jsonSettings)
 {
-    disconnect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
+    disconnect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
 
     m_numOfCharacters = jsonSettings.size();
     // setting code 생성 및 추가
@@ -263,7 +265,7 @@ void SettingAdviser::slotShowClassSelector()
 
 void SettingAdviser::slotHandleAllSettings(QVariantList jsonSettings)
 {
-    disconnect(DB::getInstance(), SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
+    disconnect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
 
     m_topSettingCodes.clear();
     m_topSettingCodes = QList<QList<SettingCodeCount>>(getNumOfClass() + 1);
