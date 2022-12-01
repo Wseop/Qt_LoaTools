@@ -6,6 +6,7 @@
 #include <mongocxx/instance.hpp>
 
 #include <QObject>
+#include <QMutex>
 
 class DB : public QObject
 {
@@ -19,6 +20,8 @@ private:
 
 public:
     mongocxx::collection getCollection(Collection collection);
+    void lock();
+    void unlock();
 
 public:
     static DB* getInstance();
@@ -29,6 +32,8 @@ private:
     static DB* m_pDb;
     mongocxx::client m_client;
     mongocxx::database m_db;
+
+    QMutex m_mutex;
 };
 
 #endif // DB_H

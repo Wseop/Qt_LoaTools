@@ -4,6 +4,7 @@
 #include "db/db_request.h"
 
 #include <QJsonObject>
+#include <QThread>
 
 RankingBoard* RankingBoard::m_pRankingBoard = nullptr;
 
@@ -26,6 +27,10 @@ RankingBoard::RankingBoard(QWidget *parent) :
 
     initAlignment();
     initConnect();
+
+    QThread* dbThread = new QThread();
+    m_pDBRequest->moveToThread(dbThread);
+    dbThread->start();
 
     requestAllCharacters();
 }

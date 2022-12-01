@@ -31,6 +31,7 @@
 #include <QFile>
 #include <QDir>
 #include <QFontDatabase>
+#include <QThread>
 
 Profile* Profile::m_pProfile = nullptr;
 
@@ -48,6 +49,10 @@ Profile::Profile(QWidget *parent) :
 
     initUI();
     initConnect();
+
+    QThread* dbThread = new QThread();
+    m_pDBRequest->moveToThread(dbThread);
+    dbThread->start();
 }
 
 Profile::~Profile()

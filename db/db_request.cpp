@@ -11,11 +11,11 @@ using namespace bsoncxx::builder::stream;
 
 DBRequest::DBRequest()
 {
-    connect(this, SIGNAL(insertDocument(Collection, QJsonObject)), this, SLOT(slotInsertDocument(Collection, QJsonObject)));
-    connect(this, SIGNAL(updateDocument(Collection, QJsonObject)), this, SLOT(slotUpdateDocument(Collection, QJsonObject)));
-    connect(this, SIGNAL(deleteDocument(Collection, QString)), this, SLOT(slotDeleteDocument(Collection, QString)));
+    connect(this, SIGNAL(insertDocument(Collection,QJsonObject)), this, SLOT(slotInsertDocument(Collection,QJsonObject)));
+    connect(this, SIGNAL(updateDocument(Collection,QJsonObject)), this, SLOT(slotUpdateDocument(Collection,QJsonObject)));
+    connect(this, SIGNAL(deleteDocument(Collection,QString)), this, SLOT(slotDeleteDocument(Collection,QString)));
 
-    connect(this, SIGNAL(requestAllDocuments(Collection, int, QString)), this, SLOT(slotRequestAllDocuments(Collection, int, QString)));
+    connect(this, SIGNAL(requestAllDocuments(Collection,int,QString)), this, SLOT(slotRequestAllDocuments(Collection,int,QString)));
     connect(this, SIGNAL(requestDocumentsByClass(Collection,Class,int,QString)), this, SLOT(slotRequestDocumentsByClass(Collection,Class,int,QString)));
     connect(this, SIGNAL(requestDocumentByName(Collection,QString)), this, SLOT(slotRequestDocumentByName(Collection,QString)));
 }
@@ -80,6 +80,8 @@ void DBRequest::slotRequestAllDocuments(Collection collection, int order, QStrin
         orderDoc << orderField.toStdString() << order;
     options.sort(orderDoc.view());
 
+    DB::getInstance()->lock();
+
     mongocxx::cursor cursor = DB::getInstance()->getCollection(collection).find({}, options);
     for (auto doc : cursor)
     {
@@ -87,6 +89,8 @@ void DBRequest::slotRequestAllDocuments(Collection collection, int order, QStrin
         QJsonObject docObj(QJsonDocument::fromJson(docStr.toUtf8()).object());
         ret.append(docObj);
     }
+
+    DB::getInstance()->unlock();
 
     emit finished(ret.toVariantList());
 }
@@ -101,6 +105,8 @@ void DBRequest::slotRequestDocumentsByClass(Collection collection, Class cls, in
         orderDoc << orderField.toStdString() << order;
     options.sort(orderDoc.view());
 
+    DB::getInstance()->lock();
+
     mongocxx::cursor cursor = DB::getInstance()->getCollection(collection).find(document{} << "Class" << enumClassToStr(cls).toStdString() << finalize, options);
     for (auto doc : cursor)
     {
@@ -109,12 +115,16 @@ void DBRequest::slotRequestDocumentsByClass(Collection collection, Class cls, in
         ret.append(docObj);
     }
 
+    DB::getInstance()->unlock();
+
     emit finished(ret.toVariantList());
 }
 
 void DBRequest::slotRequestDocumentByName(Collection collection, QString name)
 {
     QJsonObject ret;
+
+    DB::getInstance()->lock();
 
     auto doc = DB::getInstance()->getCollection(collection).find_one(document{} << "Name" << name.toStdString() << finalize);
     if (doc)
@@ -123,11 +133,15 @@ void DBRequest::slotRequestDocumentByName(Collection collection, QString name)
         ret = QJsonDocument::fromJson(docStr.toUtf8()).object();
     }
 
+    DB::getInstance()->unlock();
+
     emit finished(ret);
 }
 
 void DBRequest::slotInsertDocument(Collection collection, QJsonObject docObj)
 {
+    DB::getInstance()->lock();
+
     // 데이터가 이미 존재하면 update, 없으면 insert
     auto result = DB::getInstance()->getCollection(collection).find_one(document{} << "Name" << docObj.find("Name")->toString().toStdString() << finalize);
     if (result)
@@ -141,6 +155,8 @@ void DBRequest::slotInsertDocument(Collection collection, QJsonObject docObj)
     {
         DB::getInstance()->getCollection(collection).insert_one(objToDoc(collection, docObj).view());
     }
+
+    DB::getInstance()->unlock();
 }
 
 void DBRequest::slotUpdateDocument(Collection collection, QJsonObject docObj)
@@ -149,12 +165,20 @@ void DBRequest::slotUpdateDocument(Collection collection, QJsonObject docObj)
     bsoncxx::document::value filter = document{}
             << "Name" << docObj.find("Name")->toString().toStdString() << finalize;
 
+    DB::getInstance()->lock();
+
     DB::getInstance()->getCollection(collection).update_one(filter.view(),
                                          document{} << "$set" << objToDoc(collection, docObj) << finalize);
+
+    DB::getInstance()->unlock();
 }
 
 void DBRequest::slotDeleteDocument(Collection collection, QString name)
 {
+    DB::getInstance()->lock();
+
     // delete document by name
     DB::getInstance()->getCollection(collection).delete_one(document{} << "Name" << name.toStdString() << finalize);
+
+    DB::getInstance()->unlock();
 }

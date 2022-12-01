@@ -13,6 +13,7 @@
 #include <QJsonObject>
 #include <QPair>
 #include <QFontDatabase>
+#include <QThread>
 
 #include <algorithm>
 
@@ -50,6 +51,10 @@ SettingAdviser::SettingAdviser(QWidget *parent) :
     ui->pbTopSetting->setFont(fontNanumBold10);
 
     initConnect();
+
+    QThread* dbThread = new QThread();
+    m_pDBRequest->moveToThread(dbThread);
+    dbThread->start();
 }
 
 SettingAdviser::~SettingAdviser()

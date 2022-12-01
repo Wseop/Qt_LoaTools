@@ -39,6 +39,16 @@ mongocxx::collection DB::getCollection(Collection collection)
     }
 }
 
+void DB::lock()
+{
+    m_mutex.lock();
+}
+
+void DB::unlock()
+{
+    m_mutex.unlock();
+}
+
 DB *DB::getInstance()
 {
     if (m_pDb == nullptr)
