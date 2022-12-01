@@ -1,11 +1,11 @@
 #include "bracelet_widget.h"
 #include "ui_bracelet_widget.h"
 #include "item/bracelet.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QFontDatabase>
 
 BraceletWidget::BraceletWidget(QWidget *parent, const Bracelet* bracelet, QString iconUrl) :
     QWidget(parent),
@@ -41,10 +41,9 @@ void BraceletWidget::setText()
 
 void BraceletWidget::setStyleSheet()
 {
-    QString familyNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
-    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
-    QFont fontNanumRegular10 = QFont(familyNanumRegular, 10);
-    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     ui->groupBracelet->setFont(fontNanumRegular10);
     ui->lbIcon->setFont(fontNanumBold10);

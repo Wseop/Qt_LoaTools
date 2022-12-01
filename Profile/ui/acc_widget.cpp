@@ -1,11 +1,11 @@
 #include "acc_widget.h"
 #include "ui_acc_widget.h"
 #include "item/accessory.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QFontDatabase>
 
 AccWidget::AccWidget(QWidget *parent, const Accessory* acc, QString iconUrl) :
     QWidget(parent),
@@ -59,10 +59,9 @@ void AccWidget::setText()
 
 void AccWidget::setStyleSheet()
 {
-    QString familyNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
-    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
-    QFont fontNanumRegular10 = QFont(familyNanumRegular, 10);
-    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     ui->groupAcc->setFont(fontNanumRegular10);
     ui->barQual->setFont(fontNanumBold10);

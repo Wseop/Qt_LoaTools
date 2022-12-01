@@ -1,11 +1,11 @@
 #include "abilitystone_widget.h"
 #include "ui_abilitystone_widget.h"
 #include "item/abilitystone.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QFontDatabase>
 
 AbilityStoneWidget::AbilityStoneWidget(QWidget *parent, const AbilityStone* stone, QString iconUrl) :
     QWidget(parent),
@@ -47,9 +47,13 @@ void AbilityStoneWidget::setText()
 
 void AbilityStoneWidget::setStyleSheet()
 {
-    ui->groupStone->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10));
-    ui->lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
-    ui->lbName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+
+    ui->groupStone->setFont(fontNanumRegular10);
+    ui->lbEngrave->setFont(fontNanumBold10);
+    ui->lbName->setFont(fontNanumBold10);
 
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mStone->getGrade())]));

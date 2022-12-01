@@ -1,6 +1,7 @@
 #include "character_list.h"
 #include "ui_character_list.h"
 #include "profile.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -9,7 +10,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
-#include <QFontDatabase>
 
 CharacterList::CharacterList(QWidget *parent, QWidget* ret) :
     QWidget(parent),
@@ -70,7 +70,8 @@ void CharacterList::addCharacter(QString server, QString name, QString cls)
 
         QLabel* label = new QLabel(server);
         mLabelList.append(label);
-        label->setFont(QFont(QFontDatabase::applicationFontFamilies(3).at(0), 12));
+        QFont fontNanumExtraBold12 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
+        label->setFont(fontNanumExtraBold12);
         label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         label->setFixedHeight(30);
         label->setStyleSheet("QLabel { color: #B178FF; background-color: #444A5B }");
@@ -128,7 +129,8 @@ void CharacterList::slotParseItemLevel(QNetworkReply* reply)
 
     QString text = QString("%1 [%2]\n%3").arg(title->cls, title->itemLevel, title->name);
     QPushButton* btn = new QPushButton(text);
-    btn->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10));
+    QFont fontNanumRegular10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    btn->setFont(fontNanumRegular10);
     mNameButton[name] = btn;
 
     connect(btn, SIGNAL(pressed()), this, SLOT(slotSearchCharacter()));

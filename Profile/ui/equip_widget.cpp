@@ -1,11 +1,11 @@
 #include "equip_widget.h"
 #include "ui_equip_widget.h"
 #include "item/equip.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QFontDatabase>
 
 EquipWidget::EquipWidget(QWidget *parent, const Equip* equip, QString iconUrl) :
     QWidget(parent),
@@ -59,8 +59,9 @@ void EquipWidget::setText()
 
 void EquipWidget::setStyleSheet()
 {
-    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
-    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
     ui->groupEquip->setFont(fontNanumRegular10);
     ui->lbLevelTier->setFont(fontNanumBold10);
     ui->lbName->setFont(fontNanumBold10);

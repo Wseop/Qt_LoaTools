@@ -1,7 +1,6 @@
 #include "card_label.h"
 #include "ui_card_label.h"
-
-#include <QFontDatabase>
+#include "font/font_manager.h"
 
 CardLabel::CardLabel(QWidget *parent, QString cardTitle, QString cardDesc) :
     QWidget(parent),
@@ -9,7 +8,8 @@ CardLabel::CardLabel(QWidget *parent, QString cardTitle, QString cardDesc) :
 {
     ui->setupUi(this);
 
-    QFont fontNanumBold12 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
 
     ui->lbCardDesc->setFont(fontNanumBold12);
     ui->lbCardTitle->setFont(fontNanumBold12);

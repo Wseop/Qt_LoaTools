@@ -1,7 +1,6 @@
 #include "meteor_timer.h"
 #include "ui_meteortimer.h"
-
-#include <QFontDatabase>
+#include "font/font_manager.h"
 
 MeteorTimer* MeteorTimer::m_pMeteorTimer = nullptr;
 
@@ -16,10 +15,10 @@ MeteorTimer::MeteorTimer(QWidget *parent) :
 
     ui->lbCount->setText(QString("%1").arg(mCount));
 
-    QString familyNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
-    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
-    QFont fontNanumExtraBold20 = QFont(familyNanumExtraBold, 20);
-    QFont fontNanumExtraBold48 = QFont(familyNanumExtraBold, 48);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumExtraBold20 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 20);
+    QFont fontNanumExtraBold48 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 48);
 
     ui->groupBox->setFont(fontNanumRegular10);
     ui->pbReset->setFont(fontNanumExtraBold20);

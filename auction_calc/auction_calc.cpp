@@ -1,8 +1,8 @@
 #include "auction_calc.h"
 #include "ui_auctioncalc.h"
+#include "font/font_manager.h"
 
 #include <QIntValidator>
-#include <QFontDatabase>
 
 AuctionCalc* AuctionCalc::m_pAuctionCalc = nullptr;
 
@@ -63,10 +63,10 @@ void AuctionCalc::initUI()
     // 숫자만 입력 가능하도록 설정
     ui->lePrice->setValidator(mIntValidator);
 
-    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
-    QFont fontNanumBold9 = QFont(familyNanumBold, 9);
-    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
-    QFont fontNanumExtraBold10 = QFont(QFontDatabase::applicationFontFamilies(3).at(0), 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold9 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 9);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumExtraBold10 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 10);
 
     ui->lbInfo->setFont(fontNanumBold9);
     ui->lbPrice->setFont(fontNanumBold10);

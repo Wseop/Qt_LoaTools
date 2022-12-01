@@ -1,12 +1,12 @@
 #include "engrave_simulator.h"
 #include "ui_engravesimulator.h"
+#include "font/font_manager.h"
 
 #include <QCompleter>
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
 #include <QMessageBox>
-#include <QFontDatabase>
 
 EngraveSimulator* EngraveSimulator::m_pEngraveSimulator = nullptr;
 
@@ -98,9 +98,10 @@ void EngraveSimulator::initMap()
 
 void EngraveSimulator::initUI()
 {
-    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
-    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
-    QFont fontNanumBold11 = QFont(familyNanumBold, 11);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumBold11 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 11);
     ui->lbLvAtt->setFont(fontNanumBold10);
     ui->lbLvAttSpd->setFont(fontNanumBold10);
     ui->lbLvDef->setFont(fontNanumBold10);
@@ -120,8 +121,6 @@ void EngraveSimulator::initUI()
     ui->lbNameAttSpd->setFont(fontNanumBold11);
     ui->lbNameDef->setFont(fontNanumBold11);
     ui->lbNameSpd->setFont(fontNanumBold11);
-
-    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
 
     ui->groupEngrave->setFont(fontNanumRegular10);
     ui->groupPenalty->setFont(fontNanumRegular10);
@@ -266,8 +265,11 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     lbName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     lbLevel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-    lbName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12));
-    lbLevel->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+    lbName->setFont(fontNanumBold12);
+    lbLevel->setFont(fontNanumBold10);
     if (level >= 1)
         lbLevel->setStyleSheet("QLabel { color : blue }");
 

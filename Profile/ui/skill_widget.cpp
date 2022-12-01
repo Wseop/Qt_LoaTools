@@ -1,11 +1,11 @@
 #include "skill_widget.h"
 #include "ui_skill_widget.h"
 #include "profile/skill.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QFontDatabase>
 
 SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
     QWidget(parent),
@@ -19,7 +19,7 @@ SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
 
     ui->hLayoutSkill->setAlignment(Qt::AlignLeft);
 
-    QFont fontNanumRegular10 = QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10);
+    QFont fontNanumRegular10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoRegular, 10);
     ui->groupSkill->setFont(fontNanumRegular10);
     ui->groupRune->setFont(fontNanumRegular10);
     ui->groupTripod->setFont(fontNanumRegular10);
@@ -51,19 +51,21 @@ void SkillWidget::requestSkillIcon(QString iconUrl)
 
 void SkillWidget::setSkillName()
 {
-    ui->lbSkillName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+    ui->lbSkillName->setFont(fontNanumBold10);
     ui->lbSkillName->setText(QString("%1 Lv.%2").arg(mSkill->getName()).arg(mSkill->getLevel()));
 }
 
 void SkillWidget::setTripods()
 {
     const QList<Tripod>& tripods = mSkill->getTripods();
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     for (int i = 0; i < tripods.size(); i++)
     {
         const Tripod& tripod = tripods[i];
         QLabel* lbTripod = new QLabel(QString("%1: %2 Lv.%3").arg(i + 1).arg(tripod.name).arg(tripod.level));
-        lbTripod->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+        lbTripod->setFont(fontNanumBold10);
         lbTripod->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
         ui->vLayoutTripod->addWidget(lbTripod);
         mTripods.append(lbTripod);
@@ -86,7 +88,8 @@ void SkillWidget::setRuneName()
     if (rune == nullptr)
         return;
 
-    ui->lbRuneName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+    ui->lbRuneName->setFont(fontNanumBold10);
     ui->lbRuneName->setText(rune->getName());
     ui->lbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(rune->getGrade())]));
 }

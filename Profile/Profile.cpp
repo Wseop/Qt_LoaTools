@@ -7,6 +7,7 @@
 #include "http_client/json_builder.h"
 #include "db/db.h"
 #include "db/db_request.h"
+#include "font/font_manager.h"
 
 #include "ui/card_label.h"
 #include "ui/equip_widget.h"
@@ -30,7 +31,6 @@
 #include <QTabWidget>
 #include <QFile>
 #include <QDir>
-#include <QFontDatabase>
 #include <QThread>
 
 Profile* Profile::m_pProfile = nullptr;
@@ -86,13 +86,11 @@ void Profile::destroyInstance()
 
 void Profile::initUI()
 {   
-    QString familyNanumRegular = QFontDatabase::applicationFontFamilies(1).at(0);
-    QString familyNanumBold = QFontDatabase::applicationFontFamilies(2).at(0);
-
-    QFont fontNanumBold10 = QFont(familyNanumBold, 10);
-    QFont fontNanumBold12 = QFont(familyNanumBold, 12);
-    QFont fontNanumBold16 = QFont(familyNanumBold, 16);
-    QFont fontNanumBold20 = QFont(familyNanumBold, 20);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+    QFont fontNanumBold16 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 16);
+    QFont fontNanumBold20 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 20);
 
     ui->leName->setFont(fontNanumBold10);
     ui->pbSearch->setFont(fontNanumBold10);

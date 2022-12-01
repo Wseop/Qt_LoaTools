@@ -13,6 +13,7 @@ SOURCES += \
     db/db.cpp \
     db/db_request.cpp \
     engrave_simulator//engrave_simulator.cpp \
+    font/font_manager.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
     item/abilitystone.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     enum/class.h \
     enum/collection.h \
     enum/set_effect.h \
+    font/font_manager.h \
     http_client/http_client.h \
     http_client/json_builder.h \
     item/abilitystone.h \

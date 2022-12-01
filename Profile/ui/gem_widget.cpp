@@ -1,11 +1,11 @@
 #include "gem_widget.h"
 #include "ui_gem_widget.h"
 #include "item/gem.h"
+#include "font/font_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QFontDatabase>
 
 GemWidget::GemWidget(QWidget *parent, const Gem* gem, QString iconUrl) :
     QWidget(parent),
@@ -36,21 +36,24 @@ void GemWidget::requestIcon(QString iconUrl)
 
 void GemWidget::setLevel()
 {
-    ui->lbLevel->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+    ui->lbLevel->setFont(fontNanumBold10);
     ui->lbLevel->setText(QString("Lv. %1").arg(mGem->GetLevel()));
     ui->lbLevel->setAlignment(Qt::AlignHCenter);
 }
 
 void GemWidget::setName()
 {
-    ui->lbName->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+    ui->lbName->setFont(fontNanumBold10);
     ui->lbName->setText(mGem->getName());
     ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mGem->getGrade())]));
 }
 
 void GemWidget::setEffect()
 {
-    ui->lbEffect->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+    ui->lbEffect->setFont(fontNanumBold10);
     ui->lbEffect->setText(mGem->getEffect());
 }
 

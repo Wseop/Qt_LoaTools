@@ -1,11 +1,11 @@
 #include "engrave_widget.h"
 #include "ui_engrave_widget.h"
 #include "engrave.h"
+#include "font/font_manager.h"
 
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QFontDatabase>
 
 EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
     QWidget(parent),
@@ -14,7 +14,9 @@ EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
 {
     ui->setupUi(this);
 
-    ui->groupEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 10));
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    ui->groupEngrave->setFont(fontNanumRegular10);
 
     createEngraveLayouts(engrave->getActiveEngraveList());
     createPenaltyLayouts(engrave->getActivePenaltyList());
@@ -97,7 +99,8 @@ QHBoxLayout* EngraveWidget::createEngraveLayout(QString iconPath, QString engrav
         lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
 
-    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2), 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     QLabel* lbEngraveName = new QLabel(engrave);
     lbEngraveName->setFont(fontNanumBold10);
