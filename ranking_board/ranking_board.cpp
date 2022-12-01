@@ -1,7 +1,7 @@
 #include "ranking_board.h"
 #include "ui_ranking_board.h"
-#include "db/db.h"
 #include "db/db_request.h"
+#include "font/font_manager.h"
 
 #include <QJsonObject>
 #include <QThread>
@@ -13,7 +13,7 @@ RankingBoard::RankingBoard(QWidget *parent) :
     ui(new Ui::RankingBoard),
     RENDER_COUNT(100),
     m_pDBRequest(new DBRequest()),
-    m_rankIndex(1),
+    m_rankIndex(0),
     m_characterIndex(0),
     m_selectedItemLevel(1655),
     m_selectedClass(Class::None),
@@ -26,6 +26,7 @@ RankingBoard::RankingBoard(QWidget *parent) :
     ui->lbInfo->hide();
 
     initAlignment();
+    initFont();
     initConnect();
 
     QThread* dbThread = new QThread();
@@ -43,8 +44,7 @@ RankingBoard::~RankingBoard()
 
 void RankingBoard::setSelectedClass(Class cls)
 {
-    m_selectedClass = cls;
-    ui->lbSelectedClass->setText(enumClassToKStr(cls));
+    m_selectedClass = cls;    
     renderCharacters(true);
 }
 
@@ -69,7 +69,28 @@ void RankingBoard::initAlignment()
 {
     ui->vLayoutRankingBoard->setAlignment(Qt::AlignHCenter);
     ui->hLayoutSelector->setAlignment(Qt::AlignHCenter);
+    ui->vLayoutScrollArea->setAlignment(Qt::AlignHCenter);
+    ui->gridRankingLabels->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->gridRankingBoard->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+}
+
+void RankingBoard::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+
+    ui->lbSelectedClass->setFont(fontNanumBold10);
+    ui->lbSelectItemLevel->setFont(fontNanumBold10);
+
+    ui->lbClass->setFont(fontNanumBold12);
+    ui->lbItemLevel->setFont(fontNanumBold12);
+    ui->lbName->setFont(fontNanumBold12);
+    ui->lbRank->setFont(fontNanumBold12);
+    ui->pbSelectAllClass->setFont(fontNanumBold12);
+    ui->pbSelectClass->setFont(fontNanumBold12);
+    ui->pbRenderMore->setFont(fontNanumBold12);
+    ui->lbInfo->setFont(fontNanumBold12);
 }
 
 void RankingBoard::initConnect()
@@ -151,10 +172,16 @@ void RankingBoard::renderCharacters(bool bInitialize)
     if (bInitialize)
     {
         clear();
-        m_rankIndex = 1;
+        m_rankIndex = 0;
         m_characterIndex = 0;
+
+        if (m_selectedClass == Class::None)
+            ui->lbSelectedClass->setText("전체 랭킹");
+        else
+            ui->lbSelectedClass->setText(enumClassToKStr(m_selectedClass));
     }
 
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     int i = 0;
     QString selectedClass = enumClassToKStr(m_selectedClass);
     while (i < RENDER_COUNT && m_characterIndex < m_characters.size())
@@ -165,10 +192,14 @@ void RankingBoard::renderCharacters(bool bInitialize)
         {
             QString name = getCharacterName(m_characterIndex);
 
-            QLabel* lbRank = createLabel(QString("%1").arg(m_rankIndex));
+            QLabel* lbRank = createLabel(QString("%1").arg(m_rankIndex + 1));
+            lbRank->setFont(fontNanumBold10);
             QLabel* lbName = createLabel(name);
+            lbName->setFont(fontNanumBold10);
             QLabel* lbItemLevel = createLabel(QString("%1").arg(itemLevel));
+            lbItemLevel->setFont(fontNanumBold10);
             QLabel* lbClass = createLabel(cls);
+            lbClass->setFont(fontNanumBold10);
 
             m_labels.append(lbRank);
             m_labels.append(lbName);

@@ -27,6 +27,7 @@ public:
 
 private:
     void initAlignment();
+    void initFont();
     void initConnect();
     void disableInput();
     void enableInput();
