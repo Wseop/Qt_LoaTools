@@ -1,18 +1,16 @@
 #include "setting_adviser.h"
 #include "ui_setting_adviser.h"
-#include "http_client/http_client.h"
 #include "class_selector.h"
 #include "setting_code.h"
 #include "enum/class.h"
 #include "ui/setting_widget.h"
-#include "db/db.h"
 #include "db/db_request.h"
+#include "font/font_manager.h"
 
 #include <QNetworkReply>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QPair>
-#include <QFontDatabase>
 #include <QThread>
 
 #include <algorithm>
@@ -36,10 +34,10 @@ SettingAdviser::SettingAdviser(QWidget *parent) :
     ui->vLayoutSetting2->setAlignment(Qt::AlignTop);
     ui->vLayoutSetting3->setAlignment(Qt::AlignTop);
 
-    QString familyNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
-    QFont fontNanumExtraBold12 = QFont(familyNanumExtraBold, 12);
-    QFont fontNanumExtraBold16 = QFont(familyNanumExtraBold, 16);
-    QFont fontNanumBold10 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
+    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     ui->lbInfo->setFont(fontNanumExtraBold12);
     ui->lbSelectedClass->setFont(fontNanumExtraBold12);

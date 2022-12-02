@@ -2,9 +2,9 @@
 #include "ui_class_selector.h"
 #include "setting_adviser/setting_adviser.h"
 #include "ranking_board/ranking_board.h"
+#include "font/font_manager.h"
 
 #include <QCloseEvent>
-#include <QFontDatabase>
 
 ClassSelector::ClassSelector(QWidget *parent, ParentClass parentClass) :
     ui(new Ui::ClassSelector),
@@ -43,8 +43,9 @@ void ClassSelector::initStyleSheet()
     ui->lbAssassin->setStyleSheet(styleSheet);
     ui->lbSpecialist->setStyleSheet(styleSheet);
 
-    QFont fontNanumBold12 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12);
-    QFont fontNanumExtraBold12 = QFont(QFontDatabase::applicationFontFamilies(3).at(0), 12);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
     ui->pbDestroyer->setFont(fontNanumBold12);
     ui->pbWarlord->setFont(fontNanumBold12);
     ui->pbBerserker->setFont(fontNanumBold12);

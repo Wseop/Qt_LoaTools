@@ -1,7 +1,6 @@
 #include "setting_widget.h"
 #include "ui_setting_widget.h"
-
-#include <QFontDatabase>
+#include "font/font_manager.h"
 
 SettingWidget::SettingWidget(QWidget *parent) :
     QWidget(parent),
@@ -11,11 +10,11 @@ SettingWidget::SettingWidget(QWidget *parent) :
     ui->groupSetting->setStyleSheet("QGroupBox{border:2px solid gray;border-radius:5px;margin-top: 4ex;}"
                                     "QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:3 3px;}");
 
-    QString familyNanumExtraBold = QFontDatabase::applicationFontFamilies(3).at(0);
-    QFont fontNanumExtraBold10 = QFont(familyNanumExtraBold, 10);
-    QFont fontNanumExtraBold12 = QFont(familyNanumExtraBold, 12);
-    QFont fontNanumExtraBold14 = QFont(familyNanumExtraBold, 14);
-    QFont fontNanumBold12 = QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12);
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumExtraBold10 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 10);
+    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
+    QFont fontNanumExtraBold14 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 14);
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
 
     ui->groupEngrave->setFont(fontNanumExtraBold10);
     ui->groupAbility->setFont(fontNanumExtraBold10);
@@ -157,6 +156,8 @@ void SettingWidget::renderSetEffect()
 
 void SettingWidget::renderClassEngrave()
 {
+    QFont fontNanumBold12 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 12);
+
     for (const auto& classEngrave : m_classEngraves)
     {
         QHBoxLayout* layout = new QHBoxLayout();
@@ -175,13 +176,15 @@ void SettingWidget::renderClassEngrave()
         layout->addWidget(lbEngrave);
         m_mapClassEngrave[lbEngrave] = layout;
         lbEngrave->setContentsMargins(10, 0, 0, 0);
-        lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 12));
+        lbEngrave->setFont(fontNanumBold12);
         lbEngrave->setText(QString("%1 Lv.%2").arg(classEngrave.first).arg(classEngrave.second));
     }
 }
 
 void SettingWidget::renderNormalEngrave()
 {
+    QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+
     for (const auto& normalEngrave : m_normalEngraves)
     {
         QVBoxLayout* layout = new QVBoxLayout();
@@ -201,7 +204,7 @@ void SettingWidget::renderNormalEngrave()
         layout->addWidget(lbEngrave);
         m_mapNormalEngrave[lbEngrave] = layout;
         lbEngrave->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        lbEngrave->setFont(QFont(QFontDatabase::applicationFontFamilies(2).at(0), 10));
+        lbEngrave->setFont(fontNanumBold10);
         lbEngrave->setText(QString("%1 Lv.%2").arg(normalEngrave.first).arg(normalEngrave.second));
     }
 

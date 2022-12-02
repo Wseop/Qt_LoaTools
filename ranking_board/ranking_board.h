@@ -72,9 +72,6 @@ private:
 
 private:
     static RankingBoard* m_pRankingBoard;
-
-private:
-    static void emitRenderAfterSort(QVariantList* characters);
 };
 
 #endif // RANKING_BOARD_H
