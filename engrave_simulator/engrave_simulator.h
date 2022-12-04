@@ -16,7 +16,7 @@ class EngraveSimulator : public QWidget
     Q_OBJECT
 
 private:
-    explicit EngraveSimulator(QWidget *parent = nullptr);
+    EngraveSimulator();
     ~EngraveSimulator();
 
 public:

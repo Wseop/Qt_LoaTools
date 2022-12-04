@@ -25,6 +25,8 @@ private:
 
 private:
     void initConnect();
+    void initFont();
+    void initAlignment();
 
 private slots:
     void slotOpenMeteorTimer();

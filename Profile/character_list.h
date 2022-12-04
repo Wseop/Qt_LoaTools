@@ -28,7 +28,7 @@ class CharacterList : public QWidget
     Q_OBJECT
 
 public:
-    explicit CharacterList(QWidget *parent = nullptr, QWidget* ret = nullptr);
+    CharacterList(QWidget *parent);
     ~CharacterList();
 
     void initConnect();

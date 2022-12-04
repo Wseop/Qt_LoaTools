@@ -15,24 +15,8 @@ LoaTools::LoaTools(QWidget *parent)
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
 
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
-
-    ui->pbAuctionCalc->setFont(fontNanumExtraBold16);
-    ui->pbEngrave->setFont(fontNanumExtraBold16);
-    ui->pbMeteorTimer->setFont(fontNanumExtraBold16);
-    ui->pbProfile->setFont(fontNanumExtraBold16);
-    ui->pbSettingAdviser->setFont(fontNanumExtraBold16);
-    ui->pbRankingBoard->setFont(fontNanumExtraBold16);
-
-    ui->groupCharacter->setFont(fontNanumRegular10);
-    ui->groupRaid->setFont(fontNanumRegular10);
-
-    ui->hLayoutCharacter1->setAlignment(Qt::AlignLeft);
-    ui->hLayoutCharacter2->setAlignment(Qt::AlignLeft);
-    ui->hLayoutGroupRaid->setAlignment(Qt::AlignLeft);
-
+    initFont();
+    initAlignment();
     initConnect();
 }
 
@@ -49,6 +33,30 @@ void LoaTools::initConnect()
     connect(ui->pbProfile, SIGNAL(pressed()), this, SLOT(slotOpenProfile()));
     connect(ui->pbSettingAdviser, SIGNAL(pressed()), this, SLOT(slotOpenSettingAdviser()));
     connect(ui->pbRankingBoard, SIGNAL(pressed()), this, SLOT(slotOpenRankingBoard()));
+}
+
+void LoaTools::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
+
+    ui->pbAuctionCalc->setFont(fontNanumExtraBold16);
+    ui->pbEngrave->setFont(fontNanumExtraBold16);
+    ui->pbMeteorTimer->setFont(fontNanumExtraBold16);
+    ui->pbProfile->setFont(fontNanumExtraBold16);
+    ui->pbSettingAdviser->setFont(fontNanumExtraBold16);
+    ui->pbRankingBoard->setFont(fontNanumExtraBold16);
+
+    ui->groupCharacter->setFont(fontNanumRegular10);
+    ui->groupRaid->setFont(fontNanumRegular10);
+}
+
+void LoaTools::initAlignment()
+{
+    ui->hLayoutCharacter1->setAlignment(Qt::AlignLeft);
+    ui->hLayoutCharacter2->setAlignment(Qt::AlignLeft);
+    ui->hLayoutGroupRaid->setAlignment(Qt::AlignLeft);
 }
 
 void LoaTools::slotOpenMeteorTimer()

@@ -8,8 +8,7 @@
 
 RankingBoard* RankingBoard::m_pRankingBoard = nullptr;
 
-RankingBoard::RankingBoard(QWidget *parent) :
-    QWidget(parent),
+RankingBoard::RankingBoard() :
     ui(new Ui::RankingBoard),
     RENDER_COUNT(100),
     m_pDBRequest(new DBRequest()),

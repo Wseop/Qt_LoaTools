@@ -4,10 +4,10 @@
 
 MeteorTimer* MeteorTimer::m_pMeteorTimer = nullptr;
 
-MeteorTimer::MeteorTimer(QWidget *parent) :
-    QWidget(parent),
+MeteorTimer::MeteorTimer() :
     ui(new Ui::MeteorTimer),
-    mTimer(new QTimer()), mCount(MAX_COUNT)
+    mTimer(new QTimer()),
+    mCount(MAX_COUNT)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -15,16 +15,7 @@ MeteorTimer::MeteorTimer(QWidget *parent) :
 
     ui->lbCount->setText(QString("%1").arg(mCount));
 
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-    QFont fontNanumExtraBold20 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 20);
-    QFont fontNanumExtraBold48 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 48);
-
-    ui->groupBox->setFont(fontNanumRegular10);
-    ui->pbReset->setFont(fontNanumExtraBold20);
-    ui->pbStart->setFont(fontNanumExtraBold20);
-    ui->lbCount->setFont(fontNanumExtraBold48);
-
+    initFont();
     initConnect();
 }
 
@@ -57,6 +48,19 @@ void MeteorTimer::initConnect()
     connect(ui->pbStart, SIGNAL(pressed()), this, SLOT(slotStartTimer()));
     connect(ui->pbReset, SIGNAL(pressed()), this, SLOT(slotResetTimer()));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotUpdateTimer()));
+}
+
+void MeteorTimer::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumExtraBold20 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 20);
+    QFont fontNanumExtraBold48 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 48);
+
+    ui->groupBox->setFont(fontNanumRegular10);
+    ui->pbReset->setFont(fontNanumExtraBold20);
+    ui->pbStart->setFont(fontNanumExtraBold20);
+    ui->lbCount->setFont(fontNanumExtraBold48);
 }
 
 void MeteorTimer::slotStartTimer()

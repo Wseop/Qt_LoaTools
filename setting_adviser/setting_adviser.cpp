@@ -17,8 +17,7 @@
 
 SettingAdviser* SettingAdviser::m_pSettingAdviser = nullptr;
 
-SettingAdviser::SettingAdviser(QWidget *parent) :
-    QWidget(parent),
+SettingAdviser::SettingAdviser() :
     ui(new Ui::SettingAdviser),
     m_pDBRequest(new DBRequest()),
     m_pClassSelector(new ClassSelector(this, ParentClass::SettingAdviser))
@@ -28,26 +27,8 @@ SettingAdviser::SettingAdviser(QWidget *parent) :
     this->setWindowTitle("직업별 세팅 조회");
     this->showMaximized();
 
-    ui->hLayoutTop->setAlignment(Qt::AlignLeft);
-    ui->verticalLayout->setAlignment(Qt::AlignTop);
-    ui->vLayoutSetting1->setAlignment(Qt::AlignTop);
-    ui->vLayoutSetting2->setAlignment(Qt::AlignTop);
-    ui->vLayoutSetting3->setAlignment(Qt::AlignTop);
-
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
-    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
-    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
-
-    ui->lbInfo->setFont(fontNanumExtraBold12);
-    ui->lbSelectedClass->setFont(fontNanumExtraBold12);
-    ui->lbTotal->setFont(fontNanumExtraBold12);
-    ui->groupSetting1->setFont(fontNanumExtraBold16);
-    ui->groupSetting2->setFont(fontNanumExtraBold16);
-    ui->groupSetting3->setFont(fontNanumExtraBold16);
-    ui->pbSelectClass->setFont(fontNanumBold10);
-    ui->pbTopSetting->setFont(fontNanumBold10);
-
+    initFont();
+    initAlignment();
     initConnect();
 
     QThread* dbThread = new QThread();
@@ -88,6 +69,32 @@ void SettingAdviser::destroyInstance()
 
     delete m_pSettingAdviser;
     m_pSettingAdviser = nullptr;
+}
+
+void SettingAdviser::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
+    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
+    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+
+    ui->lbInfo->setFont(fontNanumExtraBold12);
+    ui->lbSelectedClass->setFont(fontNanumExtraBold12);
+    ui->lbTotal->setFont(fontNanumExtraBold12);
+    ui->groupSetting1->setFont(fontNanumExtraBold16);
+    ui->groupSetting2->setFont(fontNanumExtraBold16);
+    ui->groupSetting3->setFont(fontNanumExtraBold16);
+    ui->pbSelectClass->setFont(fontNanumBold10);
+    ui->pbTopSetting->setFont(fontNanumBold10);
+}
+
+void SettingAdviser::initAlignment()
+{
+    ui->hLayoutTop->setAlignment(Qt::AlignLeft);
+    ui->verticalLayout->setAlignment(Qt::AlignTop);
+    ui->vLayoutSetting1->setAlignment(Qt::AlignTop);
+    ui->vLayoutSetting2->setAlignment(Qt::AlignTop);
+    ui->vLayoutSetting3->setAlignment(Qt::AlignTop);
 }
 
 void SettingAdviser::initConnect()

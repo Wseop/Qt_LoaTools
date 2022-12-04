@@ -11,10 +11,9 @@
 #include <QLabel>
 #include <QGridLayout>
 
-CharacterList::CharacterList(QWidget *parent, QWidget* ret) :
-    QWidget(parent),
+CharacterList::CharacterList(QWidget *parent) :
     ui(new Ui::CharacterList),
-    mParent(ret),
+    mParent(parent),
     mNetworkItemLevel(new QNetworkAccessManager())
 {
     ui->setupUi(this);

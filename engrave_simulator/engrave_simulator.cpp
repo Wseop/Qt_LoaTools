@@ -10,8 +10,7 @@
 
 EngraveSimulator* EngraveSimulator::m_pEngraveSimulator = nullptr;
 
-EngraveSimulator::EngraveSimulator(QWidget *parent) :
-    QWidget(parent),
+EngraveSimulator::EngraveSimulator() :
     ui(new Ui::EngraveSimulator),
     mEngraveLayout(new QHBoxLayout())
 {

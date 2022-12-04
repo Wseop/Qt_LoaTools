@@ -2,35 +2,14 @@
 #include "ui_setting_widget.h"
 #include "font/font_manager.h"
 
-SettingWidget::SettingWidget(QWidget *parent) :
-    QWidget(parent),
+SettingWidget::SettingWidget() :
     ui(new Ui::SettingWidget)
 {
     ui->setupUi(this);
     ui->groupSetting->setStyleSheet("QGroupBox{border:2px solid gray;border-radius:5px;margin-top: 4ex;}"
                                     "QGroupBox::title{subcontrol-origin: margin;subcontrol-position:top center;padding:3 3px;}");
 
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumExtraBold10 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 10);
-    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
-    QFont fontNanumExtraBold14 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 14);
-    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
-
-    ui->groupEngrave->setFont(fontNanumExtraBold10);
-    ui->groupAbility->setFont(fontNanumExtraBold10);
-    ui->groupClassEngrave->setFont(fontNanumExtraBold10);
-    ui->groupSetEffect->setFont(fontNanumExtraBold10);
-    ui->label_5->setFont(fontNanumExtraBold12);
-    ui->label_2->setFont(fontNanumExtraBold12);
-    ui->label_8->setFont(fontNanumExtraBold12);
-    ui->groupSetting->setFont(fontNanumExtraBold14);
-    ui->lbEar1->setFont(fontNanumBold12);
-    ui->lbEar2->setFont(fontNanumBold12);
-    ui->lbNeck1->setFont(fontNanumBold12);
-    ui->lbNeck2->setFont(fontNanumBold12);
-    ui->lbRing1->setFont(fontNanumBold12);
-    ui->lbRing2->setFont(fontNanumBold12);
-    ui->lbSetEffect->setFont(fontNanumBold12);
+    initFont();
 }
 
 SettingWidget::~SettingWidget()
@@ -129,6 +108,31 @@ void SettingWidget::setNormalEngraves(QList<QPair<QString, int> > normalEngraves
     m_normalEngraves = normalEngraves;
 
     renderNormalEngrave();
+}
+
+void SettingWidget::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumExtraBold10 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 10);
+    QFont fontNanumExtraBold12 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
+    QFont fontNanumExtraBold14 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 14);
+    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+
+    ui->groupEngrave->setFont(fontNanumExtraBold10);
+    ui->groupAbility->setFont(fontNanumExtraBold10);
+    ui->groupClassEngrave->setFont(fontNanumExtraBold10);
+    ui->groupSetEffect->setFont(fontNanumExtraBold10);
+    ui->label_5->setFont(fontNanumExtraBold12);
+    ui->label_2->setFont(fontNanumExtraBold12);
+    ui->label_8->setFont(fontNanumExtraBold12);
+    ui->groupSetting->setFont(fontNanumExtraBold14);
+    ui->lbEar1->setFont(fontNanumBold12);
+    ui->lbEar2->setFont(fontNanumBold12);
+    ui->lbNeck1->setFont(fontNanumBold12);
+    ui->lbNeck2->setFont(fontNanumBold12);
+    ui->lbRing1->setFont(fontNanumBold12);
+    ui->lbRing2->setFont(fontNanumBold12);
+    ui->lbSetEffect->setFont(fontNanumBold12);
 }
 
 void SettingWidget::renderAbility()

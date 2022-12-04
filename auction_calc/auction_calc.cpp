@@ -6,8 +6,7 @@
 
 AuctionCalc* AuctionCalc::m_pAuctionCalc = nullptr;
 
-AuctionCalc::AuctionCalc(QWidget *parent) :
-    QWidget(parent),
+AuctionCalc::AuctionCalc() :
     ui(new Ui::AuctionCalc),
     mIntValidator(new QIntValidator())
 {

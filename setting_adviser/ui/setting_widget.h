@@ -14,7 +14,7 @@ class SettingWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SettingWidget(QWidget *parent = nullptr);
+    SettingWidget();
     ~SettingWidget();
 
     void setIndex(int index);
@@ -27,6 +27,8 @@ public:
     void setNormalEngraves(QList<QPair<QString, int>> normalEngraves);
 
 private:
+    void initFont();
+
     void renderAbility();
     void renderSetEffect();
     void renderClassEngrave();

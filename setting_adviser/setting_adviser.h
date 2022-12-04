@@ -19,7 +19,7 @@ class SettingAdviser : public QWidget
     Q_OBJECT
 
 private:
-    explicit SettingAdviser(QWidget *parent = nullptr);
+    SettingAdviser();
     ~SettingAdviser();
 
 public:
@@ -30,6 +30,8 @@ public:
     static void destroyInstance();
 
 private:
+    void initFont();
+    void initAlignment();
     void initConnect();
     void clearData();
 

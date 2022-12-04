@@ -31,7 +31,7 @@ class Profile : public QWidget
     Q_OBJECT
 
 private:
-    explicit Profile(QWidget *parent = nullptr);
+    Profile();
     ~Profile();
 
 public:

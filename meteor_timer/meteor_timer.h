@@ -15,7 +15,7 @@ class MeteorTimer : public QWidget
     const int MAX_COUNT = 100;
 
 private:
-    explicit MeteorTimer(QWidget *parent = nullptr);
+    MeteorTimer();
     ~MeteorTimer();
 
 public:
@@ -31,6 +31,7 @@ private:
 
 private:
     void initConnect();
+    void initFont();
 
 private slots:
     void slotStartTimer();

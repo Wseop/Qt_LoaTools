@@ -35,8 +35,7 @@
 
 Profile* Profile::m_pProfile = nullptr;
 
-Profile::Profile(QWidget *parent) :
-    QWidget(parent),
+Profile::Profile() :
     ui(new Ui::Profile),
     mNetworkProfile(new QNetworkAccessManager()),
     m_pDBRequest(new DBRequest()),
@@ -952,7 +951,7 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         mCharacter = new Character();
         mCharacter->setName(ui->leName->text());
         ui->leName->clear();
-        mCharacterList = new CharacterList(nullptr, this);
+        mCharacterList = new CharacterList(this);
 
         // 추출 결과 parsing
         parseItem();
