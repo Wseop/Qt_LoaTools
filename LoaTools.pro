@@ -14,6 +14,7 @@ SOURCES += \
     db/db_request.cpp \
     engrave_simulator//engrave_simulator.cpp \
     font/font_manager.cpp \
+    game_data/engrave.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
     item/abilitystone.cpp \
@@ -28,7 +29,6 @@ SOURCES += \
     profile/character.cpp \
     profile/character_list.cpp \
     profile/profile.cpp \
-    engrave.cpp \
     main.cpp \
     loatools.cpp \
     profile/skill.cpp \
@@ -50,12 +50,17 @@ HEADERS += \
     auction_calc/auction_calc.h \
     db/db.h \
     db/db_request.h \
+    db/enum/collection.h \
     engrave_simulator/engrave_simulator.h \
     enum/ability.h \
     enum/class.h \
     enum/collection.h \
     enum/set_effect.h \
     font/font_manager.h \
+    game_data/ability.h \
+    game_data/class.h \
+    game_data/engrave.h \
+    game_data/set_effect.h \
     http_client/http_client.h \
     http_client/json_builder.h \
     item/abilitystone.h \
@@ -70,7 +75,6 @@ HEADERS += \
     profile/character.h \
     profile/character_list.h \
     profile/profile.h \
-    engrave.h \
     loatools.h \
     profile/skill.h \
     profile/ui/abilitystone_widget.h \

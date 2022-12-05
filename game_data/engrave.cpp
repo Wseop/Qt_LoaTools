@@ -4,9 +4,16 @@
 #include <QDir>
 #include <QTextStream>
 
+Engrave* Engrave::m_pEngrave = nullptr;
+
 Engrave::Engrave()
 {
     loadEngraveList();
+}
+
+Engrave::~Engrave()
+{
+    destroyInstance();
 }
 
 void Engrave::loadEngraveList()
@@ -46,6 +53,23 @@ void Engrave::loadEngraveList()
     }
 }
 
+Engrave *Engrave::getInstance()
+{
+    if (m_pEngrave == nullptr)
+        m_pEngrave = new Engrave();
+
+    return m_pEngrave;
+}
+
+void Engrave::destroyInstance()
+{
+    if (m_pEngrave == nullptr)
+        return;
+
+    delete m_pEngrave;
+    m_pEngrave = nullptr;
+}
+
 const QStringList& Engrave::getEngraveList()
 {
     return m_engraves;
@@ -56,6 +80,26 @@ const QStringList& Engrave::getPenaltyList()
     return m_penalties;
 }
 
+QString Engrave::getEngravePath(QString engrave) const
+{
+    int index = m_engraves.indexOf(engrave);
+    return QString(":/image/resources/engraves/%1.png").arg(index);
+}
+
+QString Engrave::getPenaltyPath(QString penalty) const
+{
+    if (penalty == "공격력 감소")
+        return QString(":/image/resources/engraves/penalty_att.png");
+    else if (penalty == "공격속도 감소")
+        return QString(":/image/resources/engraves/penalty_attspd.png");
+    else if (penalty == "방어력 감소")
+        return QString(":/image/resources/engraves/penalty_def.png");
+    else if (penalty == "이동속도 감소")
+        return QString(":/image/resources/engraves/penalty_spd.png");
+    else
+        return "";
+}
+
 bool Engrave::isValidEngrave(QString engrave)
 {
     return m_engraves.contains(engrave);
@@ -64,82 +108,6 @@ bool Engrave::isValidEngrave(QString engrave)
 bool Engrave::isValidPenalty(QString penalty)
 {
     return m_penalties.contains(penalty);
-}
-
-QString Engrave::getEngravePath(QString engrave) const
-{
-    int index = m_engraves.indexOf(engrave);
-    return QString("%1/%2.png").arg(PATH_ENGRAVE).arg(index);
-}
-
-QString Engrave::getPenaltyPath(QString penalty) const
-{
-    if (penalty == "공격력 감소")
-        return QString("%1/penalty_att.png").arg(PATH_ENGRAVE);
-    else if (penalty == "공격속도 감소")
-        return QString("%1/penalty_attspd.png").arg(PATH_ENGRAVE);
-    else if (penalty == "방어력 감소")
-        return QString("%1/penalty_def.png").arg(PATH_ENGRAVE);
-    else if (penalty == "이동속도 감소")
-        return QString("%1/penalty_spd.png").arg(PATH_ENGRAVE);
-    else
-        return "";
-}
-
-void Engrave::addEngrave(QString engrave, int value)
-{
-    m_engraveValue[engrave] += value;
-}
-
-void Engrave::addPenalty(QString penalty, int value)
-{
-    m_penaltyValue[penalty] += value;
-}
-
-QStringList Engrave::getActiveEngraveList() const
-{
-    QStringList ret;
-    QStringList keys = m_engraveValue.keys();
-
-    for (const QString& key : keys)
-    {
-        if (m_engraveValue[key] >= 5)
-            ret << key;
-    }
-    return ret;
-}
-
-QStringList Engrave::getActivePenaltyList() const
-{
-    QStringList ret;
-    QStringList keys = m_penaltyValue.keys();
-
-    for (const QString& key : keys)
-    {
-        if (m_penaltyValue[key] >= 5)
-            ret << key;
-    }
-    return ret;
-}
-
-int Engrave::getEngraveValue(QString engrave) const
-{
-    return m_engraveValue[engrave];
-}
-
-int Engrave::getPenaltyValue(QString penalty) const
-{
-    return m_penaltyValue[penalty];
-}
-
-void Engrave::clearEngrave()
-{
-    m_engraveValue.clear();
-}
-
-void Engrave::clearPenalty()
-{
-    m_penaltyValue.clear();
 }
 
 bool Engrave::isClassEngrave(QString engraveName)
