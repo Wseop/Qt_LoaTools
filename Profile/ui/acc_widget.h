@@ -16,7 +16,7 @@ class AccWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit AccWidget(QWidget *parent = nullptr, const Accessory* acc = nullptr, QString iconUrl = "");
+    AccWidget(const Accessory* acc = nullptr, QString iconUrl = "");
     ~AccWidget();
 
 private:
@@ -27,8 +27,8 @@ private:
 
 private:
     Ui::AccWidget *ui;
-    const Accessory* mAcc;
-    QNetworkAccessManager* mNetworkManager = nullptr;
+    const Accessory* m_pAcc;
+    QNetworkAccessManager* m_pNetworkManager = nullptr;
 
 private slots:
     void slotUpdateIcon(QNetworkReply* reply);

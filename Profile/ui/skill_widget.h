@@ -17,10 +17,13 @@ class SkillWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SkillWidget(QWidget *parent = nullptr, const Skill* skill = nullptr, QString iconUrl = "");
+    SkillWidget(const Skill* skill = nullptr, QString iconUrl = "");
     ~SkillWidget();
 
 private:
+    void initFont();
+    void initAlignment();
+
     void requestSkillIcon(QString iconUrl);
     void setSkillName();
     void setTripods();
@@ -29,9 +32,9 @@ private:
 
 private:
     Ui::SkillWidget *ui;
-    const Skill* mSkill;
-    QNetworkAccessManager* mNetworkManager;
-    QList<QLabel*> mTripods;
+    const Skill* m_pSkill;
+    QNetworkAccessManager* m_pNetworkManager;
+    QList<QLabel*> m_tripods;
 
 private slots:
     void slotUpdateSkillIcon(QNetworkReply* reply);

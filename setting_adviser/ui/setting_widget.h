@@ -1,8 +1,6 @@
 #ifndef SETTING_WIDGET_H
 #define SETTING_WIDGET_H
 
-#include "engrave.h"
-
 #include <QWidget>
 
 namespace Ui {
@@ -46,8 +44,6 @@ private:
     QStringList m_setEffects;
     QList<QPair<QString, int>> m_classEngraves;
     QList<QPair<QString, int>> m_normalEngraves;
-
-    Engrave m_engrave;
 
     QMap<class QHBoxLayout*, class QVBoxLayout*> m_mapClassLayout;
     QMap<class QLabel*, class QHBoxLayout*> m_mapClassIcon;

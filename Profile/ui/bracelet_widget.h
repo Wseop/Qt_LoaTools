@@ -16,7 +16,7 @@ class BraceletWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BraceletWidget(QWidget *parent = nullptr, const Bracelet* bracelet = nullptr, QString iconUrl = "");
+    BraceletWidget(const Bracelet* bracelet = nullptr, QString iconUrl = "");
     ~BraceletWidget();
 
 private:
@@ -26,8 +26,8 @@ private:
 
 private:
     Ui::BraceletWidget *ui;
-    const Bracelet* mBracelet;
-    QNetworkAccessManager* mNetworkManager = nullptr;
+    const Bracelet* m_pBracelet;
+    QNetworkAccessManager* m_pNetworkManager = nullptr;
 
 private slots:
     void slotUpdateIcon(QNetworkReply* reply);

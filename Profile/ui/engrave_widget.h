@@ -17,20 +17,24 @@ class EngraveWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit EngraveWidget(QWidget *parent = nullptr, const Engrave* engrave = nullptr);
+    EngraveWidget(const QMap<QString, int>& engraveValues, const QMap<QString, int>& penaltyValues);
     ~EngraveWidget();
 
 private:
+    void initFont();
+
     void createEngraveLayouts(const QStringList& engraves);
     void createPenaltyLayouts(const QStringList& penalties);
     QHBoxLayout* createEngraveLayout(QString iconPath, QString engrave, int level);
 
 private:
     Ui::EngraveWidget *ui;
-    const Engrave* mEngrave;
-    QList<QLabel*> mLabels;
-    QList<QHBoxLayout*> mEngraveLayouts;
-    QList<QHBoxLayout*> mPenaltyLayouts;
+
+    QMap<QString, int> m_engraveValues;
+    QMap<QString, int> m_penaltyValues;
+    QList<QLabel*> m_labels;
+    QList<QHBoxLayout*> m_engraveLayouts;
+    QList<QHBoxLayout*> m_penaltyLayouts;
 };
 
 #endif // ENGRAVE_WIDGET_H

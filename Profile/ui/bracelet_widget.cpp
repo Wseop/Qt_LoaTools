@@ -7,15 +7,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-BraceletWidget::BraceletWidget(QWidget *parent, const Bracelet* bracelet, QString iconUrl) :
-    QWidget(parent),
+BraceletWidget::BraceletWidget(const Bracelet* bracelet, QString iconUrl) :
     ui(new Ui::BraceletWidget),
-    mBracelet(bracelet),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pBracelet(bracelet),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
 
     requestIcon(iconUrl);
     setText();
@@ -29,14 +28,14 @@ BraceletWidget::~BraceletWidget()
 
 void BraceletWidget::requestIcon(QString iconUrl)
 {
-    QNetworkRequest request((QUrl(iconUrl + mBracelet->getIconPath())));
-    mNetworkManager->get(request);
+    QNetworkRequest request((QUrl(iconUrl + m_pBracelet->getIconPath())));
+    m_pNetworkManager->get(request);
 }
 
 void BraceletWidget::setText()
 {
-    ui->lbName->setText(mBracelet->getName());
-    ui->lbEffect->setText(mBracelet->getEffect());
+    ui->lbName->setText(m_pBracelet->getName());
+    ui->lbEffect->setText(m_pBracelet->getEffect());
 }
 
 void BraceletWidget::setStyleSheet()
@@ -51,7 +50,7 @@ void BraceletWidget::setStyleSheet()
     ui->lbEffect->setFont(fontNanumBold10);
 
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mBracelet->getGrade())]));
+    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(m_pBracelet->getGrade())]));
 }
 
 void BraceletWidget::slotUpdateIcon(QNetworkReply *reply)

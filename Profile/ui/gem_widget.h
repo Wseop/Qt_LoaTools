@@ -16,7 +16,7 @@ class GemWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit GemWidget(QWidget *parent = nullptr, const Gem* gem = nullptr, QString iconUrl = "");
+    GemWidget(const Gem* gem = nullptr, QString iconUrl = "");
     ~GemWidget();
 
 private:
@@ -27,8 +27,8 @@ private:
 
 private:
     Ui::GemWidget *ui;
-    const Gem* mGem;
-    QNetworkAccessManager* mNetworkManager;
+    const Gem* m_pGem;
+    QNetworkAccessManager* m_pNetworkManager;
 
 private slots:
     void slotUpdateIcon(QNetworkReply* reply);

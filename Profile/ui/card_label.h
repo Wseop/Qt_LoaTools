@@ -12,8 +12,11 @@ class CardLabel : public QWidget
     Q_OBJECT
 
 public:
-    explicit CardLabel(QWidget *parent = nullptr, QString cardTitle = "", QString cardDesc = "");
+    CardLabel(QString cardTitle = "", QString cardDesc = "");
     ~CardLabel();
+
+private:
+    void initFont();
 
 private:
     Ui::CardLabel *ui;

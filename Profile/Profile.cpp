@@ -2,10 +2,9 @@
 #include "ui_profile.h"
 #include "character_list.h"
 #include "card_set.h"
-#include "enum/class.h"
-#include "http_client/http_client.h"
+#include "game_data/class.h"
+#include "game_data/engrave.h"
 #include "http_client/json_builder.h"
-#include "db/db.h"
 #include "db/db_request.h"
 #include "font/font_manager.h"
 
@@ -37,9 +36,9 @@ Profile* Profile::m_pProfile = nullptr;
 
 Profile::Profile() :
     ui(new Ui::Profile),
-    mNetworkProfile(new QNetworkAccessManager()),
+    m_pNetworkProfile(new QNetworkAccessManager()),
     m_pDBRequest(new DBRequest()),
-    mHtmlTag("<[^>]*>")
+    m_htmlTag("<[^>]*>")
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -140,7 +139,7 @@ void Profile::initConnect()
     connect(ui->pbSearch, SIGNAL(pressed()), this, SLOT(slotProfileRequest()));
     connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(slotProfileRequest()));
     connect(ui->pbCharacterList, SIGNAL(pressed()), this, SLOT(slotShowCharacterList()));
-    connect(mNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
+    connect(m_pNetworkProfile, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExtractProfile(QNetworkReply*)));
 
     connect(this, SIGNAL(sigUpdateTitle()), this, SLOT(slotUpdateTitle()));
     connect(this, SIGNAL(sigUpdateItem()), this, SLOT(slotUpdateItem()));
@@ -159,21 +158,21 @@ void Profile::parseTitle(const QString& profile)
     startIndex = profile.indexOf(classToken);
     startIndex = profile.indexOf("alt=\"", startIndex) + 5;
     endIndex = profile.indexOf("\">", startIndex);
-    mCharacter->setClass(profile.sliced(startIndex, endIndex - startIndex));
+    m_pCharacter->setClass(profile.sliced(startIndex, endIndex - startIndex));
 
     // level 정보 추출
     classToken = "profile-character-info__lv";
     startIndex = profile.indexOf(classToken);
     startIndex = profile.indexOf("Lv.", startIndex);
     endIndex = profile.indexOf("</span>", startIndex);
-    mCharacter->setLevel(profile.sliced(startIndex, endIndex - startIndex));
+    m_pCharacter->setLevel(profile.sliced(startIndex, endIndex - startIndex));
 
     // 서버 정보 추출
     classToken = "profile-character-info__server";
     startIndex = profile.indexOf(classToken);
     startIndex = profile.indexOf("@", startIndex);
     endIndex = profile.indexOf("\">", startIndex);
-    mCharacter->setServer(profile.sliced(startIndex, endIndex - startIndex));
+    m_pCharacter->setServer(profile.sliced(startIndex, endIndex - startIndex));
 
     parseCharacterList(profile);
     parseGuildName(profile);
@@ -207,7 +206,7 @@ void Profile::parseCharacterList(const QString &profile)
             endIndex = profile.indexOf("</span>", startIndex);
             QString name = profile.sliced(startIndex, endIndex - startIndex);
 
-            mCharacterList->addCharacter(server, name, cls);
+            m_pCharacterList->addCharacter(server, name, cls);
 
             startIndex = profile.indexOf("common/thumb", startIndex);
             if (serverIndexStart != -1 && startIndex > serverIndexStart)
@@ -225,12 +224,12 @@ void Profile::parseGuildName(const QString &profile)
         indexStart = profile.indexOf(">", indexStart) + 1;
     qsizetype indexEnd = profile.indexOf("</span>", indexStart);
 
-    mCharacter->setGuild(profile.sliced(indexStart, indexEnd - indexStart));
+    m_pCharacter->setGuild(profile.sliced(indexStart, indexEnd - indexStart));
 }
 
 void Profile::parseItem()
 {
-    const QJsonObject& obj = mProfile->find("Equip")->toObject();
+    const QJsonObject& obj = m_pProfileObj->find("Equip")->toObject();
 
     const QStringList& objKeys = obj.keys();
     // gem(보석 아이템)만 구분하여 item key 추출
@@ -301,7 +300,7 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
         if (type == "NameTagBox")
         {
-            QString name = element.find("value")->toString().remove(mHtmlTag);
+            QString name = element.find("value")->toString().remove(m_htmlTag);
             equip->setName(name);
         }
         else if (type == "ItemTitle")
@@ -309,7 +308,7 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
             const QJsonObject& valueObj = element.find("value")->toObject();
 
             Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
-            QString levelTier = valueObj.find("leftStr2")->toString().remove(mHtmlTag);
+            QString levelTier = valueObj.find("leftStr2")->toString().remove(m_htmlTag);
             int quality = valueObj.find("qualityValue")->toInt();
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
             equip->setGrade(grade);
@@ -330,29 +329,29 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
             if (valueObj.find("Element_000")->toString().contains("세트 효과 레벨"))
             {
-                QString setLevel = valueObj.find("Element_001")->toString().remove(mHtmlTag);
+                QString setLevel = valueObj.find("Element_001")->toString().remove(m_htmlTag);
                 equip->setSetLevel(setLevel);
             }
         }
     }
 
-    mCharacter->setItem(static_cast<Item*>(equip));
-    mCharacter->addItemLevel(itemLevel);
+    m_pCharacter->setItem(static_cast<Item*>(equip));
+    m_pCharacter->addItemLevel(itemLevel);
 
     if (equip->getSetLevel() != "")
     {
         if (part != Part::WEAPON || (part == Part::WEAPON && equip->getGrade() != Grade::ESTHER))
         {
-            mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(part));
+            m_pCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(part));
         }
 
-        const Equip* weapon = static_cast<const Equip*>(mCharacter->getItemByPart(Part::WEAPON));
+        const Equip* weapon = static_cast<const Equip*>(m_pCharacter->getItemByPart(Part::WEAPON));
         if (weapon == nullptr)
             return;
 
         if (part == Part::HAND && weapon->getGrade() == Grade::ESTHER)
         {
-            mCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+            m_pCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
         }
     }
 }
@@ -369,7 +368,7 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
 
         if (type == "NameTagBox")
         {
-            QString name = element.find("value")->toString().remove(mHtmlTag);
+            QString name = element.find("value")->toString().remove(m_htmlTag);
             acc->setName(name);
         }
         else if (type == "ItemTitle")
@@ -423,7 +422,7 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
         }
     }
 
-    mCharacter->setItem(static_cast<Item*>(acc));
+    m_pCharacter->setItem(static_cast<Item*>(acc));
 }
 
 void Profile::parseStone(const QJsonObject &stoneObj)
@@ -438,7 +437,7 @@ void Profile::parseStone(const QJsonObject &stoneObj)
 
         if (type == "NameTagBox")
         {
-            QString name = element.find("value")->toString().remove(mHtmlTag);
+            QString name = element.find("value")->toString().remove(m_htmlTag);
             stone->setName(name);
         }
         else if (type == "ItemTitle")
@@ -480,7 +479,7 @@ void Profile::parseStone(const QJsonObject &stoneObj)
         }
     }
 
-    mCharacter->setItem(static_cast<Item*>(stone));
+    m_pCharacter->setItem(static_cast<Item*>(stone));
 }
 
 void Profile::parseBracelet(const QJsonObject &braceletObj)
@@ -495,7 +494,7 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
 
         if (type == "NameTagBox")
         {
-            QString name = element.find("value")->toString().remove(mHtmlTag);
+            QString name = element.find("value")->toString().remove(m_htmlTag);
             bracelet->setName(name);
         }
         else if (type == "ItemTitle")
@@ -523,7 +522,7 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
         }
     }
 
-    mCharacter->setItem(static_cast<Item*>(bracelet));
+    m_pCharacter->setItem(static_cast<Item*>(bracelet));
 }
 
 void Profile::parseGem(const QJsonObject &gemObj)
@@ -538,7 +537,7 @@ void Profile::parseGem(const QJsonObject &gemObj)
 
         if (type == "NameTagBox")
         {
-            QString name = element.find("value")->toString().remove(mHtmlTag);
+            QString name = element.find("value")->toString().remove(m_htmlTag);
             gem.setName(name);
         }
         else if (type == "ItemTitle")
@@ -565,12 +564,12 @@ void Profile::parseGem(const QJsonObject &gemObj)
         }
     }
 
-    mCharacter->addGem(gem);
+    m_pCharacter->addGem(gem);
 }
 
 void Profile::parseEngrave()
 {
-    const QJsonObject& obj = mProfile->find("Engrave")->toObject();
+    const QJsonObject& obj = m_pProfileObj->find("Engrave")->toObject();
     const QStringList& objKeys = obj.keys();
 
     // 장착 각인 parsing
@@ -593,10 +592,10 @@ void Profile::parseEngrave()
             else if (type == "EngraveSkillTitle")
             {
                 value = element.find("value")->toObject().find("leftText")->toString()
-                        .remove(mHtmlTag).remove("각인 활성 포인트 +").toInt();
+                        .remove(m_htmlTag).remove("각인 활성 포인트 +").toInt();
             }
         }
-        mCharacter->addEngrave(name, value);
+        m_pCharacter->addEngrave(name, value);
     }
 
     emit sigUpdateEngrave();
@@ -604,7 +603,7 @@ void Profile::parseEngrave()
 
 void Profile::parseCard()
 {
-    const QJsonObject& cardSetObj = mProfile->find("CardSet")->toObject();
+    const QJsonObject& cardSetObj = m_pProfileObj->find("CardSet")->toObject();
     QStringList keys = cardSetObj.keys();
 
     CardSet cardSet;
@@ -624,13 +623,13 @@ void Profile::parseCard()
         }
     }
 
-    mCharacter->setCardSet(cardSet);
+    m_pCharacter->setCardSet(cardSet);
     emit sigUpdateCard();
 }
 
 void Profile::parseSkill()
 {
-    const QJsonObject& skillObj = mProfile->find("Skill")->toObject();
+    const QJsonObject& skillObj = m_pProfileObj->find("Skill")->toObject();
     QStringList keys = skillObj.keys();
 
     for (const QString& key : keys)
@@ -678,8 +677,8 @@ void Profile::parseSkill()
                         break;
 
                     Tripod tripod;
-                    tripod.name = tripodObj.find("name")->toString().remove(mHtmlTag);
-                    tripod.level = tripodObj.find("tier")->toString().remove(mHtmlTag).remove("레벨 ");
+                    tripod.name = tripodObj.find("name")->toString().remove(m_htmlTag);
+                    tripod.level = tripodObj.find("tier")->toString().remove(m_htmlTag).remove("레벨 ");
                     skill.addTripod(tripod);
                 }
             }
@@ -693,7 +692,7 @@ void Profile::parseSkill()
                     QString element001 = value.find("Element_001")->toString();
                     int indexColor = element001.indexOf("#");
                     QString color = element001.sliced(indexColor, 7);
-                    QString name = element001.remove(mHtmlTag).sliced(1, 2);
+                    QString name = element001.remove(m_htmlTag).sliced(1, 2);
 
                     Rune* rune = new Rune();
                     rune->setName(name);
@@ -705,7 +704,7 @@ void Profile::parseSkill()
         // 스킬레벨이 2이상이거나 룬이 착용되어 있는 경우만 추가
         if (skill.getLevel() >= 2 || bRuneExist)
         {
-            mCharacter->addSkill(skill);
+            m_pCharacter->addSkill(skill);
         }
     }
 
@@ -714,26 +713,26 @@ void Profile::parseSkill()
 
 void Profile::updateDB()
 {
-    if (mCharacter->getItemLevel() >= (double)1490)
+    if (m_pCharacter->getItemLevel() >= (double)1490)
     {
         // 미장착 슬롯 체크
         const Equip* equip = nullptr;
         for (int part = static_cast<int>(Part::WEAPON); part <= static_cast<int>(Part::SHOULDER); part++)
         {
-            equip = static_cast<const Equip*>(mCharacter->getItemByPart(static_cast<Part>(part)));
+            equip = static_cast<const Equip*>(m_pCharacter->getItemByPart(static_cast<Part>(part)));
             if (equip == nullptr)
                 return;
         }
 
         // Name, Class
-        QString name = mCharacter->getName();
-        QString cls = enumClassKtoE(mCharacter->getClass());
+        QString name = m_pCharacter->getName();
+        QString cls = Class::kStrToEstr(m_pCharacter->getClass());
 
         // Abilities
         QStringList abilities;
         QString abilityStr;
         const Accessory* accessory = nullptr;
-        accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(Part::NECK));
+        accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(Part::NECK));
         if (accessory == nullptr)
             return;
         abilityStr = accessory->getAbility();
@@ -741,7 +740,7 @@ void Profile::updateDB()
         abilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
         for (int part = static_cast<int>(Part::EAR1); part <= static_cast<int>(Part::RING2); part++)
         {
-            accessory = static_cast<const Accessory*>(mCharacter->getItemByPart(static_cast<Part>(part)));
+            accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(static_cast<Part>(part)));
             if (accessory == nullptr)
                 return;
             abilityStr = accessory->getAbility();
@@ -749,21 +748,23 @@ void Profile::updateDB()
         }
 
         // Engraves
-        const Engrave& engraveObj = mCharacter->getEngrave();
+
+
+        const QMap<QString, int>& engraveValues = m_pCharacter->getEngraveValues();
         QStringList engraveNames;
         QList<int> engraveLevels;
-        engraveNames = engraveObj.getActiveEngraveList();
+        engraveNames = Engrave::getInstance()->extractActiveEngraves(engraveValues);
         for (const QString& engraveName : engraveNames)
         {
-            engraveLevels.append(engraveObj.getEngraveValue(engraveName) / 5);
+            engraveLevels.append(engraveValues[engraveName] / 5);
         }
 
         // DB update - Character
-        QJsonObject characterObj = JsonBuilder::buildCharacter(name, cls, mCharacter->getItemLevel()).object();
+        QJsonObject characterObj = JsonBuilder::buildCharacter(name, cls, m_pCharacter->getItemLevel()).object();
         emit m_pDBRequest->insertDocument(Collection::Character, characterObj);
 
         // DB update - Setting
-        QJsonObject settingObj = JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, mCharacter->getSetEffects()).object();
+        QJsonObject settingObj = JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, m_pCharacter->getSetEffects()).object();
         emit m_pDBRequest->insertDocument(Collection::Setting, settingObj);
     }
 }
@@ -804,9 +805,9 @@ void Profile::extractEngraveValue(int type, QString engrave)
     engraveValue = engrave.sliced(indexStart, indexEnd - indexStart).toInt();
 
     if (type == 0)
-        mCharacter->addEngrave(engraveName, engraveValue);
+        m_pCharacter->addEngrave(engraveName, engraveValue);
     else
-        mCharacter->addPenalty(engraveName, engraveValue);
+        m_pCharacter->addPenalty(engraveName, engraveValue);
 }
 
 Grade Profile::getGradeByColor(QString color)
@@ -832,72 +833,72 @@ Grade Profile::getGradeByColor(QString color)
 void Profile::clearAll()
 {
     // 이전 캐릭터 정보 초기화
-    if (mCharacter != nullptr)
+    if (m_pCharacter != nullptr)
     {
-        delete mCharacter;
-        mCharacter = nullptr;
+        delete m_pCharacter;
+        m_pCharacter = nullptr;
     }
-    if (mCharacterList != nullptr)
+    if (m_pCharacterList != nullptr)
     {
-        delete mCharacterList;
-        mCharacterList = nullptr;
+        delete m_pCharacterList;
+        m_pCharacterList = nullptr;
     }
 
-    for (EquipWidget* equipWidget : mEquipWidgets)
+    for (EquipWidget* equipWidget : m_equipWidgets)
     {
         ui->vLayoutEquip->removeWidget(equipWidget);
         delete equipWidget;
     }
-    mEquipWidgets.clear();
+    m_equipWidgets.clear();
 
-    for (AccWidget* accWidget : mAccWidgets)
+    for (AccWidget* accWidget : m_accWidgets)
     {
         ui->vLayoutAccessory->removeWidget(accWidget);
         delete accWidget;
     }
-    mAccWidgets.clear();
+    m_accWidgets.clear();
 
-    if (mStoneWidget != nullptr)
+    if (m_pStoneWidget != nullptr)
     {
-        ui->vLayoutOther->removeWidget(mStoneWidget);
-        delete mStoneWidget;
-        mStoneWidget = nullptr;
+        ui->vLayoutOther->removeWidget(m_pStoneWidget);
+        delete m_pStoneWidget;
+        m_pStoneWidget = nullptr;
     }
 
-    if (mBraceletWidget != nullptr)
+    if (m_pBraceletWidget != nullptr)
     {
-        ui->vLayoutOther->removeWidget(mBraceletWidget);
-        delete mBraceletWidget;
-        mBraceletWidget = nullptr;
+        ui->vLayoutOther->removeWidget(m_pBraceletWidget);
+        delete m_pBraceletWidget;
+        m_pBraceletWidget = nullptr;
     }
 
-    if (mEngraveWidget != nullptr)
+    if (m_pEngraveWidget != nullptr)
     {
-        ui->vLayoutOther->removeWidget(mEngraveWidget);
-        delete mEngraveWidget;
-        mEngraveWidget = nullptr;
+        ui->vLayoutOther->removeWidget(m_pEngraveWidget);
+        delete m_pEngraveWidget;
+        m_pEngraveWidget = nullptr;
     }
 
-    for (GemWidget* gemWidget : mGemWidgets)
+    for (GemWidget* gemWidget : m_gemWidgets)
     {
         ui->vLayoutGem->removeWidget(gemWidget);
         delete gemWidget;
     }
-    mGemWidgets.clear();
+    m_gemWidgets.clear();
 
-    for (CardLabel* cardLabel : mCardLabels)
+    for (CardLabel* cardLabel : m_cardLabels)
     {
         ui->vLayoutCard->removeWidget(cardLabel);
         delete cardLabel;
     }
-    mCardLabels.clear();
+    m_cardLabels.clear();
 
-    for (SkillWidget* skillWidget : mSkillWidgets)
+    for (SkillWidget* skillWidget : m_skillWidgets)
     {
         ui->vLayoutSkill->removeWidget(skillWidget);
         delete skillWidget;
     }
-    mSkillWidgets.clear();
+    m_skillWidgets.clear();
 }
 
 void Profile::slotProfileRequest()
@@ -906,7 +907,7 @@ void Profile::slotProfileRequest()
     QString name = ui->leName->text();
     QString url = PATH_PROFILE + "/" + name;
     QNetworkRequest request((QUrl(url)));
-    mNetworkProfile->get(request);
+    m_pNetworkProfile->get(request);
 }
 
 // 응답 결과로부터 Profile(Json형식) 부분 추출
@@ -942,16 +943,16 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
         profileIndex += profileStart.size();
         profileSize = responseData.indexOf(profileEnd) - profileIndex + 1;
         const QString& profile = responseData.sliced(profileIndex, profileSize);
-        if (mProfile != nullptr)
-            delete mProfile;
-        mProfile = new QJsonObject(QJsonDocument::fromJson(profile.toUtf8()).object());
+        if (m_pProfileObj != nullptr)
+            delete m_pProfileObj;
+        m_pProfileObj = new QJsonObject(QJsonDocument::fromJson(profile.toUtf8()).object());
 
         // 기존 데이터 초기화
         clearAll();
-        mCharacter = new Character();
-        mCharacter->setName(ui->leName->text());
+        m_pCharacter = new Character();
+        m_pCharacter->setName(ui->leName->text());
         ui->leName->clear();
-        mCharacterList = new CharacterList(this);
+        m_pCharacterList = new CharacterList(this);
 
         // 추출 결과 parsing
         parseItem();
@@ -967,16 +968,16 @@ void Profile::slotExtractProfile(QNetworkReply* reply)
 void Profile::slotShowCharacterList()
 {
     this->setDisabled(true);
-    mCharacterList->show();
+    m_pCharacterList->show();
 }
 
 void Profile::slotUpdateTitle()
 {
-    ui->lbClassLevel->setText(QString("%1 %2").arg(mCharacter->getClass(), mCharacter->getLevel()));
-    ui->lbName->setText(mCharacter->getName());
-    ui->lbServer->setText(mCharacter->getServer());
-    ui->lbGuild->setText(mCharacter->getGuild());
-    ui->lbItemLevel->setText(QString("%1").arg(mCharacter->getItemLevel()));
+    ui->lbClassLevel->setText(QString("%1 %2").arg(m_pCharacter->getClass(), m_pCharacter->getLevel()));
+    ui->lbName->setText(m_pCharacter->getName());
+    ui->lbServer->setText(m_pCharacter->getServer());
+    ui->lbGuild->setText(m_pCharacter->getGuild());
+    ui->lbItemLevel->setText(QString("%1").arg(m_pCharacter->getItemLevel()));
 }
 
 void Profile::slotUpdateItem()
@@ -989,83 +990,83 @@ void Profile::slotUpdateItem()
     for (int i = INDEX_EQUIP; i < INDEX_ACCESSORY; i++)
     {
         part = static_cast<Part>(i);
-        const Equip* equip = static_cast<const Equip*>(mCharacter->getItemByPart(part));
+        const Equip* equip = static_cast<const Equip*>(m_pCharacter->getItemByPart(part));
         if (equip == nullptr)
             continue;
-        EquipWidget* equipWidget = new EquipWidget(nullptr, equip, PATH_CDN);
+        EquipWidget* equipWidget = new EquipWidget(equip, PATH_CDN);
         ui->vLayoutEquip->addWidget(equipWidget);
-        mEquipWidgets.append(equipWidget);
+        m_equipWidgets.append(equipWidget);
     }
 
     for (int i = INDEX_ACCESSORY; i < INDEX_STONE; i++)
     {
         part = static_cast<Part>(i);
-        const Accessory* acc = static_cast<const Accessory*>(mCharacter->getItemByPart(part));
+        const Accessory* acc = static_cast<const Accessory*>(m_pCharacter->getItemByPart(part));
         if (acc == nullptr)
             continue;
-        AccWidget* accWidget = new AccWidget(nullptr, acc, PATH_CDN);
+        AccWidget* accWidget = new AccWidget(acc, PATH_CDN);
         ui->vLayoutAccessory->addWidget(accWidget);
-        mAccWidgets.append(accWidget);
+        m_accWidgets.append(accWidget);
     }
 
     part = Part::STONE;
-    const AbilityStone* stone = static_cast<const AbilityStone*>(mCharacter->getItemByPart(part));
+    const AbilityStone* stone = static_cast<const AbilityStone*>(m_pCharacter->getItemByPart(part));
     if (stone != nullptr)
     {
-        AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(nullptr, stone, PATH_CDN);
+        AbilityStoneWidget* stoneWidget = new AbilityStoneWidget(stone, PATH_CDN);
         ui->vLayoutOther->addWidget(stoneWidget);
-        mStoneWidget = stoneWidget;
+        m_pStoneWidget = stoneWidget;
     }
 
     part = Part::BRACELET;
-    const Bracelet* bracelet = static_cast<const Bracelet*>(mCharacter->getItemByPart(part));
+    const Bracelet* bracelet = static_cast<const Bracelet*>(m_pCharacter->getItemByPart(part));
     if (bracelet != nullptr)
     {
-        BraceletWidget* braceletWidget = new BraceletWidget(nullptr, bracelet, PATH_CDN);
+        BraceletWidget* braceletWidget = new BraceletWidget(bracelet, PATH_CDN);
         ui->vLayoutOther->addWidget(braceletWidget);
-        mBraceletWidget = braceletWidget;
+        m_pBraceletWidget = braceletWidget;
     }
 }
 
 void Profile::slotUpdateGem()
 {
-    const QList<Gem>& gems = mCharacter->getGems();
+    const QList<Gem>& gems = m_pCharacter->getGems();
 
     for (const Gem& gem : gems)
     {
-        GemWidget* gemWidget = new GemWidget(nullptr, &gem, PATH_CDN);
+        GemWidget* gemWidget = new GemWidget(&gem, PATH_CDN);
         ui->vLayoutGem->addWidget(gemWidget);
-        mGemWidgets.append(gemWidget);
+        m_gemWidgets.append(gemWidget);
     }
 }
 
 void Profile::slotUpdateEngrave()
 {
-    EngraveWidget* engraveWidget = new EngraveWidget(nullptr, &mCharacter->getEngrave());
+    EngraveWidget* engraveWidget = new EngraveWidget(m_pCharacter->getEngraveValues(), m_pCharacter->getPenaltyValues());
     ui->vLayoutOther->addWidget(engraveWidget);
-    mEngraveWidget = engraveWidget;
+    m_pEngraveWidget = engraveWidget;
 }
 
 void Profile::slotUpdateCard()
 {
-    const CardSet& cardSet = mCharacter->getCardSet();
+    const CardSet& cardSet = m_pCharacter->getCardSet();
 
     for (int i = 0; i < cardSet.count(); i++)
     {
-        CardLabel* cardLabel = new CardLabel(nullptr, cardSet.getTitle(i), cardSet.getDesc(i));
+        CardLabel* cardLabel = new CardLabel(cardSet.getTitle(i), cardSet.getDesc(i));
         ui->vLayoutCard->addWidget(cardLabel);
-        mCardLabels.append(cardLabel);
+        m_cardLabels.append(cardLabel);
     }
 }
 
 void Profile::slotUpdateSkill()
 {
-    const QList<Skill>& skills = mCharacter->getSkills();
+    const QList<Skill>& skills = m_pCharacter->getSkills();
 
     for (const Skill& skill : skills)
     {
-        SkillWidget* skillWidget = new SkillWidget(nullptr, &skill, PATH_CDN);
+        SkillWidget* skillWidget = new SkillWidget(&skill, PATH_CDN);
         ui->vLayoutSkill->addWidget(skillWidget);
-        mSkillWidgets.append(skillWidget);
+        m_skillWidgets.append(skillWidget);
     }
 }

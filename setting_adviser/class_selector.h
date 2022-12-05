@@ -19,7 +19,7 @@ class ClassSelector : public QWidget
     Q_OBJECT
 
 public:
-    explicit ClassSelector(QWidget *parent = nullptr, ParentClass parentClass = ParentClass::None);
+    ClassSelector(QWidget *parent = nullptr, ParentClass parentClass = ParentClass::None);
     ~ClassSelector();
 
 protected:

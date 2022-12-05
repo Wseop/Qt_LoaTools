@@ -1,10 +1,10 @@
 #ifndef PROFILE_H
 #define PROFILE_H
 
+#include "character.h"
+
 #include <QWidget>
 #include <QRegularExpression>
-
-#include "character.h"
 
 namespace Ui {
 class Profile;
@@ -71,22 +71,22 @@ private:
 
 private:
     Ui::Profile *ui;
-    QNetworkAccessManager* mNetworkProfile = nullptr;
-    QJsonObject* mProfile = nullptr;
-    CharacterList* mCharacterList = nullptr;
-    Character* mCharacter = nullptr;
+    QNetworkAccessManager* m_pNetworkProfile = nullptr;
+    QJsonObject* m_pProfileObj = nullptr;
+    CharacterList* m_pCharacterList = nullptr;
+    Character* m_pCharacter = nullptr;
     class DBRequest* m_pDBRequest;
 
-    QRegularExpression mHtmlTag;
+    QRegularExpression m_htmlTag;
 
-    QList<class EquipWidget*> mEquipWidgets;
-    QList<class AccWidget*> mAccWidgets;
-    class AbilityStoneWidget* mStoneWidget = nullptr;
-    class BraceletWidget* mBraceletWidget = nullptr;
-    QList<class GemWidget*> mGemWidgets;
-    class EngraveWidget* mEngraveWidget = nullptr;
-    QList<class CardLabel*> mCardLabels;
-    QList<class SkillWidget*> mSkillWidgets;
+    QList<class EquipWidget*> m_equipWidgets;
+    QList<class AccWidget*> m_accWidgets;
+    class AbilityStoneWidget* m_pStoneWidget = nullptr;
+    class BraceletWidget* m_pBraceletWidget = nullptr;
+    QList<class GemWidget*> m_gemWidgets;
+    class EngraveWidget* m_pEngraveWidget = nullptr;
+    QList<class CardLabel*> m_cardLabels;
+    QList<class SkillWidget*> m_skillWidgets;
 
     static Profile* m_pProfile;
 

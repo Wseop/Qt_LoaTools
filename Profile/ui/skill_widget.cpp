@@ -7,22 +7,17 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
-    QWidget(parent),
+SkillWidget::SkillWidget(const Skill *skill, QString iconUrl) :
     ui(new Ui::SkillWidget),
-    mSkill(skill),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pSkill(skill),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateSkillIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateSkillIcon(QNetworkReply*)));
 
-    ui->hLayoutSkill->setAlignment(Qt::AlignLeft);
-
-    QFont fontNanumRegular10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoRegular, 10);
-    ui->groupSkill->setFont(fontNanumRegular10);
-    ui->groupRune->setFont(fontNanumRegular10);
-    ui->groupTripod->setFont(fontNanumRegular10);
+    initFont();
+    initAlignment();
 
     requestSkillIcon(iconUrl);
     setSkillName();
@@ -33,32 +28,45 @@ SkillWidget::SkillWidget(QWidget *parent, const Skill *skill, QString iconUrl) :
 
 SkillWidget::~SkillWidget()
 {
-    for (QLabel* label : mTripods)
+    for (QLabel* label : m_tripods)
     {
         ui->vLayoutTripod->removeWidget(label);
         delete label;
     }
-    mTripods.clear();
+    m_tripods.clear();
 
     delete ui;
 }
 
+void SkillWidget::initFont()
+{
+    QFont fontNanumRegular10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    ui->groupSkill->setFont(fontNanumRegular10);
+    ui->groupRune->setFont(fontNanumRegular10);
+    ui->groupTripod->setFont(fontNanumRegular10);
+}
+
+void SkillWidget::initAlignment()
+{
+    ui->hLayoutSkill->setAlignment(Qt::AlignLeft);
+}
+
 void SkillWidget::requestSkillIcon(QString iconUrl)
 {
-    QNetworkRequest request(QUrl(iconUrl + mSkill->getIconPath()));
-    mNetworkManager->get(request);
+    QNetworkRequest request(QUrl(iconUrl + m_pSkill->getIconPath()));
+    m_pNetworkManager->get(request);
 }
 
 void SkillWidget::setSkillName()
 {
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     ui->lbSkillName->setFont(fontNanumBold10);
-    ui->lbSkillName->setText(QString("%1 Lv.%2").arg(mSkill->getName()).arg(mSkill->getLevel()));
+    ui->lbSkillName->setText(QString("%1 Lv.%2").arg(m_pSkill->getName()).arg(m_pSkill->getLevel()));
 }
 
 void SkillWidget::setTripods()
 {
-    const QList<Tripod>& tripods = mSkill->getTripods();
+    const QList<Tripod>& tripods = m_pSkill->getTripods();
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
 
     for (int i = 0; i < tripods.size(); i++)
@@ -68,13 +76,13 @@ void SkillWidget::setTripods()
         lbTripod->setFont(fontNanumBold10);
         lbTripod->setStyleSheet(QString("QLabel { color: %1 }").arg(tripod.color));
         ui->vLayoutTripod->addWidget(lbTripod);
-        mTripods.append(lbTripod);
+        m_tripods.append(lbTripod);
     }
 }
 
 void SkillWidget::setRuneIcon()
 {
-    const Rune* rune = mSkill->getRune();
+    const Rune* rune = m_pSkill->getRune();
     if (rune == nullptr)
         return;
 
@@ -84,7 +92,7 @@ void SkillWidget::setRuneIcon()
 
 void SkillWidget::setRuneName()
 {
-    const Rune* rune = mSkill->getRune();
+    const Rune* rune = m_pSkill->getRune();
     if (rune == nullptr)
         return;
 

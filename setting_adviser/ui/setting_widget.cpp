@@ -1,6 +1,7 @@
 #include "setting_widget.h"
 #include "ui_setting_widget.h"
 #include "font/font_manager.h"
+#include "game_data/engrave.h"
 
 SettingWidget::SettingWidget() :
     ui(new Ui::SettingWidget)
@@ -173,7 +174,7 @@ void SettingWidget::renderClassEngrave()
         m_mapClassIcon[lbIcon] = layout;
         lbIcon->setFixedSize(50, 50);
         QPixmap icon;
-        if (icon.load(m_engrave.getEngravePath(classEngrave.first)))
+        if (icon.load(Engrave::getInstance()->getEngravePath(classEngrave.first)))
             lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
         QLabel* lbEngrave = new QLabel();
@@ -201,7 +202,7 @@ void SettingWidget::renderNormalEngrave()
         m_mapNormalIcon[lbIcon] = layout;
         lbIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         QPixmap icon;
-        if (icon.load(m_engrave.getEngravePath(normalEngrave.first)))
+        if (icon.load(Engrave::getInstance()->getEngravePath(normalEngrave.first)))
             lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
         QLabel* lbEngrave = new QLabel();

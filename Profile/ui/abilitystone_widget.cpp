@@ -7,15 +7,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-AbilityStoneWidget::AbilityStoneWidget(QWidget *parent, const AbilityStone* stone, QString iconUrl) :
-    QWidget(parent),
+AbilityStoneWidget::AbilityStoneWidget(const AbilityStone* stone, QString iconUrl) :
     ui(new Ui::AbilityStoneWidget),
-    mStone(stone),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pStone(stone),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
 
     requestIcon(iconUrl);
     setText();
@@ -29,19 +28,19 @@ AbilityStoneWidget::~AbilityStoneWidget()
 
 void AbilityStoneWidget::requestIcon(QString iconUrl)
 {
-    QNetworkRequest request((QUrl(iconUrl + mStone->getIconPath())));
-    mNetworkManager->get(request);
+    QNetworkRequest request((QUrl(iconUrl + m_pStone->getIconPath())));
+    m_pNetworkManager->get(request);
 }
 
 void AbilityStoneWidget::setText()
 {
-    ui->lbName->setText(mStone->getName());
+    ui->lbName->setText(m_pStone->getName());
 
-    const QStringList& engraves = mStone->getEngraves();
+    const QStringList& engraves = m_pStone->getEngraves();
     QString engraveText;
     for (const QString& engrave : engraves)
         engraveText.append(engrave);
-    engraveText.append(mStone->getPenalty());
+    engraveText.append(m_pStone->getPenalty());
     ui->lbEngrave->setText(engraveText);
 }
 
@@ -56,7 +55,7 @@ void AbilityStoneWidget::setStyleSheet()
     ui->lbName->setFont(fontNanumBold10);
 
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mStone->getGrade())]));
+    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(m_pStone->getGrade())]));
 }
 
 void AbilityStoneWidget::slotUpdateIcon(QNetworkReply *reply)

@@ -70,6 +70,34 @@ void Engrave::destroyInstance()
     m_pEngrave = nullptr;
 }
 
+QStringList Engrave::extractActiveEngraves(const QMap<QString, int> &engraveValues)
+{
+    QStringList result;
+
+    const QStringList& engraves = engraveValues.keys();
+    for (const QString& engrave : engraves)
+    {
+        if (engraveValues[engrave] >= 5)
+            result << engrave;
+    }
+
+    return result;
+}
+
+QStringList Engrave::extractActivePenalties(const QMap<QString, int> &penaltyValues)
+{
+    QStringList result;
+
+    const QStringList& penalties = penaltyValues.keys();
+    for (const QString& penalty : penalties)
+    {
+        if (penaltyValues[penalty] >= 5)
+            result << penalty;
+    }
+
+    return result;
+}
+
 const QStringList& Engrave::getEngraveList()
 {
     return m_engraves;

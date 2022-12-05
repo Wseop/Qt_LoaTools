@@ -1,48 +1,53 @@
 #include "engrave_widget.h"
 #include "ui_engrave_widget.h"
-#include "engrave.h"
+#include "game_data/engrave.h"
 #include "font/font_manager.h"
 
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
-    QWidget(parent),
+EngraveWidget::EngraveWidget(const QMap<QString, int>& engraveValues, const QMap<QString, int>& penaltyValues) :
     ui(new Ui::EngraveWidget),
-    mEngrave(engrave)
+    m_engraveValues(engraveValues),
+    m_penaltyValues(penaltyValues)
 {
     ui->setupUi(this);
 
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-    ui->groupEngrave->setFont(fontNanumRegular10);
+    initFont();
 
-    createEngraveLayouts(engrave->getActiveEngraveList());
-    createPenaltyLayouts(engrave->getActivePenaltyList());
+    createEngraveLayouts(Engrave::getInstance()->extractActiveEngraves(m_engraveValues));
+    createPenaltyLayouts(Engrave::getInstance()->extractActivePenalties(m_penaltyValues));
 }
 
 EngraveWidget::~EngraveWidget()
 {
-    for (QLabel* label : mLabels)
+    for (QLabel* label : m_labels)
         delete label;
-    mLabels.clear();
+    m_labels.clear();
 
-    for (QHBoxLayout* layout : mEngraveLayouts)
+    for (QHBoxLayout* layout : m_engraveLayouts)
     {
         ui->vLayoutEngrave->removeItem(layout);
         delete layout;
     }
-    mEngraveLayouts.clear();
+    m_engraveLayouts.clear();
 
-    for (QHBoxLayout* layout : mPenaltyLayouts)
+    for (QHBoxLayout* layout : m_penaltyLayouts)
     {
         ui->vLayoutPenalty->removeItem(layout);
         delete layout;
     }
-    mPenaltyLayouts.clear();
+    m_penaltyLayouts.clear();
 
     delete ui;
+}
+
+void EngraveWidget::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    ui->groupEngrave->setFont(fontNanumRegular10);
 }
 
 void EngraveWidget::createEngraveLayouts(const QStringList& engraves)
@@ -51,14 +56,14 @@ void EngraveWidget::createEngraveLayouts(const QStringList& engraves)
     {
         for (const QString& engrave : engraves)
         {
-            int engraveLevel = mEngrave->getEngraveValue(engrave) / 5;
+            int engraveLevel = m_engraveValues[engrave] / 5;
             if (engraveLevel != level)
                 continue;
 
-            QString iconPath = mEngrave->getEngravePath(engrave);
+            QString iconPath = Engrave::getInstance()->getEngravePath(engrave);
             QHBoxLayout* engraveLayout = createEngraveLayout(iconPath, engrave, level);
             ui->vLayoutEngrave->addLayout(engraveLayout);
-            mEngraveLayouts.append(engraveLayout);
+            m_engraveLayouts.append(engraveLayout);
         }
     }
 }
@@ -69,14 +74,14 @@ void EngraveWidget::createPenaltyLayouts(const QStringList &penalties)
     {
         for (const QString& penalty : penalties)
         {
-            int penaltyLevel = mEngrave->getPenaltyValue(penalty) / 5;
+            int penaltyLevel = m_penaltyValues[penalty] / 5;
             if (penaltyLevel != level)
                 continue;
 
-            QString iconPath = mEngrave->getPenaltyPath(penalty);
+            QString iconPath = Engrave::getInstance()->getPenaltyPath(penalty);
             QHBoxLayout* penaltyLayout = createEngraveLayout(iconPath, penalty, level);
             ui->vLayoutPenalty->addLayout(penaltyLayout);
-            mPenaltyLayouts.append(penaltyLayout);
+            m_penaltyLayouts.append(penaltyLayout);
         }
     }
 }
@@ -88,7 +93,7 @@ QHBoxLayout* EngraveWidget::createEngraveLayout(QString iconPath, QString engrav
     QLabel* lbIcon = new QLabel();
     lbIcon->setFixedSize(50, 50);
     engraveLayout->addWidget(lbIcon);
-    mLabels.append(lbIcon);
+    m_labels.append(lbIcon);
     QPixmap icon;
     if (!icon.load(iconPath))
     {
@@ -106,13 +111,13 @@ QHBoxLayout* EngraveWidget::createEngraveLayout(QString iconPath, QString engrav
     lbEngraveName->setFont(fontNanumBold10);
     lbEngraveName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     engraveLayout->addWidget(lbEngraveName);
-    mLabels.append(lbEngraveName);
+    m_labels.append(lbEngraveName);
 
     QLabel* lbEngraveValue = new QLabel(QString("Lv. %1").arg(level));
     lbEngraveValue->setFont(fontNanumBold10);
     lbEngraveValue->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     engraveLayout->addWidget(lbEngraveValue);
-    mLabels.append(lbEngraveValue);
+    m_labels.append(lbEngraveValue);
 
     if (engrave.contains("감소"))
     {

@@ -5,8 +5,6 @@
 #include <QStringList>
 #include <QMap>
 
-#include "engrave.h"
-
 namespace Ui {
 class EngraveSimulator;
 }
@@ -46,16 +44,17 @@ private:
     const int INDEX_EQUIP_END = 13;
 
     Ui::EngraveSimulator *ui;
-    class QHBoxLayout* mEngraveLayout;
+    class QHBoxLayout* m_pEngraveLayout;
 
-    Engrave mEngrave;
-    QMap<int, class QLineEdit*> mEngraveLEMap;
-    QMap<int, class QComboBox*> mPenaltyCBMap;
-    QMap<int, class QSpinBox*> mEngraveSPBMap;
-    QMap<int, class QSpinBox*> mPenaltySPBMap;
+    QMap<QString, int> m_engraveValue;
+    QMap<QString, int> m_penaltyValue;
+    QMap<int, class QLineEdit*> m_engraveLEMap;
+    QMap<int, class QComboBox*> m_penaltyCBMap;
+    QMap<int, class QSpinBox*> m_engraveSPBMap;
+    QMap<int, class QSpinBox*> m_penaltySPBMap;
 
-    QList<class QLabel*> mLabelList;
-    QList<class QVBoxLayout*> mVBoxLayoutList;
+    QList<class QLabel*> m_labelList;
+    QList<class QVBoxLayout*> m_vBoxLayoutList;
 
     static EngraveSimulator* m_pEngraveSimulator;
 

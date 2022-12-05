@@ -1,6 +1,7 @@
 #include "engrave_simulator.h"
 #include "ui_engravesimulator.h"
 #include "font/font_manager.h"
+#include "game_data/engrave.h"
 
 #include <QCompleter>
 #include <QFile>
@@ -12,7 +13,7 @@ EngraveSimulator* EngraveSimulator::m_pEngraveSimulator = nullptr;
 
 EngraveSimulator::EngraveSimulator() :
     ui(new Ui::EngraveSimulator),
-    mEngraveLayout(new QHBoxLayout())
+    m_pEngraveLayout(new QHBoxLayout())
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -49,50 +50,50 @@ void EngraveSimulator::destroyInstance()
 void EngraveSimulator::initMap()
 {
     // LineEdit Mapping
-    mEngraveLEMap[0] = ui->leNeck1;
-    mEngraveLEMap[1] = ui->leNeck2;
-    mEngraveLEMap[2] = ui->leEar1;
-    mEngraveLEMap[3] = ui->leEar2;
-    mEngraveLEMap[4] = ui->leEar3;
-    mEngraveLEMap[5] = ui->leEar4;
-    mEngraveLEMap[6] = ui->leRing1;
-    mEngraveLEMap[7] = ui->leRing2;
-    mEngraveLEMap[8] = ui->leRing3;
-    mEngraveLEMap[9] = ui->leRing4;
-    mEngraveLEMap[10] = ui->leStone1;
-    mEngraveLEMap[11] = ui->leStone2;
-    mEngraveLEMap[12] = ui->leEquip1;
-    mEngraveLEMap[13] = ui->leEquip2;
+    m_engraveLEMap[0] = ui->leNeck1;
+    m_engraveLEMap[1] = ui->leNeck2;
+    m_engraveLEMap[2] = ui->leEar1;
+    m_engraveLEMap[3] = ui->leEar2;
+    m_engraveLEMap[4] = ui->leEar3;
+    m_engraveLEMap[5] = ui->leEar4;
+    m_engraveLEMap[6] = ui->leRing1;
+    m_engraveLEMap[7] = ui->leRing2;
+    m_engraveLEMap[8] = ui->leRing3;
+    m_engraveLEMap[9] = ui->leRing4;
+    m_engraveLEMap[10] = ui->leStone1;
+    m_engraveLEMap[11] = ui->leStone2;
+    m_engraveLEMap[12] = ui->leEquip1;
+    m_engraveLEMap[13] = ui->leEquip2;
 
-    mPenaltyCBMap[0] = ui->cbNeckPenalty;
-    mPenaltyCBMap[1] = ui->cbEarPenalty1;
-    mPenaltyCBMap[2] = ui->cbEarPenalty2;
-    mPenaltyCBMap[3] = ui->cbRingPenalty1;
-    mPenaltyCBMap[4] = ui->cbRingPenalty2;
-    mPenaltyCBMap[5] = ui->cbStonePenalty;
+    m_penaltyCBMap[0] = ui->cbNeckPenalty;
+    m_penaltyCBMap[1] = ui->cbEarPenalty1;
+    m_penaltyCBMap[2] = ui->cbEarPenalty2;
+    m_penaltyCBMap[3] = ui->cbRingPenalty1;
+    m_penaltyCBMap[4] = ui->cbRingPenalty2;
+    m_penaltyCBMap[5] = ui->cbStonePenalty;
 
     // SpinBox Mapping
-    mEngraveSPBMap[0] = ui->spbNeck1;
-    mEngraveSPBMap[1] = ui->spbNeck2;
-    mEngraveSPBMap[2] = ui->spbEar1;
-    mEngraveSPBMap[3] = ui->spbEar2;
-    mEngraveSPBMap[4] = ui->spbEar3;
-    mEngraveSPBMap[5] = ui->spbEar4;
-    mEngraveSPBMap[6] = ui->spbRing1;
-    mEngraveSPBMap[7] = ui->spbRing2;
-    mEngraveSPBMap[8] = ui->spbRing3;
-    mEngraveSPBMap[9] = ui->spbRing4;
-    mEngraveSPBMap[10] = ui->spbStone1;
-    mEngraveSPBMap[11] = ui->spbStone2;
-    mEngraveSPBMap[12] = ui->spbEquip1;
-    mEngraveSPBMap[13] = ui->spbEquip2;
+    m_engraveSPBMap[0] = ui->spbNeck1;
+    m_engraveSPBMap[1] = ui->spbNeck2;
+    m_engraveSPBMap[2] = ui->spbEar1;
+    m_engraveSPBMap[3] = ui->spbEar2;
+    m_engraveSPBMap[4] = ui->spbEar3;
+    m_engraveSPBMap[5] = ui->spbEar4;
+    m_engraveSPBMap[6] = ui->spbRing1;
+    m_engraveSPBMap[7] = ui->spbRing2;
+    m_engraveSPBMap[8] = ui->spbRing3;
+    m_engraveSPBMap[9] = ui->spbRing4;
+    m_engraveSPBMap[10] = ui->spbStone1;
+    m_engraveSPBMap[11] = ui->spbStone2;
+    m_engraveSPBMap[12] = ui->spbEquip1;
+    m_engraveSPBMap[13] = ui->spbEquip2;
 
-    mPenaltySPBMap[0] = ui->spbNeckPenalty;
-    mPenaltySPBMap[1] = ui->spbEarPenalty1;
-    mPenaltySPBMap[2] = ui->spbEarPenalty2;
-    mPenaltySPBMap[3] = ui->spbRingPenalty1;
-    mPenaltySPBMap[4] = ui->spbRingPenalty2;
-    mPenaltySPBMap[5] = ui->spbStonePenalty;
+    m_penaltySPBMap[0] = ui->spbNeckPenalty;
+    m_penaltySPBMap[1] = ui->spbEarPenalty1;
+    m_penaltySPBMap[2] = ui->spbEarPenalty2;
+    m_penaltySPBMap[3] = ui->spbRingPenalty1;
+    m_penaltySPBMap[4] = ui->spbRingPenalty2;
+    m_penaltySPBMap[5] = ui->spbStonePenalty;
 }
 
 void EngraveSimulator::initUI()
@@ -125,7 +126,7 @@ void EngraveSimulator::initUI()
     ui->groupPenalty->setFont(fontNanumRegular10);
 
     // layout 연결
-    ui->groupEngrave->setLayout(mEngraveLayout);
+    ui->groupEngrave->setLayout(m_pEngraveLayout);
 
     // PushButton
     ui->pbClearAll->setStyleSheet("QPushButton { color : red }");
@@ -143,49 +144,49 @@ void EngraveSimulator::initUI()
     ui->lbEquip->setStyleSheet("QLabel { border : 1px solid black }");
 
     // LineEdit 초기화 (UI, Completer)
-    QCompleter* cplEngrave = new QCompleter(mEngrave.getEngraveList(), this);
-    for (int i = 0; i < mEngraveLEMap.size(); i++)
+    QCompleter* cplEngrave = new QCompleter(Engrave::getInstance()->getEngraveList(), this);
+    for (int i = 0; i < m_engraveLEMap.size(); i++)
     {
-        mEngraveLEMap[i]->setFixedWidth(155);
-        mEngraveLEMap[i]->setCompleter(cplEngrave);
-        mEngraveLEMap[i]->setFont(fontNanumRegular10);
+        m_engraveLEMap[i]->setFixedWidth(155);
+        m_engraveLEMap[i]->setCompleter(cplEngrave);
+        m_engraveLEMap[i]->setFont(fontNanumRegular10);
     }
-    for (int i = 0; i < mPenaltyCBMap.size(); i++)
+    for (int i = 0; i < m_penaltyCBMap.size(); i++)
     {
-        mPenaltyCBMap[i]->setFixedWidth(155);
-        mPenaltyCBMap[i]->addItems(mEngrave.getPenaltyList());
-        mPenaltyCBMap[i]->setFont(fontNanumRegular10);
+        m_penaltyCBMap[i]->setFixedWidth(155);
+        m_penaltyCBMap[i]->addItems(Engrave::getInstance()->getPenaltyList());
+        m_penaltyCBMap[i]->setFont(fontNanumRegular10);
     }
 
     // SpinBox 초기화 (UI)
-    for (int i = 0; i < mEngraveSPBMap.size(); i++)
+    for (int i = 0; i < m_engraveSPBMap.size(); i++)
     {
-        mEngraveSPBMap[i]->setFixedWidth(45);
-        mEngraveSPBMap[i]->setFont(fontNanumRegular10);
+        m_engraveSPBMap[i]->setFixedWidth(45);
+        m_engraveSPBMap[i]->setFont(fontNanumRegular10);
     }
-    for (int i = 0; i < mPenaltySPBMap.size(); i++)
+    for (int i = 0; i < m_penaltySPBMap.size(); i++)
     {
-        mPenaltySPBMap[i]->setFixedWidth(45);
-        mPenaltySPBMap[i]->setFont(fontNanumRegular10);
+        m_penaltySPBMap[i]->setFixedWidth(45);
+        m_penaltySPBMap[i]->setFont(fontNanumRegular10);
     }
     for (int index = INDEX_ACC_START; index <= INDEX_ACC_END; index++)
     {
-        mEngraveSPBMap[index]->setMaximum(MAX_ACC);
+        m_engraveSPBMap[index]->setMaximum(MAX_ACC);
     }
     for (int index = INDEX_STONE_START; index <= INDEX_STONE_END; index++)
     {
-        mEngraveSPBMap[index]->setMaximum(MAX_STONE);
+        m_engraveSPBMap[index]->setMaximum(MAX_STONE);
     }
     for (int index = INDEX_EQUIP_START; index <= INDEX_EQUIP_END; index++)
     {
-        mEngraveSPBMap[index]->setMaximum(MAX_EQUIP);
-        mEngraveSPBMap[index]->setSingleStep(3);
+        m_engraveSPBMap[index]->setMaximum(MAX_EQUIP);
+        m_engraveSPBMap[index]->setSingleStep(3);
     }
     for (int index = INDEX_ACC_START; index <= (INDEX_ACC_END / 2); index++)
     {
-        mPenaltySPBMap[index]->setMaximum(MAX_ACC_PENALTY);
+        m_penaltySPBMap[index]->setMaximum(MAX_ACC_PENALTY);
     }
-    mPenaltySPBMap[5]->setMaximum(MAX_STONE);
+    m_penaltySPBMap[5]->setMaximum(MAX_STONE);
 
     // Penalty UI - Pixmap 초기화
     QPixmap att(":/image/resources/engraves/penalty_att.png");
@@ -201,13 +202,13 @@ void EngraveSimulator::initUI()
 void EngraveSimulator::initConnect()
 {
     connect(ui->pbClearAll, SIGNAL(pressed()), this, SLOT(slotClearInput()));
-    for (int i = 0; i < mEngraveSPBMap.size(); i++)
+    for (int i = 0; i < m_engraveSPBMap.size(); i++)
     {
-        connect(mEngraveSPBMap[i], SIGNAL(valueChanged(int)), this, SLOT(slotUpdateResult()));
+        connect(m_engraveSPBMap[i], SIGNAL(valueChanged(int)), this, SLOT(slotUpdateResult()));
     }
-    for (int i = 0; i < mPenaltySPBMap.size(); i++)
+    for (int i = 0; i < m_penaltySPBMap.size(); i++)
     {
-        connect(mPenaltySPBMap[i], SIGNAL(valueChanged(int)), this, SLOT(slotUpdateResult()));
+        connect(m_penaltySPBMap[i], SIGNAL(valueChanged(int)), this, SLOT(slotUpdateResult()));
     }
 }
 
@@ -217,32 +218,32 @@ bool EngraveSimulator::validateAccValue()
     int value1, value2;
 
     // 목걸이 수치 검증
-    value1 = mEngraveSPBMap[0]->value();
-    value2 = mEngraveSPBMap[1]->value();
+    value1 = m_engraveSPBMap[0]->value();
+    value2 = m_engraveSPBMap[1]->value();
     if (value1 + value2 >= MAX_SUM)
         return false;
 
     // 귀걸이1 수치 검증
-    value1 = mEngraveSPBMap[2]->value();
-    value2 = mEngraveSPBMap[3]->value();
+    value1 = m_engraveSPBMap[2]->value();
+    value2 = m_engraveSPBMap[3]->value();
     if (value1 + value2 >= MAX_SUM)
         return false;
 
     // 귀걸이2 수치 검증
-    value1 = mEngraveSPBMap[4]->value();
-    value2 = mEngraveSPBMap[5]->value();
+    value1 = m_engraveSPBMap[4]->value();
+    value2 = m_engraveSPBMap[5]->value();
     if (value1 + value2 >= MAX_SUM)
         return false;
 
     // 반지1 수치 검증
-    value1 = mEngraveSPBMap[6]->value();
-    value2 = mEngraveSPBMap[7]->value();
+    value1 = m_engraveSPBMap[6]->value();
+    value2 = m_engraveSPBMap[7]->value();
     if (value1 + value2 >= MAX_SUM)
         return false;
 
     // 반지2 수치 검증
-    value1 = mEngraveSPBMap[8]->value();
-    value2 = mEngraveSPBMap[9]->value();
+    value1 = m_engraveSPBMap[8]->value();
+    value2 = m_engraveSPBMap[9]->value();
     if (value1 + value2 >= MAX_SUM)
         return false;
 
@@ -256,7 +257,7 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     QLabel* lbName = new QLabel();
     QLabel* lbLevel = new QLabel();
     int level = value / 5;
-    QString pixPath = mEngrave.getEngravePath(engrave);
+    QString pixPath = Engrave::getInstance()->getEngravePath(engrave);
     QPixmap pixmap(pixPath);
 
     lbPixmap->setPixmap(pixmap.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
@@ -278,49 +279,49 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     layout->addWidget(lbName);
     layout->addWidget(lbLevel);
 
-    mEngraveLayout->addLayout(layout);
+    m_pEngraveLayout->addLayout(layout);
 
-    mLabelList.append(lbPixmap);
-    mLabelList.append(lbName);
-    mLabelList.append(lbLevel);
-    mVBoxLayoutList.append(layout);
+    m_labelList.append(lbPixmap);
+    m_labelList.append(lbName);
+    m_labelList.append(lbLevel);
+    m_vBoxLayoutList.append(layout);
 }
 
 void EngraveSimulator::clearEngraveLayout()
 {
     // 결과 layout에 할당된 ui memory 해제
-    for (QLabel* label : mLabelList)
+    for (QLabel* label : m_labelList)
         delete label;
-    mLabelList.clear();
-    for (QVBoxLayout* layout : mVBoxLayoutList)
+    m_labelList.clear();
+    for (QVBoxLayout* layout : m_vBoxLayoutList)
         delete layout;
-    mVBoxLayoutList.clear();
+    m_vBoxLayoutList.clear();
 }
 
 void EngraveSimulator::slotClearInput()
 {
     // 모든 입력 값 초기화
-    for (int i = 0; i < mEngraveLEMap.size(); i++)
+    for (int i = 0; i < m_engraveLEMap.size(); i++)
     {
-        mEngraveLEMap[i]->clear();
+        m_engraveLEMap[i]->clear();
     }
 
-    for (int i = 0; i < mEngraveSPBMap.size(); i++)
+    for (int i = 0; i < m_engraveSPBMap.size(); i++)
     {
-        mEngraveSPBMap[i]->setValue(0);
+        m_engraveSPBMap[i]->setValue(0);
     }
 
-    for (int i = 0; i < mPenaltySPBMap.size(); i++)
+    for (int i = 0; i < m_penaltySPBMap.size(); i++)
     {
-        mPenaltySPBMap[i]->setValue(0);
+        m_penaltySPBMap[i]->setValue(0);
     }
 }
 
 void EngraveSimulator::slotUpdateResult()
 {
     // 결과값 초기화
-    mEngrave.clearEngrave();
-    mEngrave.clearPenalty();
+    m_engraveValue.clear();
+    m_penaltyValue.clear();
 
     // 입력값 검증
     if (!validateAccValue())
@@ -333,14 +334,14 @@ void EngraveSimulator::slotUpdateResult()
 
     // 입력값 조회 및 update
     QStringList addedEngraveList;
-    for (int i = 0; i < mEngraveLEMap.size(); i++)
+    for (int i = 0; i < m_engraveLEMap.size(); i++)
     {
-        QString engrave = mEngraveLEMap[i]->text();
+        QString engrave = m_engraveLEMap[i]->text();
         if (engrave == "")
             continue;
-        else if (mEngrave.isValidEngrave(engrave))
+        else if (Engrave::getInstance()->isValidEngrave(engrave))
         {
-            mEngrave.addEngrave(engrave, mEngraveSPBMap[i]->value());
+            m_engraveValue[engrave] += m_engraveSPBMap[i]->value();
             if (!addedEngraveList.contains(engrave))
                 addedEngraveList << engrave;
         }
@@ -361,18 +362,18 @@ void EngraveSimulator::slotUpdateResult()
     {
         for (const QString& engrave : addedEngraveList)
         {
-            int value = mEngrave.getEngraveValue(engrave);
+            int value = m_engraveValue[engrave];
             if (level == (value / 5))
                 addEngraveLayout(engrave, value);
         }
     }
 
     // 감소 각인 update
-    for (int i = 0; i < mPenaltyCBMap.size(); i++)
+    for (int i = 0; i < m_penaltyCBMap.size(); i++)
     {
-        QString penalty = mPenaltyCBMap[i]->currentText();
-        mEngrave.addPenalty(penalty, mPenaltySPBMap[i]->value());
-        int value = mEngrave.getPenaltyValue(penalty);
+        QString penalty = m_penaltyCBMap[i]->currentText();
+        m_penaltyValue[penalty] += m_penaltySPBMap[i]->value();
+        int value = m_penaltyValue[penalty];
         int level = value / 5;
         if (penalty == "공격력 감소")
         {

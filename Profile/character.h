@@ -6,7 +6,6 @@
 #include "item/abilitystone.h"
 #include "item/bracelet.h"
 #include "item/gem.h"
-#include "engrave.h"
 #include "card_set.h"
 #include "skill.h"
 
@@ -28,7 +27,8 @@ public:
     const Item* getItemByPart(Part part);
     const QList<Gem>& getGems();
 
-    const Engrave& getEngrave();
+    const QMap<QString, int>& getEngraveValues();
+    const QMap<QString, int>& getPenaltyValues();
     const QList<Skill>& getSkills();
 
     void setName(QString name);
@@ -49,14 +49,14 @@ public:
     void addSkill(const Skill& skill);
 
 private:
-    QString mName;
-    QString mClass;
-    QString mLevel;
-    QString mServer;
-    QString mGuild;
-    int mItemLevelTotal;
-    CardSet mCardSet;
-    QStringList mSetEffects;
+    QString m_name;
+    QString m_class;
+    QString m_level;
+    QString m_server;
+    QString m_guild;
+    int m_itemLevelTotal;
+    CardSet m_cardSet;
+    QStringList m_setEffects;
 
     Equip* m_pWeapon = nullptr;
     Equip* m_pHead = nullptr;
@@ -71,9 +71,10 @@ private:
     Accessory* m_pRing2 = nullptr;
     AbilityStone* m_pStone = nullptr;
     Bracelet* m_pBracelet = nullptr;
-    QList<Gem> mGems;
+    QList<Gem> m_gems;
 
-    Engrave mEngrave;
+    QMap<QString, int> m_engraveValues;
+    QMap<QString, int> m_penaltyValues;
     QList<Skill> mSkills;
 };
 

@@ -2,7 +2,8 @@
 #include "ui_setting_adviser.h"
 #include "class_selector.h"
 #include "setting_code.h"
-#include "enum/class.h"
+#include "game_data/class.h"
+#include "game_data/engrave.h"
 #include "ui/setting_widget.h"
 #include "db/db_request.h"
 #include "font/font_manager.h"
@@ -43,7 +44,7 @@ SettingAdviser::~SettingAdviser()
     destroyInstance();
 }
 
-void SettingAdviser::setSelectedClass(Class cls)
+void SettingAdviser::setSelectedClass(int cls)
 {
     m_selectedClass = cls;
 
@@ -162,7 +163,7 @@ void SettingAdviser::renderSettings()
 {
     clearData();
 
-    ui->lbSelectedClass->setText(enumClassToKStr(m_selectedClass));
+    ui->lbSelectedClass->setText(Class::enumToKstr(m_selectedClass));
     QString totalText = QString("등록된 캐릭터 수(1600레벨 이상) : %1 캐릭터").arg(m_numOfCharacters);
     ui->lbTotal->setText(totalText);
     ui->lbInfo->setText("(직업 각인 별 최대 10개의 세팅이 표기되며, 카던 및 pvp 세팅이 포함되어 있을 수 있습니다.)");
@@ -190,7 +191,7 @@ void SettingAdviser::renderSettings()
             layout = ui->vLayoutSetting3;
             layoutIndex = 2;
         }
-        else if (m_engrave.indexOf(classEngraves[0].first) & 1)
+        else if (Engrave::getInstance()->indexOf(classEngraves[0].first) & 1)
         {
             layout = ui->vLayoutSetting1;
             layoutIndex = 0;
@@ -233,7 +234,7 @@ void SettingAdviser::renderTopSettings()
     ui->groupSetting2->setTitle("2순위");
     ui->groupSetting3->setTitle("3순위");
 
-    for (int i = static_cast<int>(Class::Destroyer); i <= static_cast<int>(Class::Aeromancer); i++)
+    for (int i = Class::start(); i <= Class::size(); i++)
     {
         const QList<SettingCodeCount> topSettingCodes = m_topSettingCodes[i];
 
@@ -241,7 +242,7 @@ void SettingAdviser::renderTopSettings()
         {
             QString settingCode = topSettingCodes[j].first;
             double adoptRatio = (double)topSettingCodes[j].second / m_classCounts[i];
-            QString title = enumClassToKStr(static_cast<Class>(i)) + QString(" (%1순위 - 채용률 %2%)").arg(j + 1).arg(adoptRatio * 100, 0, 'f', 2, QChar(' '));
+            QString title = Class::enumToKstr(i) + QString(" (%1순위 - 채용률 %2%)").arg(j + 1).arg(adoptRatio * 100, 0, 'f', 2, QChar(' '));
             QStringList abilities = SettingCode::getAbility(settingCode);
             QStringList setEffects = SettingCode::getSetEffect(settingCode);
             QList<QPair<QString, int>> classEngraves = SettingCode::getClassEngrave(settingCode);
@@ -278,24 +279,24 @@ void SettingAdviser::slotHandleAllSettings(QVariantList jsonSettings)
     disconnect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
 
     m_topSettingCodes.clear();
-    m_topSettingCodes = QList<QList<SettingCodeCount>>(getNumOfClass() + 1);
+    m_topSettingCodes = QList<QList<SettingCodeCount>>(Class::size() + 1);
     m_classCounts.clear();
-    m_classCounts = QList<int>(getNumOfClass() + 1);
+    m_classCounts = QList<int>(Class::size() + 1);
 
-    QList<QMap<QString, int>> settingCodeCounts(getNumOfClass() + 1);
+    QList<QMap<QString, int>> settingCodeCounts(Class::size() + 1);
     for (const QVariant& jsonValue : jsonSettings)
     {
         QString settingCode = SettingCode::generateSettingCode(jsonValue.toJsonObject());
         if (settingCode.contains("-1"))
             continue;
 
-        Class cls = strToEnumClass(jsonValue.toJsonObject().find("Class")->toString());
-        settingCodeCounts[static_cast<int>(cls)][settingCode] += 1;
-        m_classCounts[static_cast<int>(cls)] += 1;
+        int cls = Class::eStrToEnum(jsonValue.toJsonObject().find("Class")->toString());
+        settingCodeCounts[cls][settingCode] += 1;
+        m_classCounts[cls] += 1;
     }
 
-    QList<QList<SettingCodeCount>> topSettingCodes(getNumOfClass() + 1);
-    for (int i = static_cast<int>(Class::Destroyer); i <= static_cast<int>(Class::Aeromancer); i++)
+    QList<QList<SettingCodeCount>> topSettingCodes(Class::size() + 1);
+    for (int i = Class::start(); i <= Class::size(); i++)
     {
         auto& topSettingCode = topSettingCodes[i];
         topSettingCode = QList<SettingCodeCount>(settingCodeCounts[i].keyValueBegin(), settingCodeCounts[i].keyValueEnd());

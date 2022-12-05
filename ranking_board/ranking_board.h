@@ -1,7 +1,7 @@
 #ifndef RANKING_BOARD_H
 #define RANKING_BOARD_H
 
-#include "enum/class.h"
+#include "game_data/class.h"
 #include "setting_adviser/class_selector.h"
 
 #include <QWidget>
@@ -19,7 +19,7 @@ private:
     ~RankingBoard();
 
 public:
-    void setSelectedClass(Class cls);
+    void setSelectedClass(int cls);
 
 public:
     static RankingBoard* getInstance();
@@ -66,7 +66,7 @@ private:
     int m_rankIndex;
     int m_characterIndex;
     int m_selectedItemLevel;
-    Class m_selectedClass;
+    int m_selectedClass;
     ClassSelector* m_pClassSelector = nullptr;
     QList<QLabel*> m_labels;
 

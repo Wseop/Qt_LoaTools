@@ -7,15 +7,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-EquipWidget::EquipWidget(QWidget *parent, const Equip* equip, QString iconUrl) :
-    QWidget(parent),
+EquipWidget::EquipWidget(const Equip* equip, QString iconUrl) :
     ui(new Ui::EquipWidget),
-    mEquip(equip),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pEquip(equip),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
 
     requestIcon(iconUrl);
     setText();
@@ -29,13 +28,13 @@ EquipWidget::~EquipWidget()
 
 void EquipWidget::requestIcon(QString iconUrl)
 {
-    QNetworkRequest request((QUrl(iconUrl + mEquip->getIconPath())));
-    mNetworkManager->get(request);
+    QNetworkRequest request((QUrl(iconUrl + m_pEquip->getIconPath())));
+    m_pNetworkManager->get(request);
 }
 
 void EquipWidget::setText()
 {
-    Part part = mEquip->getPart();
+    Part part = m_pEquip->getPart();
     QString groupTitle;
     if (part == Part::WEAPON)
         groupTitle = "무기";
@@ -51,10 +50,10 @@ void EquipWidget::setText()
         groupTitle = "장갑";
     ui->groupEquip->setTitle(groupTitle);
 
-    ui->barQual->setValue(mEquip->getQuality());
-    ui->lbName->setText(mEquip->getName());
-    ui->lbLevelTier->setText(mEquip->getLevelTier());
-    ui->lbSetLevel->setText(mEquip->getSetLevel());
+    ui->barQual->setValue(m_pEquip->getQuality());
+    ui->lbName->setText(m_pEquip->getName());
+    ui->lbLevelTier->setText(m_pEquip->getLevelTier());
+    ui->lbSetLevel->setText(m_pEquip->getSetLevel());
 }
 
 void EquipWidget::setStyleSheet()
@@ -70,13 +69,13 @@ void EquipWidget::setStyleSheet()
 
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->barQual->setStyleSheet(QString("QProgressBar::chunk { background-color: %1 }").arg(getQualColor()));
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mEquip->getGrade())]));
+    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(m_pEquip->getGrade())]));
 }
 
 QString EquipWidget::getQualColor()
 {
     QString color;
-    int quality = mEquip->getQuality();
+    int quality = m_pEquip->getQuality();
 
     if (quality == 100)
         color = "#FE9600";

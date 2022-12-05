@@ -17,7 +17,7 @@ public:
         Infighter,
         Soulmaster,
         Lancemaster,
-        Devilhunter,
+        DevilHunter,
         Blaster,
         Hawkeye,
         Scouter,
@@ -33,10 +33,15 @@ public:
         Aeromancer
     };
 
+    static inline int start()
+    {
+        return Class::Destroyer;
+    }
+
     static inline int size()
     {
         // None을 제외한 직업의 갯수를 반환
-        return static_cast<int>(Class::Aeromancer);
+        return Class::Aeromancer;
     }
 
     static inline QString enumToKstr(int cls)
@@ -61,7 +66,7 @@ public:
             return "기공사";
         case Class::Lancemaster:
             return "창술사";
-        case Class::Devilhunter:
+        case Class::DevilHunter:
             return "데빌헌터";
         case Class::Blaster:
             return "블래스터";
@@ -115,7 +120,7 @@ public:
         else if (cls == "창술사")
             return Class::Lancemaster;
         else if (cls == "데빌헌터")
-            return Class::Devilhunter;
+            return Class::DevilHunter;
         else if (cls == "블래스터")
             return Class::Blaster;
         else if (cls == "호크아이")
@@ -168,8 +173,8 @@ public:
             return "Soulmaster";
         case Class::Lancemaster:
             return "Lancemaster";
-        case Class::Devilhunter:
-            return "Devilhunter";
+        case Class::DevilHunter:
+            return "DevilHunter";
         case Class::Blaster:
             return "Blaster";
         case Class::Hawkeye:
@@ -221,8 +226,8 @@ public:
             return Class::Soulmaster;
         else if (cls == "Lancemaster")
             return Class::Lancemaster;
-        else if (cls == "Devilhunter")
-            return Class::Devilhunter;
+        else if (cls == "DevilHunter")
+            return Class::DevilHunter;
         else if (cls == "Blaster")
             return Class::Blaster;
         else if (cls == "Hawkeye")
@@ -274,7 +279,7 @@ public:
         else if (cls == "창술사")
             return "Lancemaster";
         else if (cls == "데빌헌터")
-            return "Devilhunter";
+            return "DevilHunter";
         else if (cls == "블래스터")
             return "Blaster";
         else if (cls == "호크아이")
@@ -325,7 +330,7 @@ public:
             return "기공사";
         else if (cls == "Lancemaster")
             return "창술사";
-        else if (cls == "Devilhunter")
+        else if (cls == "DevilHunter")
             return "데빌헌터";
         else if (cls == "Blaster")
             return "블래스터";

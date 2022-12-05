@@ -16,7 +16,7 @@ class AbilityStoneWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit AbilityStoneWidget(QWidget *parent = nullptr, const AbilityStone* stone = nullptr, QString iconUrl = "");
+    AbilityStoneWidget(const AbilityStone* stone = nullptr, QString iconUrl = "");
     ~AbilityStoneWidget();
 
 private:
@@ -26,8 +26,8 @@ private:
 
 private:
     Ui::AbilityStoneWidget *ui;
-    const AbilityStone* mStone;
-    QNetworkAccessManager* mNetworkManager = nullptr;
+    const AbilityStone* m_pStone;
+    QNetworkAccessManager* m_pNetworkManager = nullptr;
 
 private slots:
     void slotUpdateIcon(QNetworkReply* reply);

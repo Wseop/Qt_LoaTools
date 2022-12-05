@@ -31,11 +31,11 @@ public:
     void addTripod(Tripod tripod);
 
 private:
-    QString mName;
-    QString mIconPath;
-    int mLevel;
-    QList<Tripod> mTripods;
-    Rune* mRune = nullptr;
+    QString m_name;
+    QString m_iconPath;
+    int m_level;
+    QList<Tripod> m_tripods;
+    Rune* m_pRune = nullptr;
 };
 
 #endif // SKILL_H

@@ -7,59 +7,59 @@ Skill::Skill()
 
 QString Skill::getName() const
 {
-    return mName;
+    return m_name;
 }
 
 QString Skill::getIconPath() const
 {
-    return mIconPath;
+    return m_iconPath;
 }
 
 int Skill::getLevel() const
 {
-    return mLevel;
+    return m_level;
 }
 
 QList<Tripod> Skill::getTripods() const
 {
-    return mTripods;
+    return m_tripods;
 }
 
 Tripod Skill::getTripod(int index) const
 {
-    if (index >= mTripods.size())
+    if (index >= m_tripods.size())
         return Tripod{ "", 0, "" };
-    return mTripods[index];
+    return m_tripods[index];
 }
 
 const Rune* Skill::getRune() const
 {
-    return mRune;
+    return m_pRune;
 }
 
 void Skill::setName(QString name)
 {
-    mName = name;
+    m_name = name;
 }
 
 void Skill::setIconPath(QString iconPath)
 {
-    mIconPath = iconPath;
+    m_iconPath = iconPath;
 }
 
 void Skill::setLevel(int level)
 {
-    mLevel = level;
+    m_level = level;
 }
 
 void Skill::setRune(Rune* rune)
 {
-    mRune = rune;
+    m_pRune = rune;
 }
 
 void Skill::addTripod(Tripod tripod)
 {
-    int index = mTripods.size();
+    int index = m_tripods.size();
     if (index == 0)
         tripod.color = "#31ABD9";
     else if (index == 1)
@@ -67,5 +67,5 @@ void Skill::addTripod(Tripod tripod)
     else if (index == 2)
         tripod.color = "#FFB000";
 
-    mTripods.append(tripod);
+    m_tripods.append(tripod);
 }

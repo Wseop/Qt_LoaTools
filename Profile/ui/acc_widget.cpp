@@ -7,15 +7,14 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-AccWidget::AccWidget(QWidget *parent, const Accessory* acc, QString iconUrl) :
-    QWidget(parent),
+AccWidget::AccWidget(const Accessory* acc, QString iconUrl) :
     ui(new Ui::AccWidget),
-    mAcc(acc),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pAcc(acc),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
 
     requestIcon(iconUrl);
     setText();
@@ -29,13 +28,13 @@ AccWidget::~AccWidget()
 
 void AccWidget::requestIcon(QString iconUrl)
 {
-    QNetworkRequest request((QUrl(iconUrl + mAcc->getIconPath())));
-    mNetworkManager->get(request);
+    QNetworkRequest request((QUrl(iconUrl + m_pAcc->getIconPath())));
+    m_pNetworkManager->get(request);
 }
 
 void AccWidget::setText()
 {
-    Part part = mAcc->getPart();
+    Part part = m_pAcc->getPart();
     QString groupTitle;
     if (part == Part::NECK)
         groupTitle = "목걸이";
@@ -45,15 +44,15 @@ void AccWidget::setText()
         groupTitle = "반지";
     ui->groupAcc->setTitle(groupTitle);
 
-    ui->barQual->setValue(mAcc->getQuality());
-    ui->lbName->setText(mAcc->getName());
-    ui->lbAbility->setText(mAcc->getAbility());
+    ui->barQual->setValue(m_pAcc->getQuality());
+    ui->lbName->setText(m_pAcc->getName());
+    ui->lbAbility->setText(m_pAcc->getAbility());
 
     QString engraveText;
-    const QStringList& engraves = mAcc->getEngraves();
+    const QStringList& engraves = m_pAcc->getEngraves();
     for (const QString& engrave : engraves)
         engraveText.append(engrave);
-    engraveText.append(mAcc->getPenalty());
+    engraveText.append(m_pAcc->getPenalty());
     ui->lbEngrave->setText(engraveText);
 }
 
@@ -71,13 +70,13 @@ void AccWidget::setStyleSheet()
 
     ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
     ui->barQual->setStyleSheet(QString("QProgressBar::chunk { background-color: %1 }").arg(getQualColor()));
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mAcc->getGrade())]));
+    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(m_pAcc->getGrade())]));
 }
 
 QString AccWidget::getQualColor()
 {
     QString color;
-    int quality = mAcc->getQuality();
+    int quality = m_pAcc->getQuality();
 
     if (quality == 100)
         color = "#FE9600";

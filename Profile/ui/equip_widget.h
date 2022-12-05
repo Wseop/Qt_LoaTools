@@ -16,7 +16,7 @@ class EquipWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit EquipWidget(QWidget *parent = nullptr, const Equip* equip = nullptr, QString iconUrl = "");
+    EquipWidget(const Equip* equip = nullptr, QString iconUrl = "");
     ~EquipWidget();
 
 private:
@@ -27,8 +27,8 @@ private:
 
 private:
     Ui::EquipWidget *ui;
-    const Equip* mEquip;
-    QNetworkAccessManager* mNetworkManager = nullptr;
+    const Equip* m_pEquip;
+    QNetworkAccessManager* m_pNetworkManager = nullptr;
 
 private slots:
     void slotUpdateIcon(QNetworkReply* reply);

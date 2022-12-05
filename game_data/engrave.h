@@ -14,6 +14,8 @@ private:
 public:
     static Engrave* getInstance();
     static void destroyInstance();
+    static QStringList extractActiveEngraves(const QMap<QString, int>& engraveValues);
+    static QStringList extractActivePenalties(const QMap<QString, int>& penaltyValues);
 
     const QStringList& getEngraveList();
     const QStringList& getPenaltyList();

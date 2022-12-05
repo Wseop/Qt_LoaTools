@@ -41,7 +41,7 @@ RankingBoard::~RankingBoard()
     destroyInstance();
 }
 
-void RankingBoard::setSelectedClass(Class cls)
+void RankingBoard::setSelectedClass(int cls)
 {
     m_selectedClass = cls;    
     renderCharacters(true);
@@ -163,7 +163,7 @@ double RankingBoard::getCharacterItemLevel(int index)
 
 QString RankingBoard::getCharacterClass(int index)
 {
-    return enumClassToKStr(strToEnumClass(m_characters[index].toJsonObject().find("Class")->toString()));
+    return Class::eStrToKstr(m_characters[index].toJsonObject().find("Class")->toString());
 }
 
 void RankingBoard::renderCharacters(bool bInitialize)
@@ -177,12 +177,12 @@ void RankingBoard::renderCharacters(bool bInitialize)
         if (m_selectedClass == Class::None)
             ui->lbSelectedClass->setText("전체 랭킹");
         else
-            ui->lbSelectedClass->setText(enumClassToKStr(m_selectedClass));
+            ui->lbSelectedClass->setText(Class::enumToKstr(m_selectedClass));
     }
 
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     int i = 0;
-    QString selectedClass = enumClassToKStr(m_selectedClass);
+    QString selectedClass = Class::enumToKstr(m_selectedClass);
     while (i < RENDER_COUNT && m_characterIndex < m_characters.size())
     {
         QString cls = getCharacterClass(m_characterIndex);

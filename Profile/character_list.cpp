@@ -13,8 +13,8 @@
 
 CharacterList::CharacterList(QWidget *parent) :
     ui(new Ui::CharacterList),
-    mParent(parent),
-    mNetworkItemLevel(new QNetworkAccessManager())
+    m_pParent(parent),
+    m_pNetworkItemLevel(new QNetworkAccessManager())
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -26,31 +26,31 @@ CharacterList::CharacterList(QWidget *parent) :
 CharacterList::~CharacterList()
 {
     delete ui;
-    delete mNetworkItemLevel;
+    delete m_pNetworkItemLevel;
 
-    QStringList keys = mNameButton.keys();
+    QStringList keys = m_nameButton.keys();
     for (QString& key : keys)
-        delete mNameButton[key];
-    mNameButton.clear();
+        delete m_nameButton[key];
+    m_nameButton.clear();
 
-    for (QLabel* label : mLabelList)
+    for (QLabel* label : m_labelList)
         delete label;
-    mLabelList.clear();
+    m_labelList.clear();
 
-    keys = mServerLayout.keys();
+    keys = m_serverLayout.keys();
     for (QString& key : keys)
-        delete mServerLayout[key];
-    mServerLayout.clear();
+        delete m_serverLayout[key];
+    m_serverLayout.clear();
 
-    keys = mNameTitle.keys();
+    keys = m_nameTitle.keys();
     for (QString& key : keys)
-        delete mNameTitle[key];
-    mNameTitle.clear();
+        delete m_nameTitle[key];
+    m_nameTitle.clear();
 }
 
 void CharacterList::initConnect()
 {
-    connect(mNetworkItemLevel, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotParseItemLevel(QNetworkReply*)));
+    connect(m_pNetworkItemLevel, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotParseItemLevel(QNetworkReply*)));
 }
 
 void CharacterList::addCharacter(QString server, QString name, QString cls)
@@ -59,16 +59,16 @@ void CharacterList::addCharacter(QString server, QString name, QString cls)
     title->name = name;
     title->server = server;
     title->cls = cls;
-    mNameTitle[name] = title;
+    m_nameTitle[name] = title;
 
-    if (!mServerLayout.contains(server))
+    if (!m_serverLayout.contains(server))
     {
         // server명 레이아웃이 없으면 새로 추가
         QGridLayout* layout = new QGridLayout();
-        mServerLayout[server] = layout;
+        m_serverLayout[server] = layout;
 
         QLabel* label = new QLabel(server);
-        mLabelList.append(label);
+        m_labelList.append(label);
         QFont fontNanumExtraBold12 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoExtraBold, 12);
         label->setFont(fontNanumExtraBold12);
         label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -78,18 +78,18 @@ void CharacterList::addCharacter(QString server, QString name, QString cls)
         layout->addWidget(label, 0, 0, 1, 3);
         ui->vLayoutCharacterList->addLayout(layout);
 
-        mServerGridPos[server] = GridPos{1, 0};
+        m_serverGridPos[server] = GridPos{1, 0};
     }
 
     // level 정보 request
     QString url = QString("https://lostark.game.onstove.com/Profile/Character/%1").arg(title->name);
     QNetworkRequest request((QUrl(url)));
-    mNetworkItemLevel->get(request);
+    m_pNetworkItemLevel->get(request);
 }
 
 void CharacterList::closeEvent(QCloseEvent *event)
 {
-    mParent->setEnabled(true);
+    m_pParent->setEnabled(true);
     event->accept();
 }
 
@@ -123,19 +123,19 @@ void CharacterList::slotParseItemLevel(QNetworkReply* reply)
     itemLevel += profile.sliced(startIndex, endIndex - startIndex);
 
     QString name = reply->url().path().remove("/Profile/Character/");
-    CharacterTitle* title = mNameTitle[name];
+    CharacterTitle* title = m_nameTitle[name];
     title->itemLevel = itemLevel;
 
     QString text = QString("%1 [%2]\n%3").arg(title->cls, title->itemLevel, title->name);
     QPushButton* btn = new QPushButton(text);
     QFont fontNanumRegular10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoRegular, 10);
     btn->setFont(fontNanumRegular10);
-    mNameButton[name] = btn;
+    m_nameButton[name] = btn;
 
     connect(btn, SIGNAL(pressed()), this, SLOT(slotSearchCharacter()));
 
-    GridPos& pos = mServerGridPos[title->server];
-    mServerLayout[title->server]->addWidget(btn, pos.row, pos.col, 1, 1);
+    GridPos& pos = m_serverGridPos[title->server];
+    m_serverLayout[title->server]->addWidget(btn, pos.row, pos.col, 1, 1);
     movePos(pos);
 }
 
@@ -143,9 +143,9 @@ void CharacterList::slotSearchCharacter()
 {
     QPushButton* btn = static_cast<QPushButton*>(sender());
 
-    mParent->setEnabled(true);
-    Profile* profile = static_cast<Profile*>(mParent);
-    profile->profileRequest(mNameButton.key(btn));
+    m_pParent->setEnabled(true);
+    Profile* profile = static_cast<Profile*>(m_pParent);
+    profile->profileRequest(m_nameButton.key(btn));
 
     this->close();
 }

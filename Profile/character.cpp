@@ -1,9 +1,9 @@
 #include "character.h"
 
 Character::Character()
-    : mItemLevelTotal(0)
+    : m_itemLevelTotal(0)
 {
-    mSetEffects.resize(6);
+    m_setEffects.resize(6);
 }
 
 Character::~Character()
@@ -32,52 +32,57 @@ Character::~Character()
 
 QString Character::getName()
 {
-    return mName;
+    return m_name;
 }
 
 QString Character::getClass()
 {
-    return mClass;
+    return m_class;
 }
 
 QString Character::getLevel()
 {
-    return mLevel;
+    return m_level;
 }
 
 QString Character::getServer()
 {
-    return mServer;
+    return m_server;
 }
 
 QString Character::getGuild()
 {
-    return mGuild;
+    return m_guild;
 }
 
 double Character::getItemLevel()
 {
-    return (double)mItemLevelTotal / 6;
+    return (double)m_itemLevelTotal / 6;
 }
 
 const CardSet& Character::getCardSet()
 {
-    return mCardSet;
+    return m_cardSet;
 }
 
 const QStringList &Character::getSetEffects()
 {
-    return mSetEffects;
+    return m_setEffects;
 }
 
 const QList<Gem> &Character::getGems()
 {
-    return mGems;
+    return m_gems;
 }
 
-const Engrave &Character::getEngrave()
+const QMap<QString, int> &Character::getEngraveValues()
 {
-    return mEngrave;
+    return m_engraveValues;
+}
+
+const QMap<QString, int> &Character::getPenaltyValues()
+{
+    return m_penaltyValues;
 }
 
 const QList<Skill> &Character::getSkills()
@@ -119,42 +124,42 @@ const Item *Character::getItemByPart(Part part)
 
 void Character::setName(QString name)
 {
-    mName = name;
+    m_name = name;
 }
 
 void Character::setClass(QString cls)
 {
-    mClass = cls;
+    m_class = cls;
 }
 
 void Character::setLevel(QString level)
 {
-    mLevel = level;
+    m_level = level;
 }
 
 void Character::setServer(QString server)
 {
-    mServer = server;
+    m_server = server;
 }
 
 void Character::setGuild(QString guild)
 {
-    mGuild = guild;
+    m_guild = guild;
 }
 
 void Character::addItemLevel(int itemLevel)
 {
-    mItemLevelTotal += itemLevel;
+    m_itemLevelTotal += itemLevel;
 }
 
 void Character::setCardSet(CardSet cardSet)
 {
-    mCardSet = cardSet;
+    m_cardSet = cardSet;
 }
 
 void Character::addSetEffect(QString setEffect, int index)
 {
-    mSetEffects[index] = setEffect;
+    m_setEffects[index] = setEffect;
 }
 
 void Character::setItem(Item *item)
@@ -191,17 +196,17 @@ void Character::setItem(Item *item)
 
 void Character::addGem(const Gem &gem)
 {
-    mGems.append(gem);
+    m_gems.append(gem);
 }
 
 void Character::addEngrave(QString name, int value)
 {
-    mEngrave.addEngrave(name, value);
+    m_engraveValues[name] += value;
 }
 
 void Character::addPenalty(QString name, int value)
 {
-    mEngrave.addPenalty(name, value);
+    m_penaltyValues[name] += value;
 }
 
 void Character::addSkill(const Skill &skill)

@@ -40,15 +40,15 @@ protected:
 
 private:
     Ui::CharacterList *ui;
-    QWidget* mParent;
-    class QNetworkAccessManager* mNetworkItemLevel;
+    QWidget* m_pParent;
+    class QNetworkAccessManager* m_pNetworkItemLevel;
 
-    QMap<QString, class QGridLayout*> mServerLayout;
-    QMap<QString, GridPos> mServerGridPos;
-    QMap<QString, CharacterTitle*> mNameTitle;
-    QMap<QString, class QPushButton*> mNameButton;
+    QMap<QString, class QGridLayout*> m_serverLayout;
+    QMap<QString, GridPos> m_serverGridPos;
+    QMap<QString, CharacterTitle*> m_nameTitle;
+    QMap<QString, class QPushButton*> m_nameButton;
 
-    QList<class QLabel*> mLabelList;
+    QList<class QLabel*> m_labelList;
 
 private:
     void movePos(GridPos& pos);

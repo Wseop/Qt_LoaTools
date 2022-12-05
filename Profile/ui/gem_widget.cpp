@@ -7,15 +7,14 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-GemWidget::GemWidget(QWidget *parent, const Gem* gem, QString iconUrl) :
-    QWidget(parent),
+GemWidget::GemWidget(const Gem* gem, QString iconUrl) :
     ui(new Ui::GemWidget),
-    mGem(gem),
-    mNetworkManager(new QNetworkAccessManager())
+    m_pGem(gem),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
 
-    connect(mNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
+    connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotUpdateIcon(QNetworkReply*)));
 
     requestIcon(iconUrl);
     setLevel();
@@ -30,15 +29,15 @@ GemWidget::~GemWidget()
 
 void GemWidget::requestIcon(QString iconUrl)
 {
-    QNetworkRequest request(QUrl(iconUrl + mGem->getIconPath()));
-    mNetworkManager->get(request);
+    QNetworkRequest request(QUrl(iconUrl + m_pGem->getIconPath()));
+    m_pNetworkManager->get(request);
 }
 
 void GemWidget::setLevel()
 {
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     ui->lbLevel->setFont(fontNanumBold10);
-    ui->lbLevel->setText(QString("Lv. %1").arg(mGem->GetLevel()));
+    ui->lbLevel->setText(QString("Lv. %1").arg(m_pGem->GetLevel()));
     ui->lbLevel->setAlignment(Qt::AlignHCenter);
 }
 
@@ -46,15 +45,15 @@ void GemWidget::setName()
 {
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     ui->lbName->setFont(fontNanumBold10);
-    ui->lbName->setText(mGem->getName());
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(mGem->getGrade())]));
+    ui->lbName->setText(m_pGem->getName());
+    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(gItemColor[static_cast<int>(m_pGem->getGrade())]));
 }
 
 void GemWidget::setEffect()
 {
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     ui->lbEffect->setFont(fontNanumBold10);
-    ui->lbEffect->setText(mGem->getEffect());
+    ui->lbEffect->setText(m_pGem->getEffect());
 }
 
 void GemWidget::slotUpdateIcon(QNetworkReply *reply)
