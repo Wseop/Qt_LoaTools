@@ -16,16 +16,15 @@ public:
         갈망,
         배신,
         매혹,
-        파괴,
-        SIZE
+        파괴
     };
 
-    static int size()
+    static inline int size()
     {
-        return SIZE;
+        return static_cast<int>(SetEffect::파괴) + 1;
     }
 
-    static QString enumToKStr(int setEffect)
+    static inline QString enumToStr(int setEffect)
     {
         switch (setEffect)
         {
@@ -52,7 +51,7 @@ public:
         }
     }
 
-    static int kstrToEnum(QString setEffect)
+    static inline int strToEnum(QString setEffect)
     {
         if ("구원" == setEffect)
             return 구원;

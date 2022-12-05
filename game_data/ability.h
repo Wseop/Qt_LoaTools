@@ -14,15 +14,14 @@ public:
         Domination,
         Endurance,
         Expertise,
-        SIZE
     };
 
-    static int size()
+    static inline int size()
     {
-        return SIZE;
+        return static_cast<int>(Ability::Expertise) + 1;
     }
 
-    static QString enumToKStr(int ability)
+    static inline QString enumToKStr(int ability)
     {
         switch (ability)
         {
@@ -43,7 +42,7 @@ public:
         }
     }
 
-    static int kstrToEnum(QString ability)
+    static inline int kstrToEnum(QString ability)
     {
         if ("치명" == ability)
             return Critical;

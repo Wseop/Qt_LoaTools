@@ -52,10 +52,6 @@ HEADERS += \
     db/db_request.h \
     db/enum/collection.h \
     engrave_simulator/engrave_simulator.h \
-    enum/ability.h \
-    enum/class.h \
-    enum/collection.h \
-    enum/set_effect.h \
     font/font_manager.h \
     game_data/ability.h \
     game_data/class.h \
