@@ -1,7 +1,7 @@
 #include "setting_code.h"
-#include "game_data/ability.h"
-#include "game_data/set_effect.h"
-#include "game_data/engrave.h"
+#include "game_data/profile/ability.h"
+#include "game_data/profile/set_effect.h"
+#include "game_data/profile/engrave.h"
 
 #include <QJsonArray>
 #include <utility>

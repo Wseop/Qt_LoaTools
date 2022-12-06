@@ -1,7 +1,7 @@
 #include "class_selector.h"
 #include "ui_class_selector.h"
-#include "setting_adviser/setting_adviser.h"
-#include "ranking_board/ranking_board.h"
+#include "tools/setting_adviser/setting_adviser.h"
+#include "tools/ranking_board/ranking_board.h"
 #include "font/font_manager.h"
 
 #include <QCloseEvent>
