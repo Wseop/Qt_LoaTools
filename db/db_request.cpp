@@ -66,6 +66,10 @@ document DBRequest::objToDoc(Collection collection, QJsonObject obj)
         }
         arrayBuilder << close_array;
     }
+    else if (Collection::SettingV2 == collection)
+    {
+        doc << "SettingCode" << obj.find("SettingCode")->toString().toStdString();
+    }
 
     return doc;
 }

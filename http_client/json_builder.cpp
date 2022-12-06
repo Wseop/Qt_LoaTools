@@ -51,3 +51,14 @@ QJsonDocument JsonBuilder::buildSetting(QString name, QString cls, QStringList a
 
     return QJsonDocument(jsonObj);
 }
+
+QJsonDocument JsonBuilder::buildSettingV2(QString name, QString cls, QString settingCode)
+{
+    QJsonObject jsonObj;
+
+    jsonObj.insert("Name", name);
+    jsonObj.insert("Class", cls);
+    jsonObj.insert("SettingCode", settingCode);
+
+    return QJsonDocument(jsonObj);
+}

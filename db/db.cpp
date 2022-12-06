@@ -36,6 +36,8 @@ mongocxx::collection DB::getCollection(Collection collection)
         return m_db["Character"];
     case Collection::Setting:
         return m_db["Setting"];
+    case Collection::SettingV2:
+        return m_db["Setting_v2"];
     }
 }
 
