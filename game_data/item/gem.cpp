@@ -1,36 +1,36 @@
 #include "gem.h"
 
-Gem::Gem() : Item(Part::GEM)
+Gem::Gem() : Item(ItemPart::GEM)
 {
 
 }
 
 int Gem::GetLevel() const
 {
-    return mLevel;
+    return m_level;
 }
 
 QString Gem::getAttr() const
 {
-    return mAttr;
+    return m_attr;
 }
 
 QString Gem::getEffect() const
 {
-    return mEffect;
+    return m_effect;
 }
 
 void Gem::setLevel(int level)
 {
-    mLevel = level;
+    m_level = level;
 }
 
 void Gem::setAttr(QString attr)
 {
-    mAttr = attr;
+    m_attr = attr;
 }
 
 void Gem::setEffect(QString effect)
 {
-    mEffect = effect;
+    m_effect = effect;
 }

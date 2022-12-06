@@ -34,19 +34,19 @@ void EquipWidget::requestIcon(QString iconUrl)
 
 void EquipWidget::setText()
 {
-    Part part = m_pEquip->getPart();
+    ItemPart part = m_pEquip->getPart();
     QString groupTitle;
-    if (part == Part::WEAPON)
+    if (part == ItemPart::WEAPON)
         groupTitle = "무기";
-    else if (part == Part::TOP)
+    else if (part == ItemPart::TOP)
         groupTitle = "상의";
-    else if (part == Part::BOTTOM)
+    else if (part == ItemPart::BOTTOM)
         groupTitle = "하의";
-    else if (part == Part::HEAD)
+    else if (part == ItemPart::HEAD)
         groupTitle = "머리";
-    else if (part == Part::SHOULDER)
+    else if (part == ItemPart::SHOULDER)
         groupTitle = "어깨";
-    else if (part == Part::HAND)
+    else if (part == ItemPart::HAND)
         groupTitle = "장갑";
     ui->groupEquip->setTitle(groupTitle);
 

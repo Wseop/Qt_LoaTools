@@ -1,16 +1,16 @@
 #include "bracelet.h"
 
-Bracelet::Bracelet() : Item(Part::BRACELET)
+Bracelet::Bracelet() : Item(ItemPart::BRACELET)
 {
 
 }
 
 QString Bracelet::getEffect() const
 {
-    return mEffect;
+    return m_effect;
 }
 
 void Bracelet::setEffect(QString effect)
 {
-    mEffect = effect;
+    m_effect = effect;
 }

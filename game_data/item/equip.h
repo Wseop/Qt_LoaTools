@@ -6,7 +6,7 @@
 class Equip : public Item
 {
 public:
-    Equip(Part part);
+    Equip(ItemPart part);
 
     QString getLevelTier() const;
     int getQuality() const;
@@ -17,9 +17,9 @@ public:
     void setSetLevel(QString setLevel);
 
 private:
-    QString mLevelTier;
-    int mQuality;
-    QString mSetLevel;
+    QString m_levelTier;
+    int m_quality;
+    QString m_setLevel;
 };
 
 #endif // EQUIP_H

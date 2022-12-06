@@ -15,15 +15,15 @@ SOURCES += \
     engrave_simulator//engrave_simulator.cpp \
     font/font_manager.cpp \
     game_data/engrave.cpp \
+    game_data/item/abilitystone.cpp \
+    game_data/item/accessory.cpp \
+    game_data/item/bracelet.cpp \
+    game_data/item/equip.cpp \
+    game_data/item/gem.cpp \
+    game_data/item/item.cpp \
+    game_data/item/rune.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
-    item/abilitystone.cpp \
-    item/accessory.cpp \
-    item/bracelet.cpp \
-    item/equip.cpp \
-    item/gem.cpp \
-    item/item.cpp \
-    item/rune.cpp \
     meteor_timer/meteor_timer.cpp \
     profile/card_set.cpp \
     profile/character.cpp \
@@ -56,16 +56,18 @@ HEADERS += \
     game_data/ability.h \
     game_data/class.h \
     game_data/engrave.h \
+    game_data/item/abilitystone.h \
+    game_data/item/accessory.h \
+    game_data/item/bracelet.h \
+    game_data/item/enum/item_grade.h \
+    game_data/item/enum/item_part.h \
+    game_data/item/equip.h \
+    game_data/item/gem.h \
+    game_data/item/item.h \
+    game_data/item/rune.h \
     game_data/set_effect.h \
     http_client/http_client.h \
     http_client/json_builder.h \
-    item/abilitystone.h \
-    item/accessory.h \
-    item/bracelet.h \
-    item/equip.h \
-    item/gem.h \
-    item/item.h \
-    item/rune.h \
     meteor_timer/meteor_timer.h \
     profile/card_set.h \
     profile/character.h \

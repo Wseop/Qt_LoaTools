@@ -90,33 +90,33 @@ const QList<Skill> &Character::getSkills()
     return mSkills;
 }
 
-const Item *Character::getItemByPart(Part part)
+const Item *Character::getItemByPart(ItemPart part)
 {
-    if (part == Part::WEAPON)
+    if (part == ItemPart::WEAPON)
         return static_cast<Item*>(m_pWeapon);
-    else if (part == Part::HEAD)
+    else if (part == ItemPart::HEAD)
         return static_cast<Item*>(m_pHead);
-    else if (part == Part::TOP)
+    else if (part == ItemPart::TOP)
         return static_cast<Item*>(m_pTop);
-    else if (part == Part::BOTTOM)
+    else if (part == ItemPart::BOTTOM)
         return static_cast<Item*>(m_pBottom);
-    else if (part == Part::HAND)
+    else if (part == ItemPart::HAND)
         return static_cast<Item*>(m_pHand);
-    else if (part == Part::SHOULDER)
+    else if (part == ItemPart::SHOULDER)
         return static_cast<Item*>(m_pShoulder);
-    else if (part == Part::NECK)
+    else if (part == ItemPart::NECK)
         return static_cast<Item*>(m_pNeck);
-    else if (part == Part::EAR1)
+    else if (part == ItemPart::EAR1)
         return static_cast<Item*>(m_pEar1);
-    else if (part == Part::EAR2)
+    else if (part == ItemPart::EAR2)
         return static_cast<Item*>(m_pEar2);
-    else if (part == Part::RING1)
+    else if (part == ItemPart::RING1)
         return static_cast<Item*>(m_pRing1);
-    else if (part == Part::RING2)
+    else if (part == ItemPart::RING2)
         return static_cast<Item*>(m_pRing2);
-    else if (part == Part::STONE)
+    else if (part == ItemPart::STONE)
         return static_cast<Item*>(m_pStone);
-    else if (part == Part::BRACELET)
+    else if (part == ItemPart::BRACELET)
         return static_cast<Item*>(m_pBracelet);
     else
         return nullptr;
@@ -164,33 +164,33 @@ void Character::addSetEffect(QString setEffect, int index)
 
 void Character::setItem(Item *item)
 {
-    Part part = item->getPart();
+    ItemPart part = item->getPart();
 
-    if (part == Part::WEAPON)
+    if (part == ItemPart::WEAPON)
         m_pWeapon = static_cast<Equip*>(item);
-    else if (part == Part::HEAD)
+    else if (part == ItemPart::HEAD)
         m_pHead = static_cast<Equip*>(item);
-    else if (part == Part::TOP)
+    else if (part == ItemPart::TOP)
         m_pTop = static_cast<Equip*>(item);
-    else if (part == Part::BOTTOM)
+    else if (part == ItemPart::BOTTOM)
         m_pBottom = static_cast<Equip*>(item);
-    else if (part == Part::HAND)
+    else if (part == ItemPart::HAND)
         m_pHand = static_cast<Equip*>(item);
-    else if (part == Part::SHOULDER)
+    else if (part == ItemPart::SHOULDER)
         m_pShoulder = static_cast<Equip*>(item);
-    else if (part == Part::NECK)
+    else if (part == ItemPart::NECK)
         m_pNeck = static_cast<Accessory*>(item);
-    else if (part == Part::EAR1)
+    else if (part == ItemPart::EAR1)
         m_pEar1 = static_cast<Accessory*>(item);
-    else if (part == Part::EAR2)
+    else if (part == ItemPart::EAR2)
         m_pEar2 = static_cast<Accessory*>(item);
-    else if (part == Part::RING1)
+    else if (part == ItemPart::RING1)
         m_pRing1 = static_cast<Accessory*>(item);
-    else if (part == Part::RING2)
+    else if (part == ItemPart::RING2)
         m_pRing2 = static_cast<Accessory*>(item);
-    else if (part == Part::STONE)
+    else if (part == ItemPart::STONE)
         m_pStone = static_cast<AbilityStone*>(item);
-    else if (part == Part::BRACELET)
+    else if (part == ItemPart::BRACELET)
         m_pBracelet = static_cast<Bracelet*>(item);
 }
 

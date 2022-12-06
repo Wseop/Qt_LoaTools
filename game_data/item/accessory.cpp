@@ -1,46 +1,46 @@
 #include "accessory.h"
 
-Accessory::Accessory(Part part) : Item(part)
+Accessory::Accessory(ItemPart part) : Item(part)
 {
 
 }
 
 int Accessory::getQuality() const
 {
-    return mQuality;
+    return m_quality;
 }
 
 QString Accessory::getAbility() const
 {
-    return mAbility;
+    return m_ability;
 }
 
 const QStringList &Accessory::getEngraves() const
 {
-    return mEngraves;
+    return m_engraves;
 }
 
 QString Accessory::getPenalty() const
 {
-    return mPenalty;
+    return m_penalty;
 }
 
 void Accessory::setQuality(int quality)
 {
-    mQuality = quality;
+    m_quality = quality;
 }
 
 void Accessory::setAbility(QString ability)
 {
-    mAbility = ability;
+    m_ability = ability;
 }
 
 void Accessory::addEngrave(QString engrave)
 {
-    mEngraves << engrave;
+    m_engraves << engrave;
 }
 
 void Accessory::setPenalty(QString penalty)
 {
-    mPenalty = penalty;
+    m_penalty = penalty;
 }

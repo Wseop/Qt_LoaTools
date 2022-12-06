@@ -1,11 +1,11 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "item/equip.h"
-#include "item/accessory.h"
-#include "item/abilitystone.h"
-#include "item/bracelet.h"
-#include "item/gem.h"
+#include "game_data/item/equip.h"
+#include "game_data/item/accessory.h"
+#include "game_data/item/abilitystone.h"
+#include "game_data/item/bracelet.h"
+#include "game_data/item/gem.h"
 #include "card_set.h"
 #include "skill.h"
 
@@ -24,7 +24,7 @@ public:
     const CardSet& getCardSet();
     const QStringList& getSetEffects();
 
-    const Item* getItemByPart(Part part);
+    const Item* getItemByPart(ItemPart part);
     const QList<Gem>& getGems();
 
     const QMap<QString, int>& getEngraveValues();

@@ -7,7 +7,7 @@
 class Accessory : public Item
 {
 public:
-    Accessory(Part part);
+    Accessory(ItemPart part);
 
     int getQuality() const;
     QString getAbility() const;
@@ -20,10 +20,10 @@ public:
     void setPenalty(QString penalty);
 
 private:
-    int mQuality;
-    QString mAbility;
-    QStringList mEngraves;
-    QString mPenalty;
+    int m_quality;
+    QString m_ability;
+    QStringList m_engraves;
+    QString m_penalty;
 };
 
 #endif // ACCESSORY_H

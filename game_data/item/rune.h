@@ -17,7 +17,7 @@ private:
     void setIconPath(QString iconPath);
 
 private:
-    QMap<QString, int> mRuneId;
+    QMap<QString, int> m_runeId;
 };
 
 #endif // RUNE_H

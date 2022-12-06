@@ -13,7 +13,7 @@ public:
     void setEffect(QString effect);
 
 private:
-    QString mEffect;
+    QString m_effect;
 };
 
 #endif // BRACELET_H

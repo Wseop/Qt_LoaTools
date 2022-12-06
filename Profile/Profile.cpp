@@ -248,30 +248,30 @@ void Profile::parseItem()
     {
         const QJsonObject& itemObj = obj.find(key)->toObject();
 
-        if (key.endsWith("0" + QString::number(static_cast<int>(Part::WEAPON))) ||
-            key.endsWith("0" + QString::number(static_cast<int>(Part::HEAD))) ||
-            key.endsWith("0" + QString::number(static_cast<int>(Part::TOP))) ||
-            key.endsWith("0" + QString::number(static_cast<int>(Part::BOTTOM))) ||
-            key.endsWith("0" + QString::number(static_cast<int>(Part::HAND))) ||
-            key.endsWith("0" + QString::number(static_cast<int>(Part::SHOULDER))))
+        if (key.endsWith("0" + QString::number(static_cast<int>(ItemPart::WEAPON))) ||
+            key.endsWith("0" + QString::number(static_cast<int>(ItemPart::HEAD))) ||
+            key.endsWith("0" + QString::number(static_cast<int>(ItemPart::TOP))) ||
+            key.endsWith("0" + QString::number(static_cast<int>(ItemPart::BOTTOM))) ||
+            key.endsWith("0" + QString::number(static_cast<int>(ItemPart::HAND))) ||
+            key.endsWith("0" + QString::number(static_cast<int>(ItemPart::SHOULDER))))
         {
-            Part part = static_cast<Part>(key.last(3).toInt());
+            ItemPart part = static_cast<ItemPart>(key.last(3).toInt());
             parseEquip(itemObj, part);
         }
-        else if (key.endsWith("0" + QString::number(static_cast<int>(Part::NECK))) ||
-                 key.endsWith("0" + QString::number(static_cast<int>(Part::EAR1))) ||
-                 key.endsWith("0" + QString::number(static_cast<int>(Part::EAR2))) ||
-                 key.endsWith("0" + QString::number(static_cast<int>(Part::RING1))) ||
-                 key.endsWith("0" + QString::number(static_cast<int>(Part::RING2))))
+        else if (key.endsWith("0" + QString::number(static_cast<int>(ItemPart::NECK))) ||
+                 key.endsWith("0" + QString::number(static_cast<int>(ItemPart::EAR1))) ||
+                 key.endsWith("0" + QString::number(static_cast<int>(ItemPart::EAR2))) ||
+                 key.endsWith("0" + QString::number(static_cast<int>(ItemPart::RING1))) ||
+                 key.endsWith("0" + QString::number(static_cast<int>(ItemPart::RING2))))
         {
-            Part part = static_cast<Part>(key.last(3).toInt());
+            ItemPart part = static_cast<ItemPart>(key.last(3).toInt());
             parseAccessory(itemObj, part);
         }
-        else if (key.endsWith("0" + QString::number(static_cast<int>(Part::STONE))))
+        else if (key.endsWith("0" + QString::number(static_cast<int>(ItemPart::STONE))))
         {
             parseStone(itemObj);
         }
-        else if (key.endsWith("0" + QString::number(static_cast<int>(Part::BRACELET))))
+        else if (key.endsWith("0" + QString::number(static_cast<int>(ItemPart::BRACELET))))
         {
             parseBracelet(itemObj);
         }
@@ -287,7 +287,7 @@ void Profile::parseItem()
     emit sigUpdateGem();
 }
 
-void Profile::parseEquip(const QJsonObject &equipObj, Part part)
+void Profile::parseEquip(const QJsonObject &equipObj, ItemPart part)
 {
     Equip* equip = new Equip(part);
     const QStringList& elementKeys = equipObj.keys();
@@ -307,7 +307,7 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
         {
             const QJsonObject& valueObj = element.find("value")->toObject();
 
-            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            ItemGrade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString levelTier = valueObj.find("leftStr2")->toString().remove(m_htmlTag);
             int quality = valueObj.find("qualityValue")->toInt();
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
@@ -340,23 +340,23 @@ void Profile::parseEquip(const QJsonObject &equipObj, Part part)
 
     if (equip->getSetLevel() != "")
     {
-        if (part != Part::WEAPON || (part == Part::WEAPON && equip->getGrade() != Grade::ESTHER))
+        if (part != ItemPart::WEAPON || (part == ItemPart::WEAPON && equip->getGrade() != ItemGrade::ESTHER))
         {
             m_pCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(part));
         }
 
-        const Equip* weapon = static_cast<const Equip*>(m_pCharacter->getItemByPart(Part::WEAPON));
+        const Equip* weapon = static_cast<const Equip*>(m_pCharacter->getItemByPart(ItemPart::WEAPON));
         if (weapon == nullptr)
             return;
 
-        if (part == Part::HAND && weapon->getGrade() == Grade::ESTHER)
+        if (part == ItemPart::HAND && weapon->getGrade() == ItemGrade::ESTHER)
         {
-            m_pCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(Part::WEAPON));
+            m_pCharacter->addSetEffect(equip->getSetLevel().sliced(0, 2), static_cast<int>(ItemPart::WEAPON));
         }
     }
 }
 
-void Profile::parseAccessory(const QJsonObject &accObj, Part part)
+void Profile::parseAccessory(const QJsonObject &accObj, ItemPart part)
 {
     Accessory* acc = new Accessory(part);
     const QStringList& elementKeys = accObj.keys();
@@ -375,7 +375,7 @@ void Profile::parseAccessory(const QJsonObject &accObj, Part part)
         {
             const QJsonObject& valueObj = element.find("value")->toObject();
 
-            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            ItemGrade grade = extractGrade(valueObj.find("leftStr0")->toString());
             int quality = valueObj.find("qualityValue")->toInt();
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
             acc->setGrade(grade);
@@ -444,7 +444,7 @@ void Profile::parseStone(const QJsonObject &stoneObj)
         {
             const QJsonObject& valueObj = element.find("value")->toObject();
 
-            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            ItemGrade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
             stone->setGrade(grade);
             stone->setIconPath(iconPath);
@@ -501,7 +501,7 @@ void Profile::parseBracelet(const QJsonObject &braceletObj)
         {
             const QJsonObject& valueObj = element.find("value")->toObject();
 
-            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            ItemGrade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
             bracelet->setGrade(grade);
             bracelet->setIconPath(iconPath);
@@ -544,7 +544,7 @@ void Profile::parseGem(const QJsonObject &gemObj)
         {
             const QJsonObject& valueObj = element.find("value")->toObject();
 
-            Grade grade = extractGrade(valueObj.find("leftStr0")->toString());
+            ItemGrade grade = extractGrade(valueObj.find("leftStr0")->toString());
             QString iconPath = "/" + valueObj.find("slotData")->toObject().find("iconPath")->toString();
             int level = valueObj.find("slotData")->toObject().find("rtString")->toString().remove("Lv.").toInt();
             gem.setGrade(grade);
@@ -717,9 +717,9 @@ void Profile::updateDB()
     {
         // 미장착 슬롯 체크
         const Equip* equip = nullptr;
-        for (int part = static_cast<int>(Part::WEAPON); part <= static_cast<int>(Part::SHOULDER); part++)
+        for (int part = static_cast<int>(ItemPart::WEAPON); part <= static_cast<int>(ItemPart::SHOULDER); part++)
         {
-            equip = static_cast<const Equip*>(m_pCharacter->getItemByPart(static_cast<Part>(part)));
+            equip = static_cast<const Equip*>(m_pCharacter->getItemByPart(static_cast<ItemPart>(part)));
             if (equip == nullptr)
                 return;
         }
@@ -732,15 +732,15 @@ void Profile::updateDB()
         QStringList abilities;
         QString abilityStr;
         const Accessory* accessory = nullptr;
-        accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(Part::NECK));
+        accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(ItemPart::NECK));
         if (accessory == nullptr)
             return;
         abilityStr = accessory->getAbility();
         abilities << abilityStr.sliced(0, 2);
         abilities << abilityStr.sliced(abilityStr.indexOf("<BR>") + 4, 2);
-        for (int part = static_cast<int>(Part::EAR1); part <= static_cast<int>(Part::RING2); part++)
+        for (int part = static_cast<int>(ItemPart::EAR1); part <= static_cast<int>(ItemPart::RING2); part++)
         {
-            accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(static_cast<Part>(part)));
+            accessory = static_cast<const Accessory*>(m_pCharacter->getItemByPart(static_cast<ItemPart>(part)));
             if (accessory == nullptr)
                 return;
             abilityStr = accessory->getAbility();
@@ -769,24 +769,24 @@ void Profile::updateDB()
     }
 }
 
-Grade Profile::extractGrade(QString str)
+ItemGrade Profile::extractGrade(QString str)
 {
     if (str.contains("고급"))
-        return Grade::UNCOMMON;
+        return ItemGrade::UNCOMMON;
     else if (str.contains("희귀"))
-        return Grade::RARE;
+        return ItemGrade::RARE;
     else if (str.contains("영웅"))
-        return Grade::EPIC;
+        return ItemGrade::EPIC;
     else if (str.contains("전설"))
-        return Grade::LEGEND;
+        return ItemGrade::LEGEND;
     else if (str.contains("유물"))
-        return Grade::RELIC;
+        return ItemGrade::RELIC;
     else if (str.contains("고대"))
-        return Grade::ANCIENT;
+        return ItemGrade::ANCIENT;
     else if (str.contains("에스더"))
-        return Grade::ESTHER;
+        return ItemGrade::ESTHER;
     else
-        return Grade::NONE;
+        return ItemGrade::NONE;
 }
 
 void Profile::extractEngraveValue(int type, QString engrave)
@@ -810,24 +810,24 @@ void Profile::extractEngraveValue(int type, QString engrave)
         m_pCharacter->addPenalty(engraveName, engraveValue);
 }
 
-Grade Profile::getGradeByColor(QString color)
+ItemGrade Profile::getGradeByColor(QString color)
 {
     if (color.compare("#8DF901", Qt::CaseInsensitive) == 0)
-        return Grade::UNCOMMON;
+        return ItemGrade::UNCOMMON;
     else if (color.compare("#00B0FA", Qt::CaseInsensitive) == 0)
-        return Grade::RARE;
+        return ItemGrade::RARE;
     else if (color.compare("#CE43FC", Qt::CaseInsensitive) == 0)
-        return Grade::EPIC;
+        return ItemGrade::EPIC;
     else if (color.compare("#F99200", Qt::CaseInsensitive) == 0)
-        return Grade::LEGEND;
+        return ItemGrade::LEGEND;
     else if (color.compare("#FA5D00", Qt::CaseInsensitive) == 0)
-        return Grade::RELIC;
+        return ItemGrade::RELIC;
     else if (color.compare("#E3C7A1", Qt::CaseInsensitive) == 0)
-        return Grade::ANCIENT;
+        return ItemGrade::ANCIENT;
     else if (color.compare("#3CF2E6", Qt::CaseInsensitive) == 0)
-        return Grade::ESTHER;
+        return ItemGrade::ESTHER;
     else
-        return Grade::NONE;
+        return ItemGrade::NONE;
 }
 
 void Profile::clearAll()
@@ -982,14 +982,14 @@ void Profile::slotUpdateTitle()
 
 void Profile::slotUpdateItem()
 {
-    const int INDEX_EQUIP = static_cast<int>(Part::WEAPON);
-    const int INDEX_ACCESSORY = static_cast<int>(Part::NECK);
-    const int INDEX_STONE = static_cast<int>(Part::STONE);
+    const int INDEX_EQUIP = static_cast<int>(ItemPart::WEAPON);
+    const int INDEX_ACCESSORY = static_cast<int>(ItemPart::NECK);
+    const int INDEX_STONE = static_cast<int>(ItemPart::STONE);
 
-    Part part;
+    ItemPart part;
     for (int i = INDEX_EQUIP; i < INDEX_ACCESSORY; i++)
     {
-        part = static_cast<Part>(i);
+        part = static_cast<ItemPart>(i);
         const Equip* equip = static_cast<const Equip*>(m_pCharacter->getItemByPart(part));
         if (equip == nullptr)
             continue;
@@ -1000,7 +1000,7 @@ void Profile::slotUpdateItem()
 
     for (int i = INDEX_ACCESSORY; i < INDEX_STONE; i++)
     {
-        part = static_cast<Part>(i);
+        part = static_cast<ItemPart>(i);
         const Accessory* acc = static_cast<const Accessory*>(m_pCharacter->getItemByPart(part));
         if (acc == nullptr)
             continue;
@@ -1009,7 +1009,7 @@ void Profile::slotUpdateItem()
         m_accWidgets.append(accWidget);
     }
 
-    part = Part::STONE;
+    part = ItemPart::STONE;
     const AbilityStone* stone = static_cast<const AbilityStone*>(m_pCharacter->getItemByPart(part));
     if (stone != nullptr)
     {
@@ -1018,7 +1018,7 @@ void Profile::slotUpdateItem()
         m_pStoneWidget = stoneWidget;
     }
 
-    part = Part::BRACELET;
+    part = ItemPart::BRACELET;
     const Bracelet* bracelet = static_cast<const Bracelet*>(m_pCharacter->getItemByPart(part));
     if (bracelet != nullptr)
     {

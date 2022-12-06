@@ -34,13 +34,13 @@ void AccWidget::requestIcon(QString iconUrl)
 
 void AccWidget::setText()
 {
-    Part part = m_pAcc->getPart();
+    ItemPart part = m_pAcc->getPart();
     QString groupTitle;
-    if (part == Part::NECK)
+    if (part == ItemPart::NECK)
         groupTitle = "목걸이";
-    else if (part == Part::EAR1 || part == Part::EAR2)
+    else if (part == ItemPart::EAR1 || part == ItemPart::EAR2)
         groupTitle = "귀걸이";
-    else if (part == Part::RING1 || part == Part::RING2)
+    else if (part == ItemPart::RING1 || part == ItemPart::RING2)
         groupTitle = "반지";
     ui->groupAcc->setTitle(groupTitle);
 

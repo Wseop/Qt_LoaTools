@@ -2,7 +2,7 @@
 #define SKILL_H
 
 #include <QString>
-#include "item/rune.h"
+#include "game_data/item/rune.h"
 
 struct Tripod
 {

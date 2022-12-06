@@ -1,36 +1,36 @@
 #include "equip.h"
 
-Equip::Equip(Part part) : Item(part)
+Equip::Equip(ItemPart part) : Item(part)
 {
 
 }
 
 QString Equip::getLevelTier() const
 {
-    return mLevelTier;
+    return m_levelTier;
 }
 
 int Equip::getQuality() const
 {
-    return mQuality;
+    return m_quality;
 }
 
 QString Equip::getSetLevel() const
 {
-    return mSetLevel;
+    return m_setLevel;
 }
 
 void Equip::setLevelTier(QString levelTier)
 {
-    mLevelTier = levelTier;
+    m_levelTier = levelTier;
 }
 
 void Equip::setQuality(int quality)
 {
-    mQuality = quality;
+    m_quality = quality;
 }
 
 void Equip::setSetLevel(QString setLevel)
 {
-    mSetLevel = setLevel;
+    m_setLevel = setLevel;
 }

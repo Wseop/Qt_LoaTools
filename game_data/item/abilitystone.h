@@ -16,8 +16,8 @@ public:
     void setPenalty(QString penalty);
 
 private:
-    QStringList mEngraves;
-    QString mPenalty;
+    QStringList m_engraves;
+    QString m_penalty;
 };
 
 #endif // ABILITYSTONE_H

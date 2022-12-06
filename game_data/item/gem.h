@@ -17,9 +17,9 @@ public:
     void setEffect(QString effect);
 
 private:
-    int mLevel;
-    QString mAttr;
-    QString mEffect;
+    int m_level;
+    QString m_attr;
+    QString m_effect;
 };
 
 #endif // GEM_H

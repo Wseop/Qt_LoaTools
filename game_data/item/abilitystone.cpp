@@ -1,26 +1,26 @@
 #include "abilitystone.h"
 
-AbilityStone::AbilityStone() : Item(Part::STONE)
+AbilityStone::AbilityStone() : Item(ItemPart::STONE)
 {
 
 }
 
 const QStringList &AbilityStone::getEngraves() const
 {
-    return mEngraves;
+    return m_engraves;
 }
 
 QString AbilityStone::getPenalty() const
 {
-    return mPenalty;
+    return m_penalty;
 }
 
 void AbilityStone::addEngrave(QString engrave)
 {
-    mEngraves << engrave;
+    m_engraves << engrave;
 }
 
 void AbilityStone::setPenalty(QString penalty)
 {
-    mPenalty = penalty;
+    m_penalty = penalty;
 }

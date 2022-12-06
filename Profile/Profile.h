@@ -50,8 +50,8 @@ private:
     void parseGuildName(const QString& profile);
 
     void parseItem();
-    void parseEquip(const QJsonObject& equipObj, Part part);
-    void parseAccessory(const QJsonObject& accObj, Part part);
+    void parseEquip(const QJsonObject& equipObj, ItemPart part);
+    void parseAccessory(const QJsonObject& accObj, ItemPart part);
     void parseStone(const QJsonObject& stoneObj);
     void parseBracelet(const QJsonObject& braceletObj);
     void parseGem(const QJsonObject& gemObj);
@@ -62,10 +62,10 @@ private:
 
     void updateDB();
 
-    Grade extractGrade(QString str);
+    ItemGrade extractGrade(QString str);
     void extractEngraveValue(int type, QString engrave);
 
-    Grade getGradeByColor(QString color);
+    ItemGrade getGradeByColor(QString color);
 
     void clearAll();
 

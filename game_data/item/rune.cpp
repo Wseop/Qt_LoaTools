@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QTextStream>
 
-Rune::Rune() : Item(Part::RUNE)
+Rune::Rune() : Item(ItemPart::RUNE)
 {
     initMap();
 }
@@ -13,7 +13,7 @@ void Rune::setName(QString name)
 {
     Item::setName(name);
 
-    QString iconPath = QString(":/image/resources/runes/%1.png").arg(mRuneId[name]);
+    QString iconPath = QString(":/image/resources/runes/%1.png").arg(m_runeId[name]);
     setIconPath(iconPath);
 }
 
@@ -30,7 +30,7 @@ void Rune::initMap()
     QTextStream inStream(&file);
     int id = 0;
     while (!inStream.atEnd())
-        mRuneId[inStream.readLine()] = id++;
+        m_runeId[inStream.readLine()] = id++;
 
     file.close();
 }
