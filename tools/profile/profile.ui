@@ -32,7 +32,7 @@
      <item>
       <layout class="QHBoxLayout" name="hLayoutSearch">
        <item>
-        <widget class="QGroupBox" name="groupBoxSearch">
+        <widget class="QGroupBox" name="groupSearch">
          <property name="maximumSize">
           <size>
            <width>500</width>
@@ -133,7 +133,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBoxNameServer">
+             <widget class="QGroupBox" name="groupNameServer">
               <property name="minimumSize">
                <size>
                 <width>310</width>
@@ -282,7 +282,26 @@
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBoxItemLevel">
+             <widget class="QGroupBox" name="groupExpLevel">
+              <property name="title">
+               <string>원정대 레벨</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="lbExpLevel">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupItemLevel">
               <property name="minimumSize">
                <size>
                 <width>310</width>
@@ -483,8 +502,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>783</width>
-                <height>643</height>
+                <width>100</width>
+                <height>30</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="vLayoutSkill"/>

@@ -20,6 +20,7 @@ public:
     QString getLevel();
     QString getServer();
     QString getGuild();
+    int getExpLevel();
     double getItemLevel();
     const CardSet& getCardSet();
     const QStringList& getSetEffects();
@@ -36,6 +37,7 @@ public:
     void setLevel(QString level);
     void setServer(QString server);
     void setGuild(QString guild);
+    void setExpLevel(int level);
     void addItemLevel(int itemLevel);
     void setCardSet(CardSet cardSet);
     void addSetEffect(QString setEffect, int index);
@@ -54,6 +56,7 @@ private:
     QString m_level;
     QString m_server;
     QString m_guild;
+    int m_expLevel;
     int m_itemLevelTotal;
     CardSet m_cardSet;
     QStringList m_setEffects;

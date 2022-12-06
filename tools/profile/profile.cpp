@@ -94,7 +94,8 @@ void Profile::initUI()
     ui->pbSearch->setFont(fontNanumBold10);
     ui->pbCharacterList->setFont(fontNanumBold10);
     ui->groupGuild->setFont(fontNanumBold10);
-    ui->groupBoxItemLevel->setFont(fontNanumBold10);
+    ui->groupExpLevel->setFont(fontNanumBold10);
+    ui->groupItemLevel->setFont(fontNanumBold10);
     ui->groupCard->setFont(fontNanumBold10);
     ui->tabProfile->setFont(fontNanumBold10);
     ui->tabEquip->setFont(fontNanumBold10);
@@ -106,6 +107,7 @@ void Profile::initUI()
     ui->lbServer->setFont(fontNanumBold16);
     ui->lbGuild->setFont(fontNanumBold16);
 
+    ui->lbExpLevel->setFont(fontNanumBold20);
     ui->lbItemLevel->setFont(fontNanumBold20);
 
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
@@ -113,7 +115,7 @@ void Profile::initUI()
     ui->tabProfile->hide();
     ui->groupTitle->hide();
 
-    ui->groupBoxSearch->setMaximumWidth(500);
+    ui->groupSearch->setMaximumWidth(500);
 
     ui->tabEquip->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tabSkill->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
@@ -123,6 +125,7 @@ void Profile::initUI()
     ui->lbServer->setStyleSheet("QLabel { color: #B178FF }");
     ui->lbGuild->setStyleSheet("QLabel { color: #00B700 }");
     ui->lbItemLevel->setStyleSheet("QLabel { color: #FF009B }");
+    ui->lbExpLevel->setStyleSheet("QLabel { color: #F7B838 }");
 
     // Item
     ui->vLayoutEquip->setAlignment(Qt::AlignTop);
@@ -166,6 +169,13 @@ void Profile::parseTitle(const QString& profile)
     startIndex = profile.indexOf("Lv.", startIndex);
     endIndex = profile.indexOf("</span>", startIndex);
     m_pCharacter->setLevel(profile.sliced(startIndex, endIndex - startIndex));
+
+    // 원정대 level 정보 추출
+    classToken = "level-info__expedition";
+    startIndex = profile.indexOf(classToken);
+    startIndex = profile.indexOf("Lv.", startIndex) + 11;
+    endIndex = profile.indexOf("</span>", startIndex);
+    m_pCharacter->setExpLevel(profile.sliced(startIndex, endIndex - startIndex).toInt());
 
     // 서버 정보 추출
     classToken = "profile-character-info__server";
@@ -977,6 +987,7 @@ void Profile::slotUpdateTitle()
     ui->lbName->setText(m_pCharacter->getName());
     ui->lbServer->setText(m_pCharacter->getServer());
     ui->lbGuild->setText(m_pCharacter->getGuild());
+    ui->lbExpLevel->setText(QString("%1").arg(m_pCharacter->getExpLevel()));
     ui->lbItemLevel->setText(QString("%1").arg(m_pCharacter->getItemLevel()));
 }
 

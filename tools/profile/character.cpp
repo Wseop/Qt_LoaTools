@@ -55,6 +55,11 @@ QString Character::getGuild()
     return m_guild;
 }
 
+int Character::getExpLevel()
+{
+    return m_expLevel;
+}
+
 double Character::getItemLevel()
 {
     return (double)m_itemLevelTotal / 6;
@@ -145,6 +150,11 @@ void Character::setServer(QString server)
 void Character::setGuild(QString guild)
 {
     m_guild = guild;
+}
+
+void Character::setExpLevel(int level)
+{
+    m_expLevel = level;
 }
 
 void Character::addItemLevel(int itemLevel)
