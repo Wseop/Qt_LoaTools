@@ -7,6 +7,7 @@
 #include "http_client/json_builder.h"
 #include "db/db_request.h"
 #include "font/font_manager.h"
+#include "tools/setting_adviser/setting_code.h"
 
 #include "ui/card_label.h"
 #include "ui/equip_widget.h"
@@ -758,8 +759,6 @@ void Profile::updateDB()
         }
 
         // Engraves
-
-
         const QMap<QString, int>& engraveValues = m_pCharacter->getEngraveValues();
         QStringList engraveNames;
         QList<int> engraveLevels;
@@ -775,7 +774,9 @@ void Profile::updateDB()
 
         // DB update - Setting
         QJsonObject settingObj = JsonBuilder::buildSetting(name, cls, abilities, engraveNames, engraveLevels, m_pCharacter->getSetEffects()).object();
-        emit m_pDBRequest->insertDocument(Collection::Setting, settingObj);
+        QString settingCode = SettingCode::generateSettingCode(settingObj);
+        QJsonObject settingCodeObj = JsonBuilder::buildSettingV2(name, cls, settingCode).object();
+        emit m_pDBRequest->insertDocument(Collection::SettingV2, settingCodeObj);
     }
 }
 
