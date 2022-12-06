@@ -9,10 +9,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    auction_calc/auction_calc.cpp \
     db/db.cpp \
     db/db_request.cpp \
-    engrave_simulator//engrave_simulator.cpp \
     font/font_manager.cpp \
     game_data/item/abilitystone.cpp \
     game_data/item/accessory.cpp \
@@ -24,34 +22,34 @@ SOURCES += \
     game_data/profile/engrave.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
-    meteor_timer/meteor_timer.cpp \
-    profile/card_set.cpp \
-    profile/character.cpp \
-    profile/character_list.cpp \
-    profile/profile.cpp \
     main.cpp \
     loatools.cpp \
-    profile/skill.cpp \
-    profile/ui/abilitystone_widget.cpp \
-    profile/ui/acc_widget.cpp \
-    profile/ui/bracelet_widget.cpp \
-    profile/ui/card_label.cpp \
-    profile/ui/engrave_widget.cpp \
-    profile/ui/equip_widget.cpp \
-    profile/ui/gem_widget.cpp \
-    profile/ui/skill_widget.cpp \
-    ranking_board/ranking_board.cpp \
-    setting_adviser/class_selector.cpp \
-    setting_adviser/setting_adviser.cpp \
-    setting_adviser/setting_code.cpp \
-    setting_adviser/ui/setting_widget.cpp
+    tools/auction_calc/auction_calc.cpp \
+    tools/engrave_simulator/engrave_simulator.cpp \
+    tools/meteor_timer/meteor_timer.cpp \
+    tools/profile/card_set.cpp \
+    tools/profile/character.cpp \
+    tools/profile/character_list.cpp \
+    tools/profile/profile.cpp \
+    tools/profile/skill.cpp \
+    tools/profile/ui/abilitystone_widget.cpp \
+    tools/profile/ui/acc_widget.cpp \
+    tools/profile/ui/bracelet_widget.cpp \
+    tools/profile/ui/card_label.cpp \
+    tools/profile/ui/engrave_widget.cpp \
+    tools/profile/ui/equip_widget.cpp \
+    tools/profile/ui/gem_widget.cpp \
+    tools/profile/ui/skill_widget.cpp \
+    tools/ranking_board/ranking_board.cpp \
+    tools/setting_adviser/class_selector.cpp \
+    tools/setting_adviser/setting_adviser.cpp \
+    tools/setting_adviser/setting_code.cpp \
+    tools/setting_adviser/ui/setting_widget.cpp
 
 HEADERS += \
-    auction_calc/auction_calc.h \
     db/db.h \
     db/db_request.h \
     db/enum/collection.h \
-    engrave_simulator/engrave_simulator.h \
     font/font_manager.h \
     game_data/ability.h \
     game_data/class.h \
@@ -71,46 +69,48 @@ HEADERS += \
     game_data/profile/set_effect.h \
     http_client/http_client.h \
     http_client/json_builder.h \
-    meteor_timer/meteor_timer.h \
-    profile/card_set.h \
-    profile/character.h \
-    profile/character_list.h \
-    profile/profile.h \
     loatools.h \
-    profile/skill.h \
-    profile/ui/abilitystone_widget.h \
-    profile/ui/acc_widget.h \
-    profile/ui/bracelet_widget.h \
-    profile/ui/card_label.h \
-    profile/ui/engrave_widget.h \
-    profile/ui/equip_widget.h \
-    profile/ui/gem_widget.h \
-    profile/ui/skill_widget.h \
-    ranking_board/ranking_board.h \
-    setting_adviser/class_selector.h \
-    setting_adviser/setting_adviser.h \
-    setting_adviser/setting_code.h \
-    setting_adviser/ui/setting_widget.h
+    tools/auction_calc/auction_calc.h \
+    tools/engrave_simulator/engrave_simulator.h \
+    tools/meteor_timer/meteor_timer.h \
+    tools/profile/card_set.h \
+    tools/profile/character.h \
+    tools/profile/character_list.h \
+    tools/profile/profile.h \
+    tools/profile/skill.h \
+    tools/profile/ui/abilitystone_widget.h \
+    tools/profile/ui/acc_widget.h \
+    tools/profile/ui/bracelet_widget.h \
+    tools/profile/ui/card_label.h \
+    tools/profile/ui/engrave_widget.h \
+    tools/profile/ui/equip_widget.h \
+    tools/profile/ui/gem_widget.h \
+    tools/profile/ui/skill_widget.h \
+    tools/ranking_board/ranking_board.h \
+    tools/setting_adviser/class_selector.h \
+    tools/setting_adviser/setting_adviser.h \
+    tools/setting_adviser/setting_code.h \
+    tools/setting_adviser/ui/setting_widget.h
 
 FORMS += \
-    auction_calc/auctioncalc.ui \
-    engrave_simulator/engravesimulator.ui \
-    meteor_timer/meteortimer.ui \
-    profile/character_list.ui \
-    profile/profile.ui \
     loatools.ui \
-    profile/ui/abilitystone_widget.ui \
-    profile/ui/acc_widget.ui \
-    profile/ui/bracelet_widget.ui \
-    profile/ui/card_label.ui \
-    profile/ui/engrave_widget.ui \
-    profile/ui/equip_widget.ui \
-    profile/ui/gem_widget.ui \
-    profile/ui/skill_widget.ui \
-    ranking_board/ranking_board.ui \
-    setting_adviser/class_selector.ui \
-    setting_adviser/setting_adviser.ui \
-    setting_adviser/ui/setting_widget.ui
+    tools/auction_calc/auctioncalc.ui \
+    tools/engrave_simulator/engravesimulator.ui \
+    tools/meteor_timer/meteortimer.ui \
+    tools/profile/character_list.ui \
+    tools/profile/profile.ui \
+    tools/profile/ui/abilitystone_widget.ui \
+    tools/profile/ui/acc_widget.ui \
+    tools/profile/ui/bracelet_widget.ui \
+    tools/profile/ui/card_label.ui \
+    tools/profile/ui/engrave_widget.ui \
+    tools/profile/ui/equip_widget.ui \
+    tools/profile/ui/gem_widget.ui \
+    tools/profile/ui/skill_widget.ui \
+    tools/ranking_board/ranking_board.ui \
+    tools/setting_adviser/class_selector.ui \
+    tools/setting_adviser/setting_adviser.ui \
+    tools/setting_adviser/ui/setting_widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

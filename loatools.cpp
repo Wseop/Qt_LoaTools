@@ -1,11 +1,11 @@
 #include "loatools.h"
 #include "ui_loatools.h"
-#include "meteor_timer/meteor_timer.h"
-#include "auction_calc/auction_calc.h"
-#include "engrave_simulator/engrave_simulator.h"
-#include "profile/profile.h"
-#include "setting_adviser/setting_adviser.h"
-#include "ranking_board/ranking_board.h"
+#include "tools/meteor_timer/meteor_timer.h"
+#include "tools/auction_calc/auction_calc.h"
+#include "tools/engrave_simulator/engrave_simulator.h"
+#include "tools/profile/profile.h"
+#include "tools/setting_adviser/setting_adviser.h"
+#include "tools/ranking_board/ranking_board.h"
 #include "font/font_manager.h"
 
 LoaTools::LoaTools(QWidget *parent)
