@@ -1,7 +1,7 @@
 #ifndef SETTING_ADVISER_H
 #define SETTING_ADVISER_H
 
-#include "game_data/class.h"
+#include "game_data/profile/class.h"
 
 #include <QWidget>
 

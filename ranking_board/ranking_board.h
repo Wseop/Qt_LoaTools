@@ -1,7 +1,7 @@
 #ifndef RANKING_BOARD_H
 #define RANKING_BOARD_H
 
-#include "game_data/class.h"
+#include "game_data/profile/class.h"
 #include "setting_adviser/class_selector.h"
 
 #include <QWidget>

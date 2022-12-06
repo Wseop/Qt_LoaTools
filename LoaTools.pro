@@ -14,7 +14,6 @@ SOURCES += \
     db/db_request.cpp \
     engrave_simulator//engrave_simulator.cpp \
     font/font_manager.cpp \
-    game_data/engrave.cpp \
     game_data/item/abilitystone.cpp \
     game_data/item/accessory.cpp \
     game_data/item/bracelet.cpp \
@@ -22,6 +21,7 @@ SOURCES += \
     game_data/item/gem.cpp \
     game_data/item/item.cpp \
     game_data/item/rune.cpp \
+    game_data/profile/engrave.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
     meteor_timer/meteor_timer.cpp \
@@ -65,7 +65,10 @@ HEADERS += \
     game_data/item/gem.h \
     game_data/item/item.h \
     game_data/item/rune.h \
-    game_data/set_effect.h \
+    game_data/profile/ability.h \
+    game_data/profile/class.h \
+    game_data/profile/engrave.h \
+    game_data/profile/set_effect.h \
     http_client/http_client.h \
     http_client/json_builder.h \
     meteor_timer/meteor_timer.h \

@@ -1,7 +1,7 @@
 #ifndef DBREQUEST_H
 #define DBREQUEST_H
 
-#include "game_data/class.h"
+#include "game_data/profile/class.h"
 #include "enum/collection.h"
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/client.hpp>
