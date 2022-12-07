@@ -18,8 +18,9 @@ SOURCES += \
     game_data/item/equip.cpp \
     game_data/item/gem.cpp \
     game_data/item/item.cpp \
-    game_data/item/rune.cpp \
     game_data/profile/engrave.cpp \
+    game_data/skill/rune.cpp \
+    game_data/skill/skill.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
     main.cpp \
@@ -51,22 +52,20 @@ HEADERS += \
     db/db_request.h \
     db/enum/collection.h \
     font/font_manager.h \
-    game_data/ability.h \
-    game_data/class.h \
-    game_data/engrave.h \
     game_data/item/abilitystone.h \
     game_data/item/accessory.h \
     game_data/item/bracelet.h \
     game_data/item/enum/item_grade.h \
-    game_data/item/enum/item_part.h \
+    game_data/item/enum/item_type.h \
     game_data/item/equip.h \
     game_data/item/gem.h \
     game_data/item/item.h \
-    game_data/item/rune.h \
-    game_data/profile/ability.h \
-    game_data/profile/class.h \
     game_data/profile/engrave.h \
-    game_data/profile/set_effect.h \
+    game_data/profile/enum/ability.h \
+    game_data/profile/enum/class.h \
+    game_data/profile/enum/set_effect.h \
+    game_data/skill/rune.h \
+    game_data/skill/skill.h \
     http_client/http_client.h \
     http_client/json_builder.h \
     loatools.h \
