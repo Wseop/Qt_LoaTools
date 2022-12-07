@@ -5,6 +5,23 @@
 ### [캐릭터 조회](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/profile)
 * 캐릭터의 스펙을 한 화면으로 볼 수 있게 로스트아크 전투정보실 정보를 재가공하여 제공
 > 실시간 정보 반영<br>조회 시 database에 추가됨
+* 캐릭터의 특성, 세트효과, 각인을 기반으로 [SettingCode](https://github.com/Wseop/Qt_LoaTools/blob/master/tools/setting_adviser/setting_code.cpp)를 생성하여 database에 추가
+> SettingCode (Example)
+```
+SettingCode = A121111S222222C044CL3N002004029032034NL13333
+
+특성(A) : A121111
+- index : 목걸이1/2, 귀걸이1/2, 반지1/2
+- value : 치명(0), 특화(1), 신속(2), 제압(3), 인내(4), 숙련(5)
+ 
+세트효과(S) : S222222 
+- index : 무기/머리/상의/하의/장갑/어깨
+- value : 악몽(0), 구원(1), 사멸(2), 지배(3), 환각(4), 갈망(5), 배신(6), 매혹(7), 파괴(8)
+
+직업각인(C), 직업각인레벨(CL), 일반각인(N), 일반각인레벨(NL) : C044 CL3 N002004029032034 NL13333
+- 각인은 3자리 숫자로 구분, 오름차순 정렬 (순서만 다른 경우에도 동일한 코드가 생성되도록 함)
+- 레벨은 해당하는 각인이 적힌 순서와 매칭이 되도록 코드 생성
+```
 ### [직업별 세팅 조회](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/setting_adviser)
 * 직업 선택 시, 유저들이 가장 많이 채용한 세팅을 직업각인별로 최대 10개까지 제공
 * 전체 직업의 Top3 세팅 조회 기능 제공
