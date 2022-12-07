@@ -1,8 +1,13 @@
 #include "equip.h"
 
-Equip::Equip(ItemPart part) : Item(part)
+Equip::Equip(ItemType type) : Item(type)
 {
 
+}
+
+int Equip::getReforge()
+{
+    return m_reforge;
 }
 
 QString Equip::getLevelTier() const
@@ -15,9 +20,19 @@ int Equip::getQuality() const
     return m_quality;
 }
 
+QString Equip::getSetEffect() const
+{
+    return m_setEffect;
+}
+
 QString Equip::getSetLevel() const
 {
     return m_setLevel;
+}
+
+void Equip::setReforge(int reforge)
+{
+    m_reforge = reforge;
 }
 
 void Equip::setLevelTier(QString levelTier)
@@ -28,6 +43,11 @@ void Equip::setLevelTier(QString levelTier)
 void Equip::setQuality(int quality)
 {
     m_quality = quality;
+}
+
+void Equip::setSetEffect(QString setEffect)
+{
+    m_setEffect = setEffect;
 }
 
 void Equip::setSetLevel(QString setLevel)

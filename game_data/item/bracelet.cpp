@@ -1,6 +1,7 @@
 #include "bracelet.h"
 
-Bracelet::Bracelet() : Item(ItemPart::BRACELET)
+Bracelet::Bracelet() :
+    Item(ItemType::팔찌)
 {
 
 }

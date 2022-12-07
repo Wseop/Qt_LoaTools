@@ -2,31 +2,20 @@
 #define ITEM_H
 
 #include "game_data/item/enum/item_grade.h"
-#include "game_data/item/enum/item_part.h"
+#include "game_data/item/enum/item_type.h"
 
 #include <QString>
 #include <QStringList>
 
-static QStringList gItemColor = {
-    "#000000",
-    "#00B700",
-    "#00B0FA",
-    "#CE43FC",
-    "#F99200",
-    "#FA5D00",
-    "#DCB496",
-    "#3CF2E6"
-};
-
 class Item
 {
 public:
-    Item(ItemPart part);
+    Item(ItemType type);
 
     QString getName() const;
     ItemGrade getGrade() const;
     QString getIconPath() const;
-    ItemPart getPart() const;
+    ItemType getType() const;
 
     void setName(QString name);
     void setGrade(ItemGrade grade);
@@ -36,7 +25,7 @@ private:
     QString m_name;
     ItemGrade m_grade;
     QString m_iconPath;
-    ItemPart m_part;
+    ItemType m_type;
 };
 
 #endif // ITEM_H

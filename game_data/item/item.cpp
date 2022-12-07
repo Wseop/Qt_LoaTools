@@ -1,8 +1,7 @@
 #include "item.h"
 
-Item::Item(ItemPart part) :
-    m_grade(ItemGrade::NONE),
-    m_part(part)
+Item::Item(ItemType type) :
+    m_type(type)
 {
 
 }
@@ -22,9 +21,9 @@ QString Item::getIconPath() const
     return m_iconPath;
 }
 
-ItemPart Item::getPart() const
+ItemType Item::getType() const
 {
-    return m_part;
+    return m_type;
 }
 
 void Item::setName(QString name)

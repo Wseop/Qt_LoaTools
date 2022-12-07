@@ -2,28 +2,28 @@
 #define ACCESSORY_H
 
 #include "item.h"
-#include <QStringList>
+#include "game_data/profile/enum/ability.h"
 
 class Accessory : public Item
 {
 public:
-    Accessory(ItemPart part);
+    Accessory(ItemType type);
 
     int getQuality() const;
-    QString getAbility() const;
-    const QStringList& getEngraves() const;
-    QString getPenalty() const;
+    const QList<QPair<Ability, int>>& getAbilities() const;
+    const QList<QPair<QString, int>>& getEngraves() const;
+    const QPair<QString, int>& getPenalty() const;
 
     void setQuality(int quality);
-    void setAbility(QString ability);
-    void addEngrave(QString engrave);
-    void setPenalty(QString penalty);
+    void addAbility(Ability ability, int value);
+    void addEngrave(QString engrave, int value);
+    void setPenalty(QString penalty, int value);
 
 private:
     int m_quality;
-    QString m_ability;
-    QStringList m_engraves;
-    QString m_penalty;
+    QList<QPair<Ability, int>> m_abilities;
+    QList<QPair<QString, int>> m_engraves;
+    QPair<QString, int> m_penalty;
 };
 
 #endif // ACCESSORY_H

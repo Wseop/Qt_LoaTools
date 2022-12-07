@@ -1,6 +1,7 @@
 #include "gem.h"
 
-Gem::Gem() : Item(ItemPart::GEM)
+Gem::Gem() :
+    Item(ItemType::보석)
 {
 
 }
