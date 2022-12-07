@@ -57,13 +57,13 @@ HEADERS += \
     game_data/item/bracelet.h \
     game_data/item/enum/item_grade.h \
     game_data/item/enum/item_type.h \
+    game_data/item/enum/set_effect.h \
     game_data/item/equip.h \
     game_data/item/gem.h \
     game_data/item/item.h \
     game_data/profile/engrave.h \
     game_data/profile/enum/ability.h \
     game_data/profile/enum/class.h \
-    game_data/profile/enum/set_effect.h \
     game_data/skill/rune.h \
     game_data/skill/skill.h \
     http_client/http_client.h \

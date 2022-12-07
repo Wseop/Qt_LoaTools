@@ -20,7 +20,7 @@ int Equip::getQuality() const
     return m_quality;
 }
 
-QString Equip::getSetEffect() const
+SetEffect Equip::getSetEffect() const
 {
     return m_setEffect;
 }
@@ -45,7 +45,7 @@ void Equip::setQuality(int quality)
     m_quality = quality;
 }
 
-void Equip::setSetEffect(QString setEffect)
+void Equip::setSetEffect(SetEffect setEffect)
 {
     m_setEffect = setEffect;
 }
