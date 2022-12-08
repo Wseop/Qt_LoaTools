@@ -16,7 +16,7 @@ DBRequest::DBRequest()
     connect(this, SIGNAL(deleteDocument(Collection,QString)), this, SLOT(slotDeleteDocument(Collection,QString)));
 
     connect(this, SIGNAL(requestAllDocuments(Collection,int,QString)), this, SLOT(slotRequestAllDocuments(Collection,int,QString)));
-    connect(this, SIGNAL(requestDocumentsByClass(Collection,int,int,QString)), this, SLOT(slotRequestDocumentsByClass(Collection,int,int,QString)));
+    connect(this, SIGNAL(requestDocumentsByClass(Collection,Class,int,QString)), this, SLOT(slotRequestDocumentsByClass(Collection,Class,int,QString)));
     connect(this, SIGNAL(requestDocumentByName(Collection,QString)), this, SLOT(slotRequestDocumentByName(Collection,QString)));
 }
 
@@ -99,7 +99,7 @@ void DBRequest::slotRequestAllDocuments(Collection collection, int order, QStrin
     emit finished(ret.toVariantList());
 }
 
-void DBRequest::slotRequestDocumentsByClass(Collection collection, int cls, int order, QString orderField)
+void DBRequest::slotRequestDocumentsByClass(Collection collection, Class cls, int order, QString orderField)
 {
     QJsonArray ret;
 
@@ -111,7 +111,7 @@ void DBRequest::slotRequestDocumentsByClass(Collection collection, int cls, int 
 
     DB::getInstance()->lock();
 
-    mongocxx::cursor cursor = DB::getInstance()->getCollection(collection).find(document{} << "Class" << Class::enumToEstr(cls).toStdString() << finalize, options);
+    mongocxx::cursor cursor = DB::getInstance()->getCollection(collection).find(document{} << "Class" << classToStr(cls).toStdString() << finalize, options);
     for (auto doc : cursor)
     {
         QString docStr = bsoncxx::to_json(doc).c_str();

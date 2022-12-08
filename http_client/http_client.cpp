@@ -1,29 +1,19 @@
 #include "http_client.h"
+#include "db/db.h"
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <mongocxx/collection.hpp>
 
-#include <QSettings>
-#include <QDir>
 #include <QUrl>
 #include <QNetworkRequest>
+#include <QJsonDocument>
+#include <QJsonObject>
 
-HttpClient* HttpClient::m_pClient = nullptr;
+HttpClient* HttpClient::m_pHttpClient = nullptr;
 
 HttpClient::HttpClient()
 {
-    loadConfig();
-
-    connect(this, SIGNAL(insertOrUpdateCharacter(QJsonDocument)), this, SLOT(slotInsertOrUpdateCharacter(QJsonDocument)));
-    connect(this, SIGNAL(insertOrUpdateSetting(QJsonDocument)), this, SLOT(slotInsertOrUpdateSetting(QJsonDocument)));
-
-    connect(this, SIGNAL(readCharacters()), this, SLOT(slotReadCharacters()));
-    connect(this, SIGNAL(readCharactersByClass(QString)), this, SLOT(slotReadCharactersByClass(QString)));
-    connect(this, SIGNAL(readCharacterByName(QString)), this, SLOT(slotReadCharacterByName(QString)));
-
-    connect(this, SIGNAL(readSettings()), this, SLOT(slotReadSettings()));
-    connect(this, SIGNAL(readSettingsByClass(QString)), this, SLOT(slotReadSettingsByClass(QString)));
-    connect(this, SIGNAL(readSettingByName(QString)), this, SLOT(slotReadSettingByName(QString)));
-
-    connect(&m_postManagerCharacter, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplyPost(QNetworkReply*)));
-    connect(&m_postManagerSetting, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotHandleReplyPost(QNetworkReply*)));
+    loadApiKey();
 }
 
 HttpClient::~HttpClient()
@@ -31,105 +21,51 @@ HttpClient::~HttpClient()
     destroyInstance();
 }
 
-void HttpClient::loadConfig()
+void HttpClient::loadApiKey()
 {
-    QSettings config(QDir::currentPath() + "/../config.ini", QSettings::Format::IniFormat);
-    m_serverUrl = config.value("network/url").toString();
-    m_insertKey = config.value("database/insert_key").toString();
-    m_insertValue = config.value("database/insert_value").toString();
+    DB::getInstance()->lock();
+
+    auto doc = DB::getInstance()->getCollection(Collection::LostarkAPI).find_one(bsoncxx::builder::stream::document{} << "Type" << "ApiKey" << bsoncxx::builder::stream::finalize);
+    if (doc)
+    {
+        QString docStr = bsoncxx::to_json(*doc).c_str();
+        QJsonObject docObj(QJsonDocument::fromJson(docStr.toUtf8()).object());
+        m_apiKey = docObj.find("Key")->toString();
+    }
+    else
+    {
+        qDebug() << Q_FUNC_INFO << ": ApiKey load fail";
+    }
+
+    DB::getInstance()->unlock();
 }
 
-HttpClient *HttpClient::getInstance()
+HttpClient* HttpClient::getInstance()
 {
-    if (m_pClient == nullptr)
-    {
-        m_pClient = new HttpClient();
-    }
-    return m_pClient;
+    if (m_pHttpClient == nullptr)
+        m_pHttpClient = new HttpClient();
+
+    return m_pHttpClient;
 }
 
 void HttpClient::destroyInstance()
 {
-    if (m_pClient == nullptr)
+    if (m_pHttpClient == nullptr)
         return;
 
-    delete m_pClient;
-    m_pClient = nullptr;
+    delete m_pHttpClient;
+    m_pHttpClient = nullptr;
 }
 
-const QNetworkAccessManager &HttpClient::getNetworkManagerCharacter()
+QNetworkAccessManager* HttpClient::sendRequest(const QString& url)
 {
-    return m_getManagerCharacter;
-}
+    QNetworkAccessManager* networkManager = new QNetworkAccessManager();
 
-const QNetworkAccessManager &HttpClient::getNetworkManagerSetting()
-{
-    return m_getManagerSetting;
-}
+    QNetworkRequest request;
+    request.setRawHeader("accept", "application/json");
+    request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKey).toUtf8());
+    request.setUrl(QUrl(url));
+    networkManager->get(request);
 
-void HttpClient::slotInsertOrUpdateCharacter(QJsonDocument jsonDoc)
-{
-    QString url = m_serverUrl + "/character";
-    QNetworkRequest request((QUrl(url)));
-    request.setRawHeader("Content-Type", "application/json");
-    request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_postManagerCharacter.post(request, jsonDoc.toJson());
-}
-
-void HttpClient::slotInsertOrUpdateSetting(QJsonDocument jsonDoc)
-{
-    QString url = m_serverUrl + "/setting";
-    QNetworkRequest request((QUrl(url)));
-    request.setRawHeader("Content-Type", "application/json");
-    request.setRawHeader(m_insertKey.toUtf8(), m_insertValue.toUtf8());
-    m_postManagerSetting.post(request, jsonDoc.toJson());
-}
-
-void HttpClient::slotReadCharacters()
-{
-    QString url = m_serverUrl + "/character";
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerCharacter.get(request);
-}
-
-void HttpClient::slotReadCharactersByClass(QString cls)
-{
-    QString url = m_serverUrl + "/character/Class-" + cls;
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerCharacter.get(request);
-}
-
-void HttpClient::slotReadCharacterByName(QString name)
-{
-    QString url = m_serverUrl + "/character/" + name;
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerCharacter.get(request);
-}
-
-void HttpClient::slotReadSettings()
-{
-    QString url = m_serverUrl + "/setting";
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerSetting.get(request);
-}
-
-void HttpClient::slotReadSettingsByClass(QString cls)
-{
-    QString url = m_serverUrl + "/setting/Class-" + cls;
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerSetting.get(request);
-}
-
-void HttpClient::slotReadSettingByName(QString name)
-{
-    QString url = m_serverUrl + "/setting/" + name;
-    QNetworkRequest request((QUrl(url)));
-    m_getManagerSetting.get(request);
-}
-
-void HttpClient::slotHandleReplyPost(QNetworkReply *reply)
-{
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    QString log = QString("%1 : Status %2").arg(reply->url().path()).arg(statusCode);
-    qDebug() << Q_FUNC_INFO << log;
+    return networkManager;
 }
