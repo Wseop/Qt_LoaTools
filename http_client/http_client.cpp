@@ -57,15 +57,11 @@ void HttpClient::destroyInstance()
     m_pHttpClient = nullptr;
 }
 
-QNetworkAccessManager* HttpClient::sendRequest(const QString& url)
+void HttpClient::sendRequest(QNetworkAccessManager* networkManager, const QString& url)
 {
-    QNetworkAccessManager* networkManager = new QNetworkAccessManager();
-
     QNetworkRequest request;
     request.setRawHeader("accept", "application/json");
     request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKey).toUtf8());
     request.setUrl(QUrl(url));
     networkManager->get(request);
-
-    return networkManager;
 }

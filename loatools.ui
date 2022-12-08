@@ -101,7 +101,7 @@
         <item>
          <layout class="QHBoxLayout" name="hLayoutCharacter1">
           <item>
-           <widget class="QPushButton" name="pbProfile">
+           <widget class="QPushButton" name="pbCharacterSearch">
             <property name="minimumSize">
              <size>
               <width>150</width>

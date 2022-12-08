@@ -20,7 +20,7 @@ private:
     class MeteorTimer* m_meteorTimer = nullptr;
     class AuctionCalc* m_auctionCalc = nullptr;
     class EngraveSimulator* m_engrave = nullptr;
-    class Profile* m_profile = nullptr;
+    class CharacterSearch* m_characterSearch = nullptr;
     class SettingAdviser* m_settingAdviser = nullptr;
 
 private:
@@ -32,7 +32,7 @@ private slots:
     void slotOpenMeteorTimer();
     void slotOpenAuctionCalc();
     void slotOpenEngraveSimulator();
-    void slotOpenProfile();
+    void slotOpenCharacterSearch();
     void slotOpenSettingAdviser();
     void slotOpenRankingBoard();
 };

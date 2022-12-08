@@ -3,9 +3,9 @@
 #include "tools/meteor_timer/meteor_timer.h"
 #include "tools/auction_calc/auction_calc.h"
 #include "tools/engrave_simulator/engrave_simulator.h"
-#include "tools/profile/profile.h"
 #include "tools/setting_adviser/setting_adviser.h"
 #include "tools/ranking_board/ranking_board.h"
+#include "tools/character_search/character_search.h"
 #include "font/font_manager.h"
 
 LoaTools::LoaTools(QWidget *parent)
@@ -30,7 +30,7 @@ void LoaTools::initConnect()
     connect(ui->pbMeteorTimer, SIGNAL(pressed()), this, SLOT(slotOpenMeteorTimer()));
     connect(ui->pbAuctionCalc, SIGNAL(pressed()), this, SLOT(slotOpenAuctionCalc()));
     connect(ui->pbEngrave, SIGNAL(pressed()), this, SLOT(slotOpenEngraveSimulator()));
-    connect(ui->pbProfile, SIGNAL(pressed()), this, SLOT(slotOpenProfile()));
+    connect(ui->pbCharacterSearch, SIGNAL(pressed()), this, SLOT(slotOpenCharacterSearch()));
     connect(ui->pbSettingAdviser, SIGNAL(pressed()), this, SLOT(slotOpenSettingAdviser()));
     connect(ui->pbRankingBoard, SIGNAL(pressed()), this, SLOT(slotOpenRankingBoard()));
 }
@@ -44,7 +44,7 @@ void LoaTools::initFont()
     ui->pbAuctionCalc->setFont(fontNanumExtraBold16);
     ui->pbEngrave->setFont(fontNanumExtraBold16);
     ui->pbMeteorTimer->setFont(fontNanumExtraBold16);
-    ui->pbProfile->setFont(fontNanumExtraBold16);
+    ui->pbCharacterSearch->setFont(fontNanumExtraBold16);
     ui->pbSettingAdviser->setFont(fontNanumExtraBold16);
     ui->pbRankingBoard->setFont(fontNanumExtraBold16);
 
@@ -74,9 +74,9 @@ void LoaTools::slotOpenEngraveSimulator()
     EngraveSimulator::getInstance()->show();
 }
 
-void LoaTools::slotOpenProfile()
+void LoaTools::slotOpenCharacterSearch()
 {
-    Profile::getInstance()->show();
+    CharacterSearch::getInstance()->show();
 }
 
 void LoaTools::slotOpenSettingAdviser()

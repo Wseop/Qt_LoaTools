@@ -27,7 +27,8 @@ enum class Class
     스카우터,
     건슬링어,
     도화가,
-    기상술사
+    기상술사,
+    Size
 };
 
 static inline QString classToStr(Class cls)

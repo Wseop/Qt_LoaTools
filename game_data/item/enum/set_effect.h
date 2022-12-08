@@ -13,7 +13,8 @@ enum class SetEffect
     갈망,
     배신,
     매혹,
-    파괴
+    파괴,
+    Size
 };
 
 static inline QString setEffectToStr(SetEffect setEffect)

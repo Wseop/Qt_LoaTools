@@ -1,7 +1,7 @@
 #include "engrave_simulator.h"
 #include "ui_engravesimulator.h"
 #include "font/font_manager.h"
-#include "game_data/engrave.h"
+#include "game_data/engrave/engrave_manager.h"
 
 #include <QCompleter>
 #include <QFile>
@@ -144,7 +144,7 @@ void EngraveSimulator::initUI()
     ui->lbEquip->setStyleSheet("QLabel { border : 1px solid black }");
 
     // LineEdit 초기화 (UI, Completer)
-    QCompleter* cplEngrave = new QCompleter(Engrave::getInstance()->getEngraveList(), this);
+    QCompleter* cplEngrave = new QCompleter(EngraveManager::getInstance()->getEngraveList(), this);
     for (int i = 0; i < m_engraveLEMap.size(); i++)
     {
         m_engraveLEMap[i]->setFixedWidth(155);
@@ -154,7 +154,7 @@ void EngraveSimulator::initUI()
     for (int i = 0; i < m_penaltyCBMap.size(); i++)
     {
         m_penaltyCBMap[i]->setFixedWidth(155);
-        m_penaltyCBMap[i]->addItems(Engrave::getInstance()->getPenaltyList());
+        m_penaltyCBMap[i]->addItems(EngraveManager::getInstance()->getPenaltyList());
         m_penaltyCBMap[i]->setFont(fontNanumRegular10);
     }
 
@@ -257,7 +257,7 @@ void EngraveSimulator::addEngraveLayout(QString engrave, int value)
     QLabel* lbName = new QLabel();
     QLabel* lbLevel = new QLabel();
     int level = value / 5;
-    QString pixPath = Engrave::getInstance()->getEngravePath(engrave);
+    QString pixPath = EngraveManager::getInstance()->getEngravePath(engrave);
     QPixmap pixmap(pixPath);
 
     lbPixmap->setPixmap(pixmap.scaled(45, 45, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
@@ -339,7 +339,7 @@ void EngraveSimulator::slotUpdateResult()
         QString engrave = m_engraveLEMap[i]->text();
         if (engrave == "")
             continue;
-        else if (Engrave::getInstance()->isValidEngrave(engrave))
+        else if (EngraveManager::getInstance()->isValidEngrave(engrave))
         {
             m_engraveValue[engrave] += m_engraveSPBMap[i]->value();
             if (!addedEngraveList.contains(engrave))

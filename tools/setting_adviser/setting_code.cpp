@@ -1,7 +1,7 @@
 #include "setting_code.h"
-#include "game_data/profile/ability.h"
-#include "game_data/profile/set_effect.h"
-#include "game_data/profile/engrave.h"
+#include "game_data/profile/enum/ability.h"
+#include "game_data/item/enum/set_effect.h"
+#include "game_data/engrave/engrave_manager.h"
 
 #include <QJsonArray>
 #include <utility>
@@ -23,7 +23,7 @@ QStringList SettingCode::getAbility(const QString &settingCode)
 
     QStringList abilities;
     for (const QChar& ability : abilityCode)
-        abilities << Ability::enumToKStr(ability.unicode() - '0');
+        abilities << abilityToStr(static_cast<Ability>(ability.unicode() - '0'));
 
     return abilities;
 }
@@ -34,7 +34,7 @@ QStringList SettingCode::getSetEffect(const QString &settingCode)
     qsizetype endIndex = settingCode.indexOf("C");
     QString setEffectCode = settingCode.sliced(startIndex, endIndex - startIndex);
 
-    QList<int> setEffectCounts(SetEffect::size(), 0);
+    QList<int> setEffectCounts(static_cast<int>(SetEffect::Size), 0);
     for (const QChar& setEffect : setEffectCode)
         setEffectCounts[setEffect.unicode() - '0']++;
 
@@ -45,7 +45,7 @@ QStringList SettingCode::getSetEffect(const QString &settingCode)
         if (count == 0)
             continue;
 
-        setEffects << QString("%1%2").arg(count).arg(SetEffect::enumToStr(i));
+        setEffects << QString("%1%2").arg(count).arg(setEffectToStr(static_cast<SetEffect>(i)));
     }
 
     return setEffects;
@@ -69,7 +69,7 @@ QList<QPair<QString, int>> SettingCode::getClassEngrave(const QString &settingCo
     while (index < classEngraveLevelCode.size())
     {
         int engraveCode = classEngraveCode.sliced(index * 3, 3).toInt();
-        QString engraveName = Engrave::getInstance()->getEngraveByIndex(engraveCode);
+        QString engraveName = EngraveManager::getInstance()->getEngraveByIndex(engraveCode);
         int engraveLevel = classEngraveLevelCode[index].unicode() - '0';
 
         classEngraveLevelMap[engraveName] = engraveLevel;
@@ -102,7 +102,7 @@ QList<QPair<QString, int>> SettingCode::getNormalEngrave(const QString &settingC
     while (index < normalEngraveLevelCode.size())
     {
         int engraveCode = normalEngraveCode.sliced(index * 3, 3).toInt();
-        QString engraveName = Engrave::getInstance()->getEngraveByIndex(engraveCode);
+        QString engraveName = EngraveManager::getInstance()->getEngraveByIndex(engraveCode);
         int engraveLevel = normalEngraveLevelCode[index].unicode() - '0';
 
         normalEngraveLevelMap[engraveName] = engraveLevel;
@@ -123,23 +123,23 @@ QString SettingCode::generateAbilityCode(const QJsonArray &abilities)
     int value1, value2;
 
     // Neck
-    value1 = Ability::kstrToEnum(abilities[0].toString());
-    value2 = Ability::kstrToEnum(abilities[1].toString());
+    value1 = static_cast<int>(strToAbility(abilities[0].toString()));
+    value2 = static_cast<int>(strToAbility(abilities[1].toString()));
     // 오름차순으로 code 생성
     if (value1 > value2)
         std::swap(value1, value2);
     abilityCode += QString("%1%2").arg(value1).arg(value2);
 
     // Ear
-    value1 = Ability::kstrToEnum(abilities[2].toString());
-    value2 = Ability::kstrToEnum(abilities[3].toString());
+    value1 = static_cast<int>(strToAbility(abilities[2].toString()));
+    value2 = static_cast<int>(strToAbility(abilities[3].toString()));
     if (value1 > value2)
         std::swap(value1, value2);
     abilityCode += QString("%1%2").arg(value1).arg(value2);
 
     // Ring
-    value1 = Ability::kstrToEnum(abilities[4].toString());
-    value2 = Ability::kstrToEnum(abilities[5].toString());
+    value1 = static_cast<int>(strToAbility(abilities[4].toString()));
+    value2 = static_cast<int>(strToAbility(abilities[5].toString()));
     if (value1 > value2)
         std::swap(value1, value2);
     abilityCode += QString("%1%2").arg(value1).arg(value2);
@@ -153,7 +153,7 @@ QString SettingCode::generateSetEffectCode(const QJsonArray &setEffects)
     QList<int> setEffectNumber;
 
     for (const QJsonValue& setEffect : setEffects)
-        setEffectNumber.append(SetEffect::strToEnum(setEffect.toString()));
+        setEffectNumber.append(static_cast<int>(strToSetEffect((setEffect.toString()))));
     std::sort(setEffectNumber.begin(), setEffectNumber.end());
 
     for (const int& setEffect : setEffectNumber)
@@ -176,10 +176,10 @@ QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const Q
     {
         QString engraveNameStr = engraveName.toString();
 
-        if (Engrave::getInstance()->isClassEngrave(engraveNameStr))
-            classEngraveNumber.append(Engrave::getInstance()->indexOf(engraveNameStr));
-        else if (Engrave::getInstance()->isValidEngrave(engraveNameStr))
-            normalEngraveNumber.append(Engrave::getInstance()->indexOf(engraveNameStr));
+        if (EngraveManager::getInstance()->isClassEngrave(engraveNameStr))
+            classEngraveNumber.append(EngraveManager::getInstance()->indexOf(engraveNameStr));
+        else if (EngraveManager::getInstance()->isValidEngrave(engraveNameStr))
+            normalEngraveNumber.append(EngraveManager::getInstance()->indexOf(engraveNameStr));
     }
     std::sort(classEngraveNumber.begin(), classEngraveNumber.end());
     std::sort(normalEngraveNumber.begin(), normalEngraveNumber.end());
@@ -190,7 +190,7 @@ QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const Q
     for (const int& classEngraveIndex : classEngraveNumber)
     {
         classEngraveNameCode += QString("%1").arg(classEngraveIndex, 3, 10, QChar('0'));
-        int level = engraveValue[Engrave::getInstance()->getEngraveByIndex(classEngraveIndex)];
+        int level = engraveValue[EngraveManager::getInstance()->getEngraveByIndex(classEngraveIndex)];
         if (level > 3)
             level = 3;
         classEngraveLevelCode += QString("%1").arg(level);
@@ -200,7 +200,7 @@ QString SettingCode::generateEngraveCode(const QJsonArray &engraveNames, const Q
     for (const int& normalEngraveIndex : normalEngraveNumber)
     {
         normalEngraveNameCode += QString("%1").arg(normalEngraveIndex, 3, 10, QChar('0'));
-        int level = engraveValue[Engrave::getInstance()->getEngraveByIndex(normalEngraveIndex)];
+        int level = engraveValue[EngraveManager::getInstance()->getEngraveByIndex(normalEngraveIndex)];
         if (level > 3)
             level = 3;
         normalEngraveLevelCode += QString("%1").arg(level);

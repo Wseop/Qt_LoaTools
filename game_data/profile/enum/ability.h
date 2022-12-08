@@ -10,7 +10,8 @@ enum class Ability
     신속,
     제압,
     인내,
-    숙련
+    숙련,
+    Size
 };
 
 static inline QString abilityToStr(Ability ability)

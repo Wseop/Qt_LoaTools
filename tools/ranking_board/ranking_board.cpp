@@ -15,7 +15,7 @@ RankingBoard::RankingBoard() :
     m_rankIndex(0),
     m_characterIndex(0),
     m_selectedItemLevel(1655),
-    m_selectedClass(Class::None),
+    m_selectedClass(Class::Size),
     m_pClassSelector(new ClassSelector(this, ParentClass::RankingBoard))
 {
     ui->setupUi(this);
@@ -41,7 +41,7 @@ RankingBoard::~RankingBoard()
     destroyInstance();
 }
 
-void RankingBoard::setSelectedClass(int cls)
+void RankingBoard::setSelectedClass(Class cls)
 {
     m_selectedClass = cls;    
     renderCharacters(true);
@@ -161,9 +161,9 @@ double RankingBoard::getCharacterItemLevel(int index)
     return m_characters[index].toJsonObject().find("Level")->toDouble();
 }
 
-QString RankingBoard::getCharacterClass(int index)
+Class RankingBoard::getCharacterClass(int index)
 {
-    return Class::eStrToKstr(m_characters[index].toJsonObject().find("Class")->toString());
+    return strToClass(m_characters[index].toJsonObject().find("Class")->toString());
 }
 
 void RankingBoard::renderCharacters(bool bInitialize)
@@ -174,20 +174,19 @@ void RankingBoard::renderCharacters(bool bInitialize)
         m_rankIndex = 0;
         m_characterIndex = 0;
 
-        if (m_selectedClass == Class::None)
+        if (m_selectedClass == Class::Size)
             ui->lbSelectedClass->setText("전체 랭킹");
         else
-            ui->lbSelectedClass->setText(Class::enumToKstr(m_selectedClass));
+            ui->lbSelectedClass->setText(classToStr(m_selectedClass));
     }
 
     QFont fontNanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
     int i = 0;
-    QString selectedClass = Class::enumToKstr(m_selectedClass);
     while (i < RENDER_COUNT && m_characterIndex < m_characters.size())
     {
-        QString cls = getCharacterClass(m_characterIndex);
+        Class cls = getCharacterClass(m_characterIndex);
         double itemLevel = getCharacterItemLevel(m_characterIndex);
-        if ((m_selectedClass == Class::None || selectedClass == cls) && itemLevel <= (double)m_selectedItemLevel)
+        if ((m_selectedClass == Class::Size || m_selectedClass == cls) && itemLevel <= (double)m_selectedItemLevel)
         {
             QString name = getCharacterName(m_characterIndex);
 
@@ -197,7 +196,7 @@ void RankingBoard::renderCharacters(bool bInitialize)
             lbName->setFont(fontNanumBold10);
             QLabel* lbItemLevel = createLabel(QString("%1").arg(itemLevel));
             lbItemLevel->setFont(fontNanumBold10);
-            QLabel* lbClass = createLabel(cls);
+            QLabel* lbClass = createLabel(classToStr(cls));
             lbClass->setFont(fontNanumBold10);
 
             m_labels.append(lbRank);
@@ -243,7 +242,7 @@ void RankingBoard::slotRenderMore()
 
 void RankingBoard::slotRenderAll()
 {
-    m_selectedClass = Class::None;
+    m_selectedClass = Class::Size;
     renderCharacters(true);
 }
 

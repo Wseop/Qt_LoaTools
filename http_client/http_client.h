@@ -18,7 +18,7 @@ public:
     static HttpClient* getInstance();
     static void destroyInstance();
 
-    QNetworkAccessManager* sendRequest(const QString& url);
+    void sendRequest(QNetworkAccessManager* networkManager, const QString& url);
 
 private:
     static HttpClient* m_pHttpClient;

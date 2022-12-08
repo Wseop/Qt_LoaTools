@@ -1,7 +1,7 @@
 #ifndef SETTING_ADVISER_H
 #define SETTING_ADVISER_H
 
-#include "game_data/profile/class.h"
+#include "game_data/profile/enum/class.h"
 
 #include <QWidget>
 
@@ -22,7 +22,7 @@ private:
     ~SettingAdviser();
 
 public:
-    void setSelectedClass(int cls);
+    void setSelectedClass(Class cls);
 
 public:
     static SettingAdviser* getInstance();
@@ -53,7 +53,7 @@ private:
     QWidget* m_pParent = nullptr;
     class ClassSelector* m_pClassSelector = nullptr;
 
-    int m_selectedClass;
+    Class m_selectedClass;
     int m_numOfCharacters;
     QList<SettingCodeCount> m_settingCodes;
     QList<QList<SettingCodeCount>> m_topSettingCodes;
