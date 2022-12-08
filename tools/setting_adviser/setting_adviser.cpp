@@ -118,7 +118,7 @@ void SettingAdviser::clearData()
 void SettingAdviser::requestSettingsBySelectedClass()
 {
     connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleSettingsBySelectedClass(QVariantList)));
-    emit m_pDBRequest->requestDocumentsByClass(Collection::Setting, m_selectedClass, 0, "");
+    emit m_pDBRequest->requestDocumentsByClass(Collection::SettingV2, m_selectedClass, 0, "");
 }
 
 void SettingAdviser::slotRequestAllSettings()
@@ -130,7 +130,7 @@ void SettingAdviser::slotRequestAllSettings()
     ui->lbInfo->setText("데이터 처리중입니다. 잠시만 기다려주세요...");
 
     connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleAllSettings(QVariantList)));
-    emit m_pDBRequest->requestAllDocuments(Collection::Setting, 0, "");
+    emit m_pDBRequest->requestAllDocuments(Collection::SettingV2, 0, "");
 }
 
 void SettingAdviser::slotHandleSettingsBySelectedClass(QVariantList jsonSettings)
