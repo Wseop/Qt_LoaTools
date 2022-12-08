@@ -8,17 +8,15 @@ class Gem : public Item
 public:
     Gem();
 
-    int GetLevel() const;
+    int getLevel() const;
     QString getAttr() const;
     QString getEffect() const;
 
     void setLevel(int level);
-    void setAttr(QString attr);
-    void setEffect(QString effect);
+    void setEffect(const QString& effect);
 
 private:
     int m_level;
-    QString m_attr;
     QString m_effect;
 };
 

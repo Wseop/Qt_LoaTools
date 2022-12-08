@@ -1,18 +1,18 @@
-#ifndef ENGRAVE_H
-#define ENGRAVE_H
+#ifndef ENGRAVE_MANAGER_H
+#define ENGRAVE_MANAGER_H
 
 #include <QStringList>
 
-class Engrave
+class EngraveManager
 {
 private:
-    Engrave();
-    ~Engrave();
+    EngraveManager();
+    ~EngraveManager();
 
     void loadEngraveList();
 
 public:
-    static Engrave* getInstance();
+    static EngraveManager* getInstance();
     static void destroyInstance();
     static QStringList extractActiveEngraves(const QMap<QString, int>& engraveValues);
     static QStringList extractActivePenalties(const QMap<QString, int>& penaltyValues);
@@ -30,11 +30,11 @@ public:
     QString getEngraveByIndex(int index);
 
 private:
-    static Engrave* m_pEngrave;
+    static EngraveManager* m_pEngrave;
 
     QStringList m_engraves;
     QStringList m_classEngraves;
     QStringList m_penalties;
 };
 
-#endif // ENGRAVE_H
+#endif // ENGRAVE_MANAGER_H

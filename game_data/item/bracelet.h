@@ -10,7 +10,7 @@ public:
 
     QString getEffect() const;
 
-    void setEffect(QString effect);
+    void setEffect(const QString& effect);
 
 private:
     QString m_effect;

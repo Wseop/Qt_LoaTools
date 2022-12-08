@@ -11,8 +11,8 @@ public:
     const QList<QPair<QString, int>>& getEngraves() const;
     const QPair<QString, int>& getPenalty() const;
 
-    void addEngrave(QString engrave, int value);
-    void setPenalty(QString penalty, int value);
+    void addEngrave(const QString& engrave, int value);
+    void setPenalty(const QString& penalty, int value);
 
 private:
     QList<QPair<QString, int>> m_engraves;

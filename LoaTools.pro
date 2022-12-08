@@ -12,15 +12,20 @@ SOURCES += \
     db/db.cpp \
     db/db_request.cpp \
     font/font_manager.cpp \
+    game_data/card/card.cpp \
+    game_data/character/character.cpp \
+    game_data/engrave/engrave.cpp \
+    game_data/engrave/engrave_manager.cpp \
     game_data/item/abilitystone.cpp \
     game_data/item/accessory.cpp \
     game_data/item/bracelet.cpp \
     game_data/item/equip.cpp \
     game_data/item/gem.cpp \
     game_data/item/item.cpp \
-    game_data/profile/engrave.cpp \
-    game_data/skill/rune.cpp \
+    game_data/profile/profile.cpp \
     game_data/skill/skill.cpp \
+    game_data/skill/skillrune.cpp \
+    game_data/skill/skillrune_manager.cpp \
     http_client/http_client.cpp \
     http_client/json_builder.cpp \
     main.cpp \
@@ -28,19 +33,6 @@ SOURCES += \
     tools/auction_calc/auction_calc.cpp \
     tools/engrave_simulator/engrave_simulator.cpp \
     tools/meteor_timer/meteor_timer.cpp \
-    tools/profile/card_set.cpp \
-    tools/profile/character.cpp \
-    tools/profile/character_list.cpp \
-    tools/profile/profile.cpp \
-    tools/profile/skill.cpp \
-    tools/profile/ui/abilitystone_widget.cpp \
-    tools/profile/ui/acc_widget.cpp \
-    tools/profile/ui/bracelet_widget.cpp \
-    tools/profile/ui/card_label.cpp \
-    tools/profile/ui/engrave_widget.cpp \
-    tools/profile/ui/equip_widget.cpp \
-    tools/profile/ui/gem_widget.cpp \
-    tools/profile/ui/skill_widget.cpp \
     tools/ranking_board/ranking_board.cpp \
     tools/setting_adviser/class_selector.cpp \
     tools/setting_adviser/setting_adviser.cpp \
@@ -52,6 +44,10 @@ HEADERS += \
     db/db_request.h \
     db/enum/collection.h \
     font/font_manager.h \
+    game_data/card/card.h \
+    game_data/character/character.h \
+    game_data/engrave/engrave.h \
+    game_data/engrave/engrave_manager.h \
     game_data/item/abilitystone.h \
     game_data/item/accessory.h \
     game_data/item/bracelet.h \
@@ -61,30 +57,18 @@ HEADERS += \
     game_data/item/equip.h \
     game_data/item/gem.h \
     game_data/item/item.h \
-    game_data/profile/engrave.h \
     game_data/profile/enum/ability.h \
     game_data/profile/enum/class.h \
-    game_data/skill/rune.h \
+    game_data/profile/profile.h \
     game_data/skill/skill.h \
+    game_data/skill/skillrune.h \
+    game_data/skill/skillrune_manager.h \
     http_client/http_client.h \
     http_client/json_builder.h \
     loatools.h \
     tools/auction_calc/auction_calc.h \
     tools/engrave_simulator/engrave_simulator.h \
     tools/meteor_timer/meteor_timer.h \
-    tools/profile/card_set.h \
-    tools/profile/character.h \
-    tools/profile/character_list.h \
-    tools/profile/profile.h \
-    tools/profile/skill.h \
-    tools/profile/ui/abilitystone_widget.h \
-    tools/profile/ui/acc_widget.h \
-    tools/profile/ui/bracelet_widget.h \
-    tools/profile/ui/card_label.h \
-    tools/profile/ui/engrave_widget.h \
-    tools/profile/ui/equip_widget.h \
-    tools/profile/ui/gem_widget.h \
-    tools/profile/ui/skill_widget.h \
     tools/ranking_board/ranking_board.h \
     tools/setting_adviser/class_selector.h \
     tools/setting_adviser/setting_adviser.h \
@@ -96,16 +80,6 @@ FORMS += \
     tools/auction_calc/auctioncalc.ui \
     tools/engrave_simulator/engravesimulator.ui \
     tools/meteor_timer/meteortimer.ui \
-    tools/profile/character_list.ui \
-    tools/profile/profile.ui \
-    tools/profile/ui/abilitystone_widget.ui \
-    tools/profile/ui/acc_widget.ui \
-    tools/profile/ui/bracelet_widget.ui \
-    tools/profile/ui/card_label.ui \
-    tools/profile/ui/engrave_widget.ui \
-    tools/profile/ui/equip_widget.ui \
-    tools/profile/ui/gem_widget.ui \
-    tools/profile/ui/skill_widget.ui \
     tools/ranking_board/ranking_board.ui \
     tools/setting_adviser/class_selector.ui \
     tools/setting_adviser/setting_adviser.ui \

@@ -1,22 +1,22 @@
-#include "engrave.h"
+#include "engrave_manager.h"
 
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
 
-Engrave* Engrave::m_pEngrave = nullptr;
+EngraveManager* EngraveManager::m_pEngrave = nullptr;
 
-Engrave::Engrave()
+EngraveManager::EngraveManager()
 {
     loadEngraveList();
 }
 
-Engrave::~Engrave()
+EngraveManager::~EngraveManager()
 {
     destroyInstance();
 }
 
-void Engrave::loadEngraveList()
+void EngraveManager::loadEngraveList()
 {
     // 각인 리스트 초기화
     {
@@ -53,15 +53,15 @@ void Engrave::loadEngraveList()
     }
 }
 
-Engrave *Engrave::getInstance()
+EngraveManager *EngraveManager::getInstance()
 {
     if (m_pEngrave == nullptr)
-        m_pEngrave = new Engrave();
+        m_pEngrave = new EngraveManager();
 
     return m_pEngrave;
 }
 
-void Engrave::destroyInstance()
+void EngraveManager::destroyInstance()
 {
     if (m_pEngrave == nullptr)
         return;
@@ -70,7 +70,7 @@ void Engrave::destroyInstance()
     m_pEngrave = nullptr;
 }
 
-QStringList Engrave::extractActiveEngraves(const QMap<QString, int> &engraveValues)
+QStringList EngraveManager::extractActiveEngraves(const QMap<QString, int> &engraveValues)
 {
     QStringList result;
 
@@ -84,7 +84,7 @@ QStringList Engrave::extractActiveEngraves(const QMap<QString, int> &engraveValu
     return result;
 }
 
-QStringList Engrave::extractActivePenalties(const QMap<QString, int> &penaltyValues)
+QStringList EngraveManager::extractActivePenalties(const QMap<QString, int> &penaltyValues)
 {
     QStringList result;
 
@@ -98,23 +98,23 @@ QStringList Engrave::extractActivePenalties(const QMap<QString, int> &penaltyVal
     return result;
 }
 
-const QStringList& Engrave::getEngraveList()
+const QStringList& EngraveManager::getEngraveList()
 {
     return m_engraves;
 }
 
-const QStringList& Engrave::getPenaltyList()
+const QStringList& EngraveManager::getPenaltyList()
 {
     return m_penalties;
 }
 
-QString Engrave::getEngravePath(QString engrave) const
+QString EngraveManager::getEngravePath(QString engrave) const
 {
     int index = m_engraves.indexOf(engrave);
     return QString(":/image/resources/engraves/%1.png").arg(index);
 }
 
-QString Engrave::getPenaltyPath(QString penalty) const
+QString EngraveManager::getPenaltyPath(QString penalty) const
 {
     if (penalty == "공격력 감소")
         return QString(":/image/resources/engraves/penalty_att.png");
@@ -128,27 +128,27 @@ QString Engrave::getPenaltyPath(QString penalty) const
         return "";
 }
 
-bool Engrave::isValidEngrave(QString engrave)
+bool EngraveManager::isValidEngrave(QString engrave)
 {
     return m_engraves.contains(engrave);
 }
 
-bool Engrave::isValidPenalty(QString penalty)
+bool EngraveManager::isValidPenalty(QString penalty)
 {
     return m_penalties.contains(penalty);
 }
 
-bool Engrave::isClassEngrave(QString engraveName)
+bool EngraveManager::isClassEngrave(QString engraveName)
 {
     return m_classEngraves.contains(engraveName);
 }
 
-int Engrave::indexOf(QString engraveName)
+int EngraveManager::indexOf(QString engraveName)
 {
     return m_engraves.indexOf(engraveName);
 }
 
-QString Engrave::getEngraveByIndex(int index)
+QString EngraveManager::getEngraveByIndex(int index)
 {
     return m_engraves[index];
 }

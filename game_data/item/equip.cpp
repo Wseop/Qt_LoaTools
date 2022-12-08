@@ -1,6 +1,7 @@
 #include "equip.h"
 
-Equip::Equip(ItemType type) : Item(type)
+Equip::Equip(ItemType type) :
+    Item(type)
 {
 
 }
@@ -35,7 +36,7 @@ void Equip::setReforge(int reforge)
     m_reforge = reforge;
 }
 
-void Equip::setLevelTier(QString levelTier)
+void Equip::setLevelTier(const QString& levelTier)
 {
     m_levelTier = levelTier;
 }
@@ -50,7 +51,7 @@ void Equip::setSetEffect(SetEffect setEffect)
     m_setEffect = setEffect;
 }
 
-void Equip::setSetLevel(QString setLevel)
+void Equip::setSetLevel(const QString& setLevel)
 {
     m_setLevel = setLevel;
 }

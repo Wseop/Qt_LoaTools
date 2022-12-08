@@ -17,9 +17,9 @@ public:
     QString getIconPath() const;
     ItemType getType() const;
 
-    void setName(QString name);
+    void setName(const QString& name);
     void setGrade(ItemGrade grade);
-    void setIconPath(QString iconPath);
+    void setIconPath(const QString& iconPath);
 
 private:
     QString m_name;

@@ -16,10 +16,10 @@ public:
     QString getSetLevel() const;
 
     void setReforge(int reforge);
-    void setLevelTier(QString levelTier);
+    void setLevelTier(const QString& levelTier);
     void setQuality(int quality);
     void setSetEffect(SetEffect setEffect);
-    void setSetLevel(QString setLevel);
+    void setSetLevel(const QString& setLevel);
 
 private:
     int m_reforge;

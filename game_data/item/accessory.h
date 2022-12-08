@@ -16,8 +16,8 @@ public:
 
     void setQuality(int quality);
     void addAbility(Ability ability, int value);
-    void addEngrave(QString engrave, int value);
-    void setPenalty(QString penalty, int value);
+    void addEngrave(const QString& engrave, int value);
+    void setPenalty(const QString& penalty, int value);
 
 private:
     int m_quality;

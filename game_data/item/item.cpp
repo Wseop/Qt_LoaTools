@@ -26,7 +26,7 @@ ItemType Item::getType() const
     return m_type;
 }
 
-void Item::setName(QString name)
+void Item::setName(const QString& name)
 {
     m_name = name;
 }
@@ -36,7 +36,7 @@ void Item::setGrade(ItemGrade grade)
     m_grade = grade;
 }
 
-void Item::setIconPath(QString iconPath)
+void Item::setIconPath(const QString& iconPath)
 {
     m_iconPath = iconPath;
 }

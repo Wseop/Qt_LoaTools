@@ -16,12 +16,12 @@ const QPair<QString, int> &AbilityStone::getPenalty() const
     return m_penalty;
 }
 
-void AbilityStone::addEngrave(QString engrave, int value)
+void AbilityStone::addEngrave(const QString& engrave, int value)
 {
     m_engraves.append({engrave, value});
 }
 
-void AbilityStone::setPenalty(QString penalty, int value)
+void AbilityStone::setPenalty(const QString& penalty, int value)
 {
     m_penalty = {penalty, value};
 }

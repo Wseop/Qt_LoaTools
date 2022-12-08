@@ -1,6 +1,7 @@
 #include "accessory.h"
 
-Accessory::Accessory(ItemType type) : Item(type)
+Accessory::Accessory(ItemType type) :
+    Item(type)
 {
 
 }
@@ -35,12 +36,12 @@ void Accessory::addAbility(Ability ability, int value)
     m_abilities.append({ability, value});
 }
 
-void Accessory::addEngrave(QString engrave, int value)
+void Accessory::addEngrave(const QString& engrave, int value)
 {
     m_engraves.append({engrave, value});
 }
 
-void Accessory::setPenalty(QString penalty, int value)
+void Accessory::setPenalty(const QString& penalty, int value)
 {
     m_penalty = {penalty, value};
 }

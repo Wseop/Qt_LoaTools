@@ -6,14 +6,9 @@ Gem::Gem() :
 
 }
 
-int Gem::GetLevel() const
+int Gem::getLevel() const
 {
     return m_level;
-}
-
-QString Gem::getAttr() const
-{
-    return m_attr;
 }
 
 QString Gem::getEffect() const
@@ -26,12 +21,7 @@ void Gem::setLevel(int level)
     m_level = level;
 }
 
-void Gem::setAttr(QString attr)
-{
-    m_attr = attr;
-}
-
-void Gem::setEffect(QString effect)
+void Gem::setEffect(const QString& effect)
 {
     m_effect = effect;
 }
