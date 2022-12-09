@@ -60,8 +60,14 @@ Character::~Character()
         delete m_pBracelet;
     if (m_pEngrave != nullptr)
         delete m_pEngrave;
+    for (Gem* gem : m_gems)
+        delete gem;
+    m_gems.clear();
     if (m_pCard != nullptr)
         delete m_pCard;
+    for (Skill* skill : m_skills)
+        delete skill;
+    m_skills.clear();
 }
 
 const QList<Other>& Character::getOthers() const
@@ -130,7 +136,7 @@ const Bracelet* Character::getBracelet() const
     return m_pBracelet;
 }
 
-const QList<Gem>& Character::getGems() const
+const QList<Gem*>& Character::getGems() const
 {
     return m_gems;
 }
@@ -145,7 +151,7 @@ const Card* Character::getCard() const
     return m_pCard;
 }
 
-const QList<Skill>& Character::getSkills() const
+const QList<Skill*>& Character::getSkills() const
 {
     return m_skills;
 }
@@ -263,7 +269,7 @@ void Character::setBracelet(Bracelet* bracelet)
     m_pBracelet = bracelet;
 }
 
-void Character::addGem(const Gem& gem)
+void Character::addGem(Gem* gem)
 {
     m_gems.append(gem);
 }
@@ -282,7 +288,7 @@ void Character::setCard(Card* card)
     m_pCard = card;
 }
 
-void Character::addSkill(const Skill& skill)
+void Character::addSkill(Skill* skill)
 {
     m_skills.append(skill);
 }

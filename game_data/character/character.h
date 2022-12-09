@@ -38,10 +38,10 @@ public:
     const Accessory* getAccessory(ItemType type, int index = 0) const;
     const AbilityStone* getAbilityStone() const;
     const Bracelet* getBracelet() const;
-    const QList<Gem>& getGems() const;
+    const QList<Gem*>& getGems() const;
     const Engrave* getEngrave() const;
     const Card* getCard() const;
-    const QList<Skill>& getSkills() const;
+    const QList<Skill*>& getSkills() const;
 
     void addOther(const Other& other);
     void setProfile(Profile* profile);
@@ -49,10 +49,10 @@ public:
     void setAccessory(ItemType type, Accessory* accessory);
     void setAbilityStone(AbilityStone* stone);
     void setBracelet(Bracelet* bracelet);
-    void addGem(const Gem& gem);
+    void addGem(Gem* gem);
     void setEngrave(Engrave* engrave);
     void setCard(Card* card);
-    void addSkill(const Skill& skill);
+    void addSkill(Skill* skill);
 
 private:
     QList<Other> m_others;
@@ -70,10 +70,10 @@ private:
     Accessory* m_pRing2;
     AbilityStone* m_pStone;
     Bracelet* m_pBracelet;
-    QList<Gem> m_gems;
+    QList<Gem*> m_gems;
     Engrave* m_pEngrave;
     Card* m_pCard;
-    QList<Skill> m_skills;
+    QList<Skill*> m_skills;
 
     int m_earIndex;
     int m_ringIndex;

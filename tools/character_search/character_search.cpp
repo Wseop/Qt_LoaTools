@@ -244,7 +244,7 @@ void CharacterSearch::handleSkills(QNetworkReply* reply)
                 skill->setRune(rune);
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->addSkill(*skill);
+            CharacterSearch::getInstance()->m_pCharacter->addSkill(skill);
         }
     }
 }
@@ -293,7 +293,7 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
 
 void CharacterSearch::handleGems(QNetworkReply* reply)
 {
-    QMap<int, Gem> slotGems;
+    QMap<int, Gem*> slotGems;
     const QJsonObject& gemData = QJsonDocument::fromJson(reply->readAll()).object();
     const QJsonArray& gems = gemData.find("Gems")->toArray();
     const QJsonArray& gemEffects = gemData.find("Effects")->toArray();
@@ -303,11 +303,11 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
         const QJsonObject& gemObj = gemValue.toObject();
         int slot = gemObj.find("Slot")->toInt();
 
-        Gem gem;
-        gem.setName(gemObj.find("Name")->toString().remove(m_regExpHtmlTag));
-        gem.setIconPath(gemObj.find("Icon")->toString());
-        gem.setLevel(gemObj.find("Level")->toInt());
-        gem.setGrade(strToItemGrade(gemObj.find("Grade")->toString()));
+        Gem* gem = new Gem();
+        gem->setName(gemObj.find("Name")->toString().remove(m_regExpHtmlTag));
+        gem->setIconPath(gemObj.find("Icon")->toString());
+        gem->setLevel(gemObj.find("Level")->toInt());
+        gem->setGrade(strToItemGrade(gemObj.find("Grade")->toString()));
         slotGems[slot] = gem;
     }
 
@@ -317,8 +317,8 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
         int slot = effectObj.find("GemSlot")->toInt();
         QString effectStr = QString("%1 %2").arg(effectObj.find("Name")->toString(), effectObj.find("Description")->toString());
 
-        Gem& gem = slotGems[slot];
-        gem.setEffect(effectStr);
+        Gem* gem = slotGems[slot];
+        gem->setEffect(effectStr);
 
         CharacterSearch::getInstance()->m_pCharacter->addGem(gem);
     }
