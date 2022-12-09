@@ -16,7 +16,8 @@ enum class ItemType
     반지,
     어빌리티_스톤,
     팔찌,
-    보석
+    보석,
+    Size
 };
 
 static inline QString itemTypeToStr(ItemType type)
@@ -78,6 +79,8 @@ static inline ItemType strToItemType(QString type)
         return ItemType::팔찌;
     else if ("보석" == type)
         return ItemType::보석;
+    else
+        return ItemType::Size;
 }
 
 #endif // ITEM_TYPE_H

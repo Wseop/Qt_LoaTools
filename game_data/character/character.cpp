@@ -21,7 +21,9 @@ Character::Character() :
     m_pRing1(nullptr), m_pRing2(nullptr),
     m_pStone(nullptr), m_pBracelet(nullptr),
     m_pEngrave(new Engrave()),
-    m_pCard(new Card())
+    m_pCard(new Card()),
+    m_earIndex(0),
+    m_ringIndex(0)
 {
 
 }
@@ -200,14 +202,8 @@ void Character::setEquip(ItemType type, Equip* equip)
     }
 }
 
-void Character::setAccessory(ItemType type, Accessory* accessory, int index)
+void Character::setAccessory(ItemType type, Accessory* accessory)
 {
-    if (index < 0 || index > 1)
-    {
-        qDebug() << Q_FUNC_INFO << ": Invalid index";
-        return;
-    }
-
     switch (type)
     {
     case ItemType::목걸이:
@@ -216,31 +212,35 @@ void Character::setAccessory(ItemType type, Accessory* accessory, int index)
         m_pNeck = accessory;
         break;
     case ItemType::귀걸이:
-        if (index == 0)
+        if (m_earIndex == 0)
         {
             if (m_pEar1 != nullptr)
                 delete m_pEar1;
             m_pEar1 = accessory;
+            m_earIndex++;
         }
-        else if (index == 1)
+        else if (m_earIndex == 1)
         {
             if (m_pEar2 != nullptr)
                 delete m_pEar2;
             m_pEar2 = accessory;
+            m_earIndex++;
         }
         break;
     case ItemType::반지:
-        if (index == 0)
+        if (m_ringIndex == 0)
         {
             if (m_pRing1 != nullptr)
                 delete m_pRing1;
             m_pRing1 = accessory;
+            m_ringIndex++;
         }
-        else if (index == 1)
+        else if (m_ringIndex == 1)
         {
             if (m_pRing2 != nullptr)
                 delete m_pRing2;
             m_pRing2 = accessory;
+            m_ringIndex++;
         }
         break;
     default:

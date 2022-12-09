@@ -46,7 +46,7 @@ public:
     void addOther(const Other& other);
     void setProfile(Profile* profile);
     void setEquip(ItemType type, Equip* equip);
-    void setAccessory(ItemType type, Accessory* accessory, int index = 0);
+    void setAccessory(ItemType type, Accessory* accessory);
     void setAbilityStone(AbilityStone* stone);
     void setBracelet(Bracelet* bracelet);
     void addGem(const Gem& gem);
@@ -74,6 +74,9 @@ private:
     Engrave* m_pEngrave;
     Card* m_pCard;
     QList<Skill> m_skills;
+
+    int m_earIndex;
+    int m_ringIndex;
 };
 
 #endif // CHARACTER_H

@@ -49,6 +49,8 @@ static inline Ability strToAbility(QString ability)
         return Ability::인내;
     else if ("숙련" == ability)
         return Ability::숙련;
+    else
+        return Ability::Size;
 }
 
 #endif // ABILITY_H

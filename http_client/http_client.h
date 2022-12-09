@@ -4,6 +4,17 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 
+enum class LostarkApi
+{
+    Characters,
+    Profiles,
+    Equipments,
+    Skills,
+    Engraves,
+    Cards,
+    Gems,
+};
+
 class HttpClient : public QObject
 {
     Q_OBJECT
@@ -12,17 +23,19 @@ private:
     HttpClient();
     ~HttpClient();
 
+    void loadApi();
     void loadApiKey();
 
 public:
     static HttpClient* getInstance();
     static void destroyInstance();
 
-    void sendRequest(QNetworkAccessManager* networkManager, const QString& url);
+    void sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, const QStringList& params);
 
 private:
     static HttpClient* m_pHttpClient;
 
+    QStringList m_apis;
     QString m_apiKey;
 };
 

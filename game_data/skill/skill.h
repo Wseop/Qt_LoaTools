@@ -8,6 +8,7 @@
 struct Tripod
 {
     QString name;
+    int tier;
     int level;
 };
 

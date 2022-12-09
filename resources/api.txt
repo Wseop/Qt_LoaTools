@@ -1,0 +1,7 @@
+https://developer-lostark.game.onstove.com/characters/%1/siblings
+https://developer-lostark.game.onstove.com/armories/characters/%1/profiles
+https://developer-lostark.game.onstove.com/armories/characters/%1/equipment
+https://developer-lostark.game.onstove.com/armories/characters/%1/combat-skills
+https://developer-lostark.game.onstove.com/armories/characters/%1/engravings
+https://developer-lostark.game.onstove.com/armories/characters/%1/cards
+https://developer-lostark.game.onstove.com/armories/characters/%1/gems	

@@ -4,6 +4,9 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <mongocxx/collection.hpp>
 
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QJsonDocument>
@@ -13,12 +16,30 @@ HttpClient* HttpClient::m_pHttpClient = nullptr;
 
 HttpClient::HttpClient()
 {
+    loadApi();
     loadApiKey();
 }
 
 HttpClient::~HttpClient()
 {
     destroyInstance();
+}
+
+void HttpClient::loadApi()
+{
+    QString filePath = QDir::currentPath() + "/resources/api.txt";
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << Q_FUNC_INFO << ": File open fail";
+        return;
+    }
+
+    QTextStream inStream(&file);
+    while (!inStream.atEnd())
+        m_apis << inStream.readLine();
+
+    file.close();
 }
 
 void HttpClient::loadApiKey()
@@ -57,8 +78,14 @@ void HttpClient::destroyInstance()
     m_pHttpClient = nullptr;
 }
 
-void HttpClient::sendRequest(QNetworkAccessManager* networkManager, const QString& url)
+void HttpClient::sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, const QStringList& params)
 {
+    // generate url
+    QString url = m_apis[static_cast<int>(api)];
+    for (const QString& param : params)
+        url = url.arg(param);
+
+    // generate & send request
     QNetworkRequest request;
     request.setRawHeader("accept", "application/json");
     request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKey).toUtf8());
