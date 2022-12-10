@@ -31,9 +31,10 @@ CharacterSearch::CharacterSearch() :
     this->setWindowTitle("캐릭터 조회");
     this->showMaximized();
 
-    initConnect();
     initAlignment();
-    initHandlers();
+    initNetworkManagerPool();
+    initNetworkReplyHandlers();
+    initConnect();
 }
 
 CharacterSearch::~CharacterSearch()
@@ -43,6 +44,11 @@ CharacterSearch::~CharacterSearch()
         delete m_pCharacter;
         m_pCharacter = nullptr;
     }
+
+    for (int i = 0; i < NETWORK_POOL_COUNT; i++)
+        delete m_networkManagers[i];
+    m_networkManagers.clear();
+
     delete ui;
     destroyInstance();
 }
@@ -51,6 +57,8 @@ void CharacterSearch::initConnect()
 {
     connect(ui->pbSearch, &QPushButton::pressed, this, &CharacterSearch::sendRequests);
     connect(ui->leCharacterName, &QLineEdit::returnPressed, this, &CharacterSearch::sendRequests);
+    for (int i = 0; i < NETWORK_POOL_COUNT; i++)
+        connect(m_networkManagers[i], &QNetworkAccessManager::finished, m_replyHandlers[i]);
 }
 
 void CharacterSearch::initAlignment()
@@ -59,15 +67,23 @@ void CharacterSearch::initAlignment()
     ui->hLayoutSearch->setAlignment(Qt::AlignHCenter);
 }
 
-void CharacterSearch::initHandlers()
+void CharacterSearch::initNetworkManagerPool()
 {
-    m_handlers.append(handleCharacters);
-    m_handlers.append(handleProfiles);
-    m_handlers.append(handleEquipments);
-    m_handlers.append(handleSkills);
-    m_handlers.append(handleEngraves);
-    m_handlers.append(handleCards);
-    m_handlers.append(handleGems);
+    for (int i = 0; i < NETWORK_POOL_COUNT; i++)
+    {
+        m_networkManagers.append(new QNetworkAccessManager());
+    }
+}
+
+void CharacterSearch::initNetworkReplyHandlers()
+{
+    m_replyHandlers.append(handleCharacters);
+    m_replyHandlers.append(handleProfiles);
+    m_replyHandlers.append(handleEquipments);
+    m_replyHandlers.append(handleSkills);
+    m_replyHandlers.append(handleEngraves);
+    m_replyHandlers.append(handleCards);
+    m_replyHandlers.append(handleGems);
 }
 
 void CharacterSearch::sendRequests()
@@ -82,11 +98,9 @@ void CharacterSearch::sendRequests()
     QStringList params;
     params << ui->leCharacterName->text();
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < NETWORK_POOL_COUNT; i++)
     {
-        // TODO. release memory
-        QNetworkAccessManager* networkManager = new QNetworkAccessManager();
-        connect(networkManager, &QNetworkAccessManager::finished, m_handlers[i]);
+        QNetworkAccessManager* networkManager = m_networkManagers[i];
         HttpClient::getInstance()->sendGetRequest(networkManager, static_cast<LostarkApi>(i), params);
     }
 }

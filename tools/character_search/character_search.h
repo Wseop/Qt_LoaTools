@@ -7,6 +7,7 @@
 #include <QRegularExpression>
 
 class Character;
+class QNetworkAccessManager;
 class QNetworkReply;
 
 namespace Ui {
@@ -23,7 +24,8 @@ private:
 
     void initConnect();
     void initAlignment();
-    void initHandlers();
+    void initNetworkManagerPool();
+    void initNetworkReplyHandlers();
 
     void sendRequests();
 
@@ -44,7 +46,10 @@ public:
 private:
     Ui::CharacterSearch *ui;
     Character* m_pCharacter;
-    QList<std::function<void(QNetworkReply*)>> m_handlers;
+    QList<std::function<void(QNetworkReply*)>> m_replyHandlers;
+
+    const int NETWORK_POOL_COUNT = 7;
+    QList<QNetworkAccessManager*> m_networkManagers;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;
