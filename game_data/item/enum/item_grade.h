@@ -29,6 +29,8 @@ static inline QString itemGradeToStr(ItemGrade grade)
         return "영웅";
     case ItemGrade::전설:
         return "전설";
+    case ItemGrade::유물:
+        return "유물";
     case ItemGrade::고대:
         return "고대";
     case ItemGrade::에스더:

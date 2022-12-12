@@ -13,7 +13,7 @@ public:
     int getQuality() const;
     SetEffect getSetEffect() const;
     int getSetLevel() const;
-    bool isElla();
+    bool isElla() const;
 
     void setLevelTier(const QString& levelTier);
     void setQuality(int quality);

@@ -96,12 +96,14 @@ void CharacterSearch::sendRequests()
     if (m_pCharacter != nullptr)
         delete m_pCharacter;
     m_pCharacter = new Character();
+    m_replyHandleStatus = 0x00;
 
     // TODO. enable button when finish handlers
     //ui->pbSearch->setDisabled(true);
 
     QStringList params;
     params << ui->leCharacterName->text();
+    ui->leCharacterName->clear();
 
     for (int i = 0; i < NETWORK_POOL_COUNT; i++)
     {
@@ -130,7 +132,7 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
         int characterLevel = character.find("CharacterLevel")->toInt();
         QString characterName = character.find("CharacterName")->toString();
         Class cls = strToClass(character.find("CharacterClassName")->toString());
-        double itemLevel = character.find("ItemMaxLevel")->toDouble();
+        double itemLevel = character.find("ItemMaxLevel")->toString().remove(",").toDouble();
 
         CharacterSearch::getInstance()->m_pCharacter->addOther({server, characterLevel, characterName, cls, itemLevel});
     }
@@ -150,7 +152,7 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
     profile->setTitle(profileObj.find("Title")->toString());
     profile->setGuild(profileObj.find("GuildName")->toString());
     profile->setExpLevel(profileObj.find("ExpeditionLevel")->toInt());
-    profile->setItemLevel(profileObj.find("ItemMaxLevel")->toDouble());
+    profile->setItemLevel(profileObj.find("ItemMaxLevel")->toString().remove(",").toDouble());
 
     const QJsonArray& abilities = profileObj.find("Stats")->toArray();
     for (const QJsonValue& value : abilities)
@@ -160,7 +162,7 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
         Ability ability = strToAbility(abilityStr);
         if (ability != Ability::Size)
         {
-            int abilityValue = abilityObj.find("Value")->toInt();
+            int abilityValue = abilityObj.find("Value")->toString().toInt();
             profile->addAbility(ability, abilityValue);
         }
     }
@@ -576,7 +578,7 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
 
 void CharacterSearch::handleGems(QNetworkReply* reply)
 {
-    QMap<int, Gem*> slotGems;
+    QMap<int, Gem*> slotToGem;
     const QJsonObject& gemData = QJsonDocument::fromJson(reply->readAll()).object();
     const QJsonArray& gems = gemData.find("Gems")->toArray();
     const QJsonArray& gemEffects = gemData.find("Effects")->toArray();
@@ -591,7 +593,7 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
         gem->setIconPath(gemObj.find("Icon")->toString());
         gem->setLevel(gemObj.find("Level")->toInt());
         gem->setGrade(strToItemGrade(gemObj.find("Grade")->toString()));
-        slotGems[slot] = gem;
+        slotToGem[slot] = gem;
     }
 
     for (const QJsonValue& effectValue : gemEffects)
@@ -600,7 +602,7 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
         int slot = effectObj.find("GemSlot")->toInt();
         QString effectStr = QString("%1 %2").arg(effectObj.find("Name")->toString(), effectObj.find("Description")->toString());
 
-        Gem* gem = slotGems[slot];
+        Gem* gem = slotToGem[slot];
         gem->setEffect(effectStr);
 
         CharacterSearch::getInstance()->m_pCharacter->addGem(gem);

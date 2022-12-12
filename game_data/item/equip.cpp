@@ -28,7 +28,7 @@ int Equip::getSetLevel() const
     return m_setLevel;
 }
 
-bool Equip::isElla()
+bool Equip::isElla() const
 {
     return m_bElla;
 }
