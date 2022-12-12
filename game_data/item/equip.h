@@ -9,24 +9,24 @@ class Equip : public Item
 public:
     Equip(ItemType type);
 
-    int getReforge();
     QString getLevelTier() const;
     int getQuality() const;
     SetEffect getSetEffect() const;
-    QString getSetLevel() const;
+    int getSetLevel() const;
+    bool isElla();
 
-    void setReforge(int reforge);
     void setLevelTier(const QString& levelTier);
     void setQuality(int quality);
     void setSetEffect(SetEffect setEffect);
-    void setSetLevel(const QString& setLevel);
+    void setSetLevel(int setLevel);
+    void setElla(bool bElla);
 
 private:
-    int m_reforge;
     QString m_levelTier;
     int m_quality;
     SetEffect m_setEffect;
-    QString m_setLevel;
+    int m_setLevel;
+    bool m_bElla;
 };
 
 #endif // EQUIP_H

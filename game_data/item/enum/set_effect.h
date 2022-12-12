@@ -14,6 +14,7 @@ enum class SetEffect
     배신,
     매혹,
     파괴,
+    에스더,
     Size
 };
 
@@ -39,6 +40,8 @@ static inline QString setEffectToStr(SetEffect setEffect)
         return "매혹";
     case SetEffect::파괴:
         return "파괴";
+    case SetEffect::에스더:
+        return "에스더";
     default:
         return "";
     }
@@ -64,6 +67,10 @@ static inline SetEffect strToSetEffect(QString setEffect)
         return SetEffect::매혹;
     else if ("파괴" == setEffect)
         return SetEffect::파괴;
+    else if ("에스더" == setEffect)
+        return SetEffect::에스더;
+    else
+        return SetEffect::Size;
 }
 
 #endif // SET_EFFECT_H

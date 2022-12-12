@@ -6,12 +6,12 @@ Bracelet::Bracelet() :
 
 }
 
-QString Bracelet::getEffect() const
+const QStringList& Bracelet::getEffects() const
 {
-    return m_effect;
+    return m_effects;
 }
 
-void Bracelet::setEffect(const QString& effect)
+void Bracelet::addEffect(const QString& effect)
 {
-    m_effect = effect;
+    m_effects << effect;
 }

@@ -19,12 +19,17 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
+
 CharacterSearch* CharacterSearch::m_pCharacterSearch = nullptr;
 QRegularExpression CharacterSearch::m_regExpHtmlTag("<[^>]*>");
 
 CharacterSearch::CharacterSearch() :
     ui(new Ui::CharacterSearch),
-    m_pCharacter(nullptr)
+    m_pCharacter(nullptr),
+    m_replyHandleStatus(0x00)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -105,6 +110,15 @@ void CharacterSearch::sendRequests()
     }
 }
 
+void CharacterSearch::updateStatus(uint8_t statusBit)
+{
+    m_replyHandleStatus |= statusBit;
+    if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
+    {
+        // TODO. render UI
+    }
+}
+
 void CharacterSearch::handleCharacters(QNetworkReply* reply)
 {
     const QJsonArray& characters = QJsonDocument::fromJson(reply->readAll()).array();
@@ -120,6 +134,8 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
 
         CharacterSearch::getInstance()->m_pCharacter->addOther({server, characterLevel, characterName, cls, itemLevel});
     }
+
+    CharacterSearch::getInstance()->updateStatus(1 << 0);
 }
 
 void CharacterSearch::handleProfiles(QNetworkReply* reply)
@@ -150,6 +166,7 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
     }
 
     CharacterSearch::getInstance()->m_pCharacter->setProfile(profile);
+    CharacterSearch::getInstance()->updateStatus(1 << 1);
 }
 
 void CharacterSearch::handleEquipments(QNetworkReply* reply)
@@ -166,7 +183,39 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             equip->setName(equipObj.find("Name")->toString());
             equip->setIconPath(equipObj.find("Icon")->toString());
             equip->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            // remove escape sequences by casting twice (to string -> to object)
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            const QJsonObject& itemTitleObj = tooltipObj.find("Element_001")->toObject().find("value")->toObject();
+            equip->setLevelTier(itemTitleObj.find("leftStr2")->toString().remove(m_regExpHtmlTag));
+            equip->setQuality(itemTitleObj.find("qualityValue")->toInt());
+
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+
+                if (type == "ItemPartBox")
+                {
+                    const QJsonObject& valueObj = elementObj.find("value")->toObject();
+                    if (valueObj.find("Element_000")->toString().contains("세트 효과 레벨"))
+                    {
+                        const QString& setEffectLevel = valueObj.find("Element_001")->toString();
+                        equip->setSetEffect(strToSetEffect(setEffectLevel.sliced(0, 2)));
+                        equip->setSetLevel(setEffectLevel.sliced(setEffectLevel.indexOf("Lv.") + 3, 1).toInt());
+                    }
+                }
+                else if (type == "SingleTextBox")
+                {
+                    const QString& valueStr = elementObj.find("value")->toString();
+                    if (valueStr.contains("엘라 부여 완료"))
+                        equip->setElla(true);
+                }
+            }
+            if (equip->getGrade() == ItemGrade::에스더)
+                equip->setSetEffect(SetEffect::에스더);
+
             CharacterSearch::getInstance()->m_pCharacter->setEquip(itemType, equip);
         }
         else if (itemType >= ItemType::투구 && itemType <= ItemType::어깨)
@@ -175,7 +224,29 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             equip->setName(equipObj.find("Name")->toString());
             equip->setIconPath(equipObj.find("Icon")->toString());
             equip->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            const QJsonObject& itemTitleObj = tooltipObj.find("Element_001")->toObject().find("value")->toObject();
+            equip->setLevelTier(itemTitleObj.find("leftStr2")->toString().remove(m_regExpHtmlTag));
+            equip->setQuality(itemTitleObj.find("qualityValue")->toInt());
+
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+                if (type == "ItemPartBox")
+                {
+                    const QJsonObject& valueObj = elementObj.find("value")->toObject();
+                    if (valueObj.find("Element_000")->toString().contains("세트 효과 레벨"))
+                    {
+                        const QString& setEffectLevel = valueObj.find("Element_001")->toString();
+                        equip->setSetEffect(strToSetEffect(setEffectLevel.sliced(0, 2)));
+                        equip->setSetLevel(setEffectLevel.sliced(setEffectLevel.indexOf("Lv.") + 3, 1).toInt());
+                    }
+                }
+            }
+
             CharacterSearch::getInstance()->m_pCharacter->setEquip(itemType, equip);
         }
         else if (itemType == ItemType::목걸이)
@@ -184,7 +255,69 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             accessory->setName(equipObj.find("Name")->toString());
             accessory->setIconPath(equipObj.find("Icon")->toString());
             accessory->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            accessory->setQuality(tooltipObj.find("Element_001")->toObject().find("value")->toObject().find("qualityValue")->toInt());
+
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+                if (type == "ItemPartBox")
+                {
+                    // 특성
+                    const QJsonObject& valueObj = elementObj.find("value")->toObject();
+                    if (valueObj.find("Element_000")->toString().contains("추가 효과"))
+                    {
+                        const QString& abilitiesStr = valueObj.find("Element_001")->toString();
+                        int index = 0;
+                        QString abilityStr;
+                        int abilityValue = 0;
+                        for (int i = 0; i < 2; i++)
+                        {
+                            abilityStr = abilitiesStr.sliced(index, 2);
+                            index = abilitiesStr.indexOf("+", index) + 1;
+                            abilityValue = abilitiesStr.sliced(index, 3).toInt();
+                            index = abilitiesStr.indexOf("<BR>") + 4;
+                            accessory->addAbility(strToAbility(abilityStr), abilityValue);
+                        }
+                    }
+                }
+                else if (type == "IndentStringGroup")
+                {
+                    // 각인
+                    const QJsonObject& engravesObj = elementObj.find("value")->toObject()
+                                                              .find("Element_000")->toObject()
+                                                              .find("contentStr")->toObject();
+                    for (int i = 0; i < 2; i++)
+                    {
+                        QString key = QString("Element_00%1").arg(i);
+                        const QString& engraveStr = engravesObj.find(key)->toObject().find("contentStr")->toString();
+                        // 각인명
+                        int startIdx = engraveStr.indexOf(">") + 1;
+                        int endIdx = engraveStr.indexOf("</FONT>");
+                        QString engrave = engraveStr.sliced(startIdx, endIdx - startIdx);
+                        // 각인값
+                        int valueIdx = engraveStr.indexOf("+") + 1;
+                        int engraveValue = engraveStr.sliced(valueIdx, 1).toInt();
+
+                        accessory->addEngrave(engrave, engraveValue);
+                    }
+
+                    const QString& penaltyStr = engravesObj.find("Element_002")->toObject().find("contentStr")->toString();
+                    // 감소 각인명
+                    int startIdx = penaltyStr.indexOf(">") + 1;
+                    int endIdx = penaltyStr.indexOf("</FONT>");
+                    QString penalty = penaltyStr.sliced(startIdx, endIdx - startIdx);
+                    // 감소 각인값
+                    int valueIdx = penaltyStr.indexOf("+") + 1;
+                    int penaltyValue = penaltyStr.sliced(valueIdx, 1).toInt();
+
+                    accessory->setPenalty(penalty, penaltyValue);
+                }
+            }
+
             CharacterSearch::getInstance()->m_pCharacter->setAccessory(itemType, accessory);
         }
         else if (itemType == ItemType::귀걸이 || itemType == ItemType::반지)
@@ -193,7 +326,62 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             accessory->setName(equipObj.find("Name")->toString());
             accessory->setIconPath(equipObj.find("Icon")->toString());
             accessory->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            accessory->setQuality(tooltipObj.find("Element_001")->toObject().find("value")->toObject().find("qualityValue")->toInt());
+
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+                if (type == "ItemPartBox")
+                {
+                    // 특성
+                    const QJsonObject& valueObj = elementObj.find("value")->toObject();
+                    if (valueObj.find("Element_000")->toString().contains("추가 효과"))
+                    {
+                        const QString& abilityStr = valueObj.find("Element_001")->toString();
+                        QString ability = abilityStr.sliced(0, 2);
+                        int abilityValue = abilityStr.sliced(abilityStr.indexOf("+") + 1, 3).toInt();
+                        accessory->addAbility(strToAbility(ability), abilityValue);
+                    }
+                }
+                else if (type == "IndentStringGroup")
+                {
+                    // 각인
+                    const QJsonObject& engravesObj = elementObj.find("value")->toObject()
+                                                              .find("Element_000")->toObject()
+                                                              .find("contentStr")->toObject();
+                    for (int i = 0; i < 2; i++)
+                    {
+                        QString key = QString("Element_00%1").arg(i);
+                        const QString& engraveStr = engravesObj.find(key)->toObject().find("contentStr")->toString();
+                        // 각인명
+                        int startIdx = engraveStr.indexOf(">") + 1;
+                        int endIdx = engraveStr.indexOf("</FONT>");
+                        QString engrave = engraveStr.sliced(startIdx, endIdx - startIdx);
+                        // 각인값
+                        int valueIdx = engraveStr.indexOf("+") + 1;
+                        int engraveValue = engraveStr.sliced(valueIdx, 1).toInt();
+
+                        accessory->addEngrave(engrave, engraveValue);
+                    }
+
+                    const QString& penaltyStr = engravesObj.find("Element_002")->toObject().find("contentStr")->toString();
+                    // 감소 각인명
+                    int startIdx = penaltyStr.indexOf(">") + 1;
+                    int endIdx = penaltyStr.indexOf("</FONT>");
+                    QString penalty = penaltyStr.sliced(startIdx, endIdx - startIdx);
+                    // 감소 각인값
+                    int valueIdx = penaltyStr.indexOf("+") + 1;
+                    int penaltyValue = penaltyStr.sliced(valueIdx, 1).toInt();
+
+                    accessory->setPenalty(penalty, penaltyValue);
+                }
+            }
+
+
             CharacterSearch::getInstance()->m_pCharacter->setAccessory(itemType, accessory);
         }
         else if (itemType == ItemType::어빌리티_스톤)
@@ -202,7 +390,48 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             stone->setName(equipObj.find("Name")->toString());
             stone->setIconPath(equipObj.find("Icon")->toString());
             stone->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+                if (type == "IndentStringGroup")
+                {
+                    const QJsonObject& engravesObj = elementObj.find("value")->toObject()
+                                                               .find("Element_000")->toObject()
+                                                               .find("contentStr")->toObject();
+                    for (int i = 0; i < 2; i++)
+                    {
+                        QString key = QString("Element_00%1").arg(i);
+                        const QString& engraveStr = engravesObj.find(key)->toObject().find("contentStr")->toString();
+
+                        int startIdx = engraveStr.indexOf(">") + 1;
+                        int endIdx = engraveStr.indexOf("</FONT>");
+                        QString engrave = engraveStr.sliced(startIdx, endIdx - startIdx);
+
+                        startIdx = engraveStr.indexOf("+") + 1;
+                        endIdx = engraveStr.indexOf("<BR>");
+                        int engraveValue = engraveStr.sliced(startIdx, endIdx - startIdx).toInt();
+
+                        stone->addEngrave(engrave, engraveValue);
+                    }
+
+                    const QString& penaltyStr = engravesObj.find("Element_002")->toObject().find("contentStr")->toString();
+
+                    int startIdx = penaltyStr.indexOf(">") + 1;
+                    int endIdx = penaltyStr.indexOf("</FONT>");
+                    QString penalty = penaltyStr.sliced(startIdx, endIdx - startIdx);
+
+                    startIdx = penaltyStr.indexOf("+") + 1;
+                    endIdx = penaltyStr.indexOf("<BR>");
+                    int penaltyValue = penaltyStr.sliced(startIdx, endIdx - startIdx).toInt();
+
+                    stone->setPenalty(penalty, penaltyValue);
+                }
+            }
+
             CharacterSearch::getInstance()->m_pCharacter->setAbilityStone(stone);
         }
         else if (itemType == ItemType::팔찌)
@@ -211,10 +440,46 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             bracelet->setName(equipObj.find("Name")->toString());
             bracelet->setIconPath(equipObj.find("Icon")->toString());
             bracelet->setGrade(strToItemGrade(equipObj.find("Grade")->toString()));
-            // TODO. parse tooltip
+
+            const QJsonObject& tooltipObj = QJsonDocument::fromJson(equipObj.find("Tooltip")->toString().toUtf8()).object();
+            const QStringList& elements = tooltipObj.keys();
+            for (const QString& element : elements)
+            {
+                const QJsonObject& elementObj = tooltipObj.find(element)->toObject();
+                const QString& type = elementObj.find("type")->toString();
+                if (type == "ItemPartBox")
+                {
+                    const QJsonObject& valueObj = elementObj.find("value")->toObject();
+                    if (valueObj.find("Element_000")->toString().contains("팔찌 효과"))
+                    {
+                        QString effect = valueObj.find("Element_001")->toString();
+                        effect.replace("</img>", "@");
+                        effect.remove(m_regExpHtmlTag);
+
+                        int startIdx = effect.indexOf("@");
+                        int endIdx;
+                        while (startIdx != -1)
+                        {
+                            startIdx++;
+                            if (effect[startIdx] == ' ')
+                                startIdx++;
+                            endIdx = effect.indexOf("@", startIdx);
+                            if (endIdx == -1)
+                                endIdx = effect.size();
+
+                            bracelet->addEffect(effect.sliced(startIdx, endIdx - startIdx));
+
+                            startIdx = effect.indexOf("@", startIdx);
+                        }
+                    }
+                }
+            }
+
             CharacterSearch::getInstance()->m_pCharacter->setBracelet(bracelet);
         }
     }
+
+    CharacterSearch::getInstance()->updateStatus(1 << 2);
 }
 
 void CharacterSearch::handleSkills(QNetworkReply* reply)
@@ -261,6 +526,8 @@ void CharacterSearch::handleSkills(QNetworkReply* reply)
             CharacterSearch::getInstance()->m_pCharacter->addSkill(skill);
         }
     }
+
+    CharacterSearch::getInstance()->updateStatus(1 << 3);
 }
 
 void CharacterSearch::handleEngraves(QNetworkReply* reply)
@@ -283,6 +550,7 @@ void CharacterSearch::handleEngraves(QNetworkReply* reply)
     }
 
     CharacterSearch::getInstance()->m_pCharacter->setEngrave(engrave);
+    CharacterSearch::getInstance()->updateStatus(1 << 4);
 }
 
 void CharacterSearch::handleCards(QNetworkReply* reply)
@@ -303,6 +571,7 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
     }
 
     CharacterSearch::getInstance()->m_pCharacter->setCard(card);
+    CharacterSearch::getInstance()->updateStatus(1 << 5);
 }
 
 void CharacterSearch::handleGems(QNetworkReply* reply)
@@ -336,6 +605,8 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
 
         CharacterSearch::getInstance()->m_pCharacter->addGem(gem);
     }
+
+    CharacterSearch::getInstance()->updateStatus(1 << 6);
 }
 
 CharacterSearch* CharacterSearch::getInstance()

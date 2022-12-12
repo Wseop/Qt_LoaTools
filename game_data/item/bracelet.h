@@ -8,12 +8,12 @@ class Bracelet : public Item
 public:
     Bracelet();
 
-    QString getEffect() const;
+    const QStringList& getEffects() const;
 
-    void setEffect(const QString& effect);
+    void addEffect(const QString& effect);
 
 private:
-    QString m_effect;
+    QStringList m_effects;
 };
 
 #endif // BRACELET_H

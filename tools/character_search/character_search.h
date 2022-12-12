@@ -28,6 +28,7 @@ private:
     void initNetworkReplyHandlers();
 
     void sendRequests();
+    void updateStatus(uint8_t statusBit);
 
 private:
     // QNetworkReply data handlers
@@ -50,6 +51,9 @@ private:
 
     const int NETWORK_POOL_COUNT = 7;
     QList<QNetworkAccessManager*> m_networkManagers;
+
+    const uint8_t REPLY_HANDLE_FINISHED = 0x7F;
+    uint8_t m_replyHandleStatus;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

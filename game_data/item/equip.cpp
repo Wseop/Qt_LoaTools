@@ -1,14 +1,11 @@
 #include "equip.h"
 
 Equip::Equip(ItemType type) :
-    Item(type)
+    Item(type),
+    m_setLevel(0),
+    m_bElla(false)
 {
 
-}
-
-int Equip::getReforge()
-{
-    return m_reforge;
 }
 
 QString Equip::getLevelTier() const
@@ -26,14 +23,14 @@ SetEffect Equip::getSetEffect() const
     return m_setEffect;
 }
 
-QString Equip::getSetLevel() const
+int Equip::getSetLevel() const
 {
     return m_setLevel;
 }
 
-void Equip::setReforge(int reforge)
+bool Equip::isElla()
 {
-    m_reforge = reforge;
+    return m_bElla;
 }
 
 void Equip::setLevelTier(const QString& levelTier)
@@ -51,7 +48,12 @@ void Equip::setSetEffect(SetEffect setEffect)
     m_setEffect = setEffect;
 }
 
-void Equip::setSetLevel(const QString& setLevel)
+void Equip::setSetLevel(int setLevel)
 {
     m_setLevel = setLevel;
+}
+
+void Equip::setElla(bool bElla)
+{
+    m_bElla = bElla;
 }
