@@ -18,10 +18,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-
-#include <QFile>
-#include <QDir>
-#include <QTextStream>
+#include <QMessageBox>
 
 CharacterSearch* CharacterSearch::m_pCharacterSearch = nullptr;
 QRegularExpression CharacterSearch::m_regExpHtmlTag("<[^>]*>");
@@ -123,8 +120,16 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
 
 void CharacterSearch::handleCharacters(QNetworkReply* reply)
 {
-    const QJsonArray& characters = QJsonDocument::fromJson(reply->readAll()).array();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        QMessageBox msgBox;
+        msgBox.setText("존재하지 않는 캐릭터입니다.");
+        msgBox.exec();
+        return;
+    }
 
+    const QJsonArray& characters = response.array();
     for (const QJsonValue& value : characters)
     {
         const QJsonObject& character = value.toObject();
@@ -142,8 +147,11 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
 
 void CharacterSearch::handleProfiles(QNetworkReply* reply)
 {
-    const QJsonObject& profileObj = QJsonDocument::fromJson(reply->readAll()).object();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+        return;
 
+    const QJsonObject& profileObj = response.object();
     Profile* profile = new Profile();
     profile->setClass(strToClass(profileObj.find("CharacterClassName")->toString()));
     profile->setCharacterLevel(profileObj.find("CharacterLevel")->toInt());
@@ -173,8 +181,14 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
 
 void CharacterSearch::handleEquipments(QNetworkReply* reply)
 {
-    const QJsonArray& equipments = QJsonDocument::fromJson(reply->readAll()).array();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        CharacterSearch::getInstance()->updateStatus(1 << 2);
+        return;
+    }
 
+    const QJsonArray& equipments = response.array();
     for (const QJsonValue& value : equipments)
     {
         const QJsonObject& equipObj = value.toObject();
@@ -486,8 +500,14 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
 
 void CharacterSearch::handleSkills(QNetworkReply* reply)
 {
-    const QJsonArray& skills = QJsonDocument::fromJson(reply->readAll()).array();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        CharacterSearch::getInstance()->updateStatus(1 << 3);
+        return;
+    }
 
+    const QJsonArray& skills = response.array();
     for (const QJsonValue& value : skills)
     {
         const QJsonObject& skillObj = value.toObject();
@@ -534,7 +554,14 @@ void CharacterSearch::handleSkills(QNetworkReply* reply)
 
 void CharacterSearch::handleEngraves(QNetworkReply* reply)
 {
-    const QJsonArray& engraves = QJsonDocument::fromJson(reply->readAll()).object().find("Effects")->toArray();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        CharacterSearch::getInstance()->updateStatus(1 << 4);
+        return;
+    }
+
+    const QJsonArray& engraves = response.object().find("Effects")->toArray();
     Engrave* engrave = new Engrave();
 
     for (const QJsonValue& value : engraves)
@@ -557,7 +584,14 @@ void CharacterSearch::handleEngraves(QNetworkReply* reply)
 
 void CharacterSearch::handleCards(QNetworkReply* reply)
 {
-    const QJsonArray& cards = QJsonDocument::fromJson(reply->readAll()).object().find("Effects")->toArray();
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        CharacterSearch::getInstance()->updateStatus(1 << 5);
+        return;
+    }
+
+    const QJsonArray& cards = response.object().find("Effects")->toArray();
     Card* card = new Card();
 
     for (const QJsonValue& value : cards)
@@ -578,8 +612,15 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
 
 void CharacterSearch::handleGems(QNetworkReply* reply)
 {
+    QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+    if (response.isNull())
+    {
+        CharacterSearch::getInstance()->updateStatus(1 << 6);
+        return;
+    }
+
     QMap<int, Gem*> slotToGem;
-    const QJsonObject& gemData = QJsonDocument::fromJson(reply->readAll()).object();
+    const QJsonObject& gemData = response.object();
     const QJsonArray& gems = gemData.find("Gems")->toArray();
     const QJsonArray& gemEffects = gemData.find("Effects")->toArray();
 
