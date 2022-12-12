@@ -4,6 +4,7 @@
 #include "game_data/character/character.h"
 
 #include <QWidget>
+#include <QLabel>
 #include <QPushButton>
 
 enum class MoveType
@@ -46,6 +47,7 @@ private:
     const QList<Other>& m_others;
     GridPos m_gridPos;
     QMap<QPushButton*, QString> m_btnToName;
+    QList<QLabel*> m_serverLabels;
 };
 
 #endif // OTHERS_H

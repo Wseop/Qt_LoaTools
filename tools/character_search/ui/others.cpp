@@ -20,6 +20,15 @@ Others::Others(QWidget *parent, const QList<Other>& others) :
 
 Others::~Others()
 {
+    const QList<QPushButton*> btns = m_btnToName.keys();
+    for (QPushButton* btn : btns)
+        delete btn;
+    m_btnToName.clear();
+
+    for (QLabel* serverLabel : m_serverLabels)
+        delete serverLabel;
+    m_serverLabels.clear();
+
     delete ui;
 }
 
