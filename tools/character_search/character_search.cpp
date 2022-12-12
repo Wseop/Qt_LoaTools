@@ -12,6 +12,7 @@
 #include "game_data/engrave/engrave.h"
 #include "game_data/engrave/engrave_manager.h"
 #include "game_data/card/card.h"
+#include "tools/character_search/ui/others.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -19,6 +20,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QMessageBox>
+#include <algorithm>
 
 CharacterSearch* CharacterSearch::m_pCharacterSearch = nullptr;
 QRegularExpression CharacterSearch::m_regExpHtmlTag("<[^>]*>");
@@ -26,12 +28,14 @@ QRegularExpression CharacterSearch::m_regExpHtmlTag("<[^>]*>");
 CharacterSearch::CharacterSearch() :
     ui(new Ui::CharacterSearch),
     m_pCharacter(nullptr),
-    m_replyHandleStatus(0x00)
+    m_replyHandleStatus(0x00),
+    m_pOthers(nullptr)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
     this->setWindowTitle("캐릭터 조회");
     this->showMaximized();
+    ui->groupCharacter->hide();
 
     initAlignment();
     initNetworkManagerPool();
@@ -61,12 +65,19 @@ void CharacterSearch::initConnect()
     connect(ui->leCharacterName, &QLineEdit::returnPressed, this, &CharacterSearch::sendRequests);
     for (int i = 0; i < NETWORK_POOL_COUNT; i++)
         connect(m_networkManagers[i], &QNetworkAccessManager::finished, m_replyHandlers[i]);
+    connect(ui->pbOthers, &QPushButton::pressed, [&](){
+        this->setDisabled(true);
+        m_pOthers->show();
+    });
 }
 
 void CharacterSearch::initAlignment()
 {
+    ui->vLayoutBase->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    ui->hLayoutSearch->setAlignment(Qt::AlignHCenter);
+    ui->hLayoutGroupSearch->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->vLayoutProfile->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 }
 
 void CharacterSearch::initNetworkManagerPool()
@@ -93,6 +104,10 @@ void CharacterSearch::sendRequests()
     if (m_pCharacter != nullptr)
         delete m_pCharacter;
     m_pCharacter = new Character();
+
+    if (m_pOthers != nullptr)
+        delete m_pOthers;
+
     m_replyHandleStatus = 0x00;
 
     ui->pbSearch->setDisabled(true);
@@ -114,8 +129,9 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
     if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
     {
         ui->pbSearch->setEnabled(true);
-        // TODO. render UI
 
+        ui->groupCharacter->show();
+        m_pOthers = new Others(this, m_pCharacter->getOthers());
     }
 }
 
@@ -132,6 +148,7 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
     }
 
     const QJsonArray& characters = response.array();
+    QList<Other> others;
     for (const QJsonValue& value : characters)
     {
         const QJsonObject& character = value.toObject();
@@ -140,8 +157,17 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
         QString characterName = character.find("CharacterName")->toString();
         Class cls = strToClass(character.find("CharacterClassName")->toString());
         double itemLevel = character.find("ItemMaxLevel")->toString().remove(",").toDouble();
+        others.append({server, characterLevel, characterName, cls, itemLevel});
+    }
 
-        CharacterSearch::getInstance()->m_pCharacter->addOther({server, characterLevel, characterName, cls, itemLevel});
+    // sort by level
+    std::sort(others.begin(), others.end(), [](Other& a, Other& b) {
+        return a.itemLevel > b.itemLevel;
+    });
+
+    for (const Other& other : others)
+    {
+        CharacterSearch::getInstance()->m_pCharacter->addOther(other);
     }
 
     CharacterSearch::getInstance()->updateStatus(1 << 0);
@@ -637,6 +663,12 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
     }
 
     CharacterSearch::getInstance()->updateStatus(1 << 6);
+}
+
+void CharacterSearch::changeCharacter(QString name)
+{
+    ui->leCharacterName->setText(name);
+    sendRequests();
 }
 
 CharacterSearch* CharacterSearch::getInstance()

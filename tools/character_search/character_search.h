@@ -41,6 +41,9 @@ private:
     static void handleGems(QNetworkReply* reply);
 
 public:
+    void changeCharacter(QString name);
+
+public:
     static CharacterSearch* getInstance();
     static void destroyInstance();
 
@@ -54,6 +57,8 @@ private:
 
     const uint8_t REPLY_HANDLE_FINISHED = 0x7F;
     uint8_t m_replyHandleStatus;
+
+    class Others* m_pOthers;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

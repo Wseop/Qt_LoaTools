@@ -32,6 +32,7 @@ SOURCES += \
     loatools.cpp \
     tools/auction_calc/auction_calc.cpp \
     tools/character_search/character_search.cpp \
+    tools/character_search/ui/others.cpp \
     tools/engrave_simulator/engrave_simulator.cpp \
     tools/meteor_timer/meteor_timer.cpp \
     tools/ranking_board/ranking_board.cpp \
@@ -69,6 +70,7 @@ HEADERS += \
     loatools.h \
     tools/auction_calc/auction_calc.h \
     tools/character_search/character_search.h \
+    tools/character_search/ui/others.h \
     tools/engrave_simulator/engrave_simulator.h \
     tools/meteor_timer/meteor_timer.h \
     tools/ranking_board/ranking_board.h \
@@ -81,6 +83,7 @@ FORMS += \
     loatools.ui \
     tools/auction_calc/auctioncalc.ui \
     tools/character_search/character_search.ui \
+    tools/character_search/ui/others.ui \
     tools/engrave_simulator/engravesimulator.ui \
     tools/meteor_timer/meteortimer.ui \
     tools/ranking_board/ranking_board.ui \
