@@ -95,8 +95,7 @@ void CharacterSearch::sendRequests()
     m_pCharacter = new Character();
     m_replyHandleStatus = 0x00;
 
-    // TODO. enable button when finish handlers
-    //ui->pbSearch->setDisabled(true);
+    ui->pbSearch->setDisabled(true);
 
     QStringList params;
     params << ui->leCharacterName->text();
@@ -114,7 +113,9 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
     m_replyHandleStatus |= statusBit;
     if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
     {
+        ui->pbSearch->setEnabled(true);
         // TODO. render UI
+
     }
 }
 
@@ -126,6 +127,7 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
         QMessageBox msgBox;
         msgBox.setText("존재하지 않는 캐릭터입니다.");
         msgBox.exec();
+        CharacterSearch::getInstance()->ui->pbSearch->setEnabled(true);
         return;
     }
 
@@ -287,17 +289,24 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                     if (valueObj.find("Element_000")->toString().contains("추가 효과"))
                     {
                         const QString& abilitiesStr = valueObj.find("Element_001")->toString();
-                        int index = 0;
+                        int startIdx, endIdx;
                         QString abilityStr;
                         int abilityValue = 0;
-                        for (int i = 0; i < 2; i++)
-                        {
-                            abilityStr = abilitiesStr.sliced(index, 2);
-                            index = abilitiesStr.indexOf("+", index) + 1;
-                            abilityValue = abilitiesStr.sliced(index, 3).toInt();
-                            index = abilitiesStr.indexOf("<BR>") + 4;
-                            accessory->addAbility(strToAbility(abilityStr), abilityValue);
-                        }
+
+                        // 특성1
+                        startIdx = 0;
+                        endIdx = abilitiesStr.indexOf("<BR>");
+                        abilityStr = abilitiesStr.sliced(startIdx, 2);
+                        startIdx = abilitiesStr.indexOf("+") + 1;
+                        abilityValue = abilitiesStr.sliced(startIdx, endIdx - startIdx).toInt();
+                        accessory->addAbility(strToAbility(abilityStr), abilityValue);
+                        // 특성2
+                        startIdx = endIdx + 4;
+                        endIdx = abilitiesStr.size();
+                        abilityStr = abilitiesStr.sliced(startIdx, 2);
+                        startIdx = abilitiesStr.indexOf("+", startIdx) + 1;
+                        abilityValue = abilitiesStr.sliced(startIdx, endIdx - startIdx).toInt();
+                        accessory->addAbility(strToAbility(abilityStr), abilityValue);
                     }
                 }
                 else if (type == "IndentStringGroup")
@@ -306,9 +315,9 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                     const QJsonObject& engravesObj = elementObj.find("value")->toObject()
                                                               .find("Element_000")->toObject()
                                                               .find("contentStr")->toObject();
-                    for (int i = 0; i < 2; i++)
+                    const QStringList& keys = engravesObj.keys();
+                    for (const QString& key : keys)
                     {
-                        QString key = QString("Element_00%1").arg(i);
                         const QString& engraveStr = engravesObj.find(key)->toObject().find("contentStr")->toString();
                         // 각인명
                         int startIdx = engraveStr.indexOf(">") + 1;
@@ -320,17 +329,6 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
 
                         accessory->addEngrave(engrave, engraveValue);
                     }
-
-                    const QString& penaltyStr = engravesObj.find("Element_002")->toObject().find("contentStr")->toString();
-                    // 감소 각인명
-                    int startIdx = penaltyStr.indexOf(">") + 1;
-                    int endIdx = penaltyStr.indexOf("</FONT>");
-                    QString penalty = penaltyStr.sliced(startIdx, endIdx - startIdx);
-                    // 감소 각인값
-                    int valueIdx = penaltyStr.indexOf("+") + 1;
-                    int penaltyValue = penaltyStr.sliced(valueIdx, 1).toInt();
-
-                    accessory->setPenalty(penalty, penaltyValue);
                 }
             }
 
@@ -359,7 +357,8 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                     {
                         const QString& abilityStr = valueObj.find("Element_001")->toString();
                         QString ability = abilityStr.sliced(0, 2);
-                        int abilityValue = abilityStr.sliced(abilityStr.indexOf("+") + 1, 3).toInt();
+                        int index = abilityStr.indexOf("+") + 1;
+                        int abilityValue = abilityStr.sliced(index, abilityStr.size() - index).toInt();
                         accessory->addAbility(strToAbility(ability), abilityValue);
                     }
                 }
@@ -369,9 +368,9 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                     const QJsonObject& engravesObj = elementObj.find("value")->toObject()
                                                               .find("Element_000")->toObject()
                                                               .find("contentStr")->toObject();
-                    for (int i = 0; i < 2; i++)
+                    const QStringList& keys = engravesObj.keys();
+                    for (const QString& key : keys)
                     {
-                        QString key = QString("Element_00%1").arg(i);
                         const QString& engraveStr = engravesObj.find(key)->toObject().find("contentStr")->toString();
                         // 각인명
                         int startIdx = engraveStr.indexOf(">") + 1;
@@ -383,20 +382,8 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
 
                         accessory->addEngrave(engrave, engraveValue);
                     }
-
-                    const QString& penaltyStr = engravesObj.find("Element_002")->toObject().find("contentStr")->toString();
-                    // 감소 각인명
-                    int startIdx = penaltyStr.indexOf(">") + 1;
-                    int endIdx = penaltyStr.indexOf("</FONT>");
-                    QString penalty = penaltyStr.sliced(startIdx, endIdx - startIdx);
-                    // 감소 각인값
-                    int valueIdx = penaltyStr.indexOf("+") + 1;
-                    int penaltyValue = penaltyStr.sliced(valueIdx, 1).toInt();
-
-                    accessory->setPenalty(penalty, penaltyValue);
                 }
             }
-
 
             CharacterSearch::getInstance()->m_pCharacter->setAccessory(itemType, accessory);
         }

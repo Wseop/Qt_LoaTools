@@ -38,7 +38,10 @@ void Accessory::addAbility(Ability ability, int value)
 
 void Accessory::addEngrave(const QString& engrave, int value)
 {
-    m_engraves.append({engrave, value});
+    if (engrave.contains("감소"))
+        setPenalty(engrave, value);
+    else
+        m_engraves.append({engrave, value});
 }
 
 void Accessory::setPenalty(const QString& penalty, int value)
