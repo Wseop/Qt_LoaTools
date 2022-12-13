@@ -95,6 +95,9 @@
           </item>
          </layout>
         </item>
+        <item>
+         <layout class="QVBoxLayout" name="vLayoutEquip"/>
+        </item>
        </layout>
       </widget>
      </item>

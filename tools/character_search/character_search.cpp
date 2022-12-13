@@ -14,6 +14,7 @@
 #include "game_data/card/card.h"
 #include "tools/character_search/ui/others.h"
 #include "tools/character_search/ui/profile_widget.h"
+#include "tools/character_search/ui/equip_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -129,6 +130,14 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
 
         m_pProfileWidget = new ProfileWidget(this, m_pCharacter->getProfile());
         ui->vLayoutProfile->addWidget(m_pProfileWidget);
+
+        for (int i = static_cast<int>(ItemType::무기); i <= static_cast<int>(ItemType::어깨); i++)
+        {
+            ItemType type = static_cast<ItemType>(i);
+            EquipWidget* equipWidget = new EquipWidget(this, m_pCharacter->getEquip(type));
+            m_equipWidgets.append(equipWidget);
+            ui->vLayoutEquip->addWidget(equipWidget);
+        }
     }
 }
 
@@ -145,6 +154,10 @@ void CharacterSearch::reset()
     if (m_pProfileWidget != nullptr)
         delete m_pProfileWidget;
     m_pProfileWidget = nullptr;
+
+    for (EquipWidget* equipWidget : m_equipWidgets)
+        delete equipWidget;
+    m_equipWidgets.clear();
 
     m_replyHandleStatus = 0x00;
 }

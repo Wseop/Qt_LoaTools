@@ -23,12 +23,12 @@ ProfileWidget::~ProfileWidget()
 
 void ProfileWidget::setTexts()
 {
-    ui->lbServer->setText(m_pProfile->getServer());
+    ui->lbServer->setText("@ " + m_pProfile->getServer());
     ui->lbClass->setText(classToStr(m_pProfile->getClass()));
-    ui->lbCharacterLevel->setText(QString("Lv. %1").arg(m_pProfile->getCharacterLevel()));
+    ui->lbCharacterLevel->setText(QString("전투 Lv. %1").arg(m_pProfile->getCharacterLevel()));
     ui->lbCharacterName->setText(m_pProfile->getCharacterName());
-    ui->lbExpLevel->setText(QString("Lv. %1").arg(m_pProfile->getExpLevel()));
-    ui->lbItemLevel->setText(QString("Lv. %1").arg(m_pProfile->getItemLevel()));
+    ui->lbExpLevel->setText(QString("원정대 Lv. %1").arg(m_pProfile->getExpLevel()));
+    ui->lbItemLevel->setText(QString("아이템 Lv. %1").arg(m_pProfile->getItemLevel()));
     ui->lbTitle->setText(m_pProfile->getTitle());
     ui->lbGuild->setText(m_pProfile->getGuild());
     setAbilities();
