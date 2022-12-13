@@ -1,7 +1,8 @@
 #include "accessory.h"
 
 Accessory::Accessory(ItemType type) :
-    Item(type)
+    Item(type),
+    m_penalty({"", 0})
 {
 
 }

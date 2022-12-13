@@ -69,9 +69,15 @@
         <string/>
        </property>
        <property name="alignment">
-        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
        <layout class="QHBoxLayout" name="hLayoutGroupCharacter">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="vLayoutProfile">
           <item>
@@ -97,6 +103,9 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="vLayoutEquip"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="vLayoutAccessory"/>
         </item>
        </layout>
       </widget>

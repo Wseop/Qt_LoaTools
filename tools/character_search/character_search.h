@@ -61,6 +61,7 @@ private:
     class Others* m_pOthers;
     class ProfileWidget* m_pProfileWidget;
     QList<class EquipWidget*> m_equipWidgets;
+    QList<class AccessoryWidget*> m_accessoryWidgets;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

@@ -18,6 +18,7 @@ public:
     ~EquipWidget();
 
 private:
+    void initAlignment();
     void requestIcon();
     void setTexts();
     void setQuality();

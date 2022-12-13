@@ -1,52 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EquipWidget</class>
- <widget class="QWidget" name="EquipWidget">
+ <class>AccessoryWidget</class>
+ <widget class="QWidget" name="AccessoryWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>143</height>
+    <width>268</width>
+    <height>168</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
-    <height>143</height>
+    <width>268</width>
+    <height>168</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>318</width>
-    <height>143</height>
+    <width>268</width>
+    <height>168</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>6</number>
    </property>
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
    <item>
-    <widget class="QGroupBox" name="groupEquip">
+    <widget class="QGroupBox" name="groupAccessory">
      <property name="minimumSize">
       <size>
-       <width>300</width>
-       <height>125</height>
+       <width>250</width>
+       <height>150</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>300</width>
-       <height>125</height>
+       <width>250</width>
+       <height>150</height>
       </size>
      </property>
      <property name="title">
       <string/>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -113,13 +125,13 @@
          <widget class="QLabel" name="lbName">
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>150</width>
             <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>200</width>
+            <width>150</width>
             <height>25</height>
            </size>
           </property>
@@ -132,48 +144,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lbLevelTier">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>25</height>
-           </size>
+         <layout class="QHBoxLayout" name="hLayoutAbility">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>LevelTier</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="lbSetEffectElla">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>SetEffectLevel</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
+         </layout>
         </item>
        </layout>
       </item>

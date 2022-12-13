@@ -15,6 +15,7 @@
 #include "tools/character_search/ui/others.h"
 #include "tools/character_search/ui/profile_widget.h"
 #include "tools/character_search/ui/equip_widget.h"
+#include "tools/character_search/ui/accessory_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -76,11 +77,13 @@ void CharacterSearch::initConnect()
 
 void CharacterSearch::initAlignment()
 {
-    ui->vLayoutBase->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->vLayoutBase->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->hLayoutGroupSearch->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->vLayoutProfile->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->vLayoutProfile->setAlignment(Qt::AlignTop);
+    ui->vLayoutEquip->setAlignment(Qt::AlignTop);
+    ui->vLayoutAccessory->setAlignment(Qt::AlignTop);
 }
 
 void CharacterSearch::initNetworkManagerPool()
@@ -128,15 +131,45 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
 
         m_pOthers = new Others(this, m_pCharacter->getOthers());
 
-        m_pProfileWidget = new ProfileWidget(this, m_pCharacter->getProfile());
-        ui->vLayoutProfile->addWidget(m_pProfileWidget);
+        const Profile* profile = m_pCharacter->getProfile();
+        if (profile != nullptr)
+        {
+            m_pProfileWidget = new ProfileWidget(this, profile);
+            ui->vLayoutProfile->addWidget(m_pProfileWidget);
+        }
 
         for (int i = static_cast<int>(ItemType::무기); i <= static_cast<int>(ItemType::어깨); i++)
         {
             ItemType type = static_cast<ItemType>(i);
-            EquipWidget* equipWidget = new EquipWidget(this, m_pCharacter->getEquip(type));
+            const Equip* equip = m_pCharacter->getEquip(type);
+            if (equip == nullptr)
+                continue;
+
+            EquipWidget* equipWidget = new EquipWidget(this, equip);
             m_equipWidgets.append(equipWidget);
             ui->vLayoutEquip->addWidget(equipWidget);
+        }
+
+        const Accessory* acc = m_pCharacter->getAccessory(ItemType::목걸이);
+        if (acc != nullptr)
+        {
+            AccessoryWidget* neckWidget = new AccessoryWidget(this, acc);
+            m_accessoryWidgets.append(neckWidget);
+            ui->vLayoutAccessory->addWidget(neckWidget);
+        }
+        for (int i = static_cast<int>(ItemType::귀걸이); i <= static_cast<int>(ItemType::반지); i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                ItemType type = static_cast<ItemType>(i);
+                acc = m_pCharacter->getAccessory(type, j);
+                if (acc == nullptr)
+                    continue;
+
+                AccessoryWidget* accWidget = new AccessoryWidget(this, acc);
+                m_accessoryWidgets.append(accWidget);
+                ui->vLayoutAccessory->addWidget(accWidget);
+            }
         }
     }
 }
@@ -158,6 +191,10 @@ void CharacterSearch::reset()
     for (EquipWidget* equipWidget : m_equipWidgets)
         delete equipWidget;
     m_equipWidgets.clear();
+
+    for (AccessoryWidget* accessoryWidget : m_accessoryWidgets)
+        delete accessoryWidget;
+    m_accessoryWidgets.clear();
 
     m_replyHandleStatus = 0x00;
 }

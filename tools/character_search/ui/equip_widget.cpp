@@ -18,6 +18,7 @@ EquipWidget::EquipWidget(QWidget *parent, const Equip* equip) :
     ui->setupUi(this);
     ui->groupEquip->setTitle(itemTypeToStr(m_pEquip->getType()));
 
+    initAlignment();
     requestIcon();
     setTexts();
     setQuality();
@@ -27,6 +28,12 @@ EquipWidget::~EquipWidget()
 {
     delete m_pNetworkManager;
     delete ui;
+}
+
+void EquipWidget::initAlignment()
+{
+    ui->vLayoutLeft->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->vLayoutRight->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 }
 
 void EquipWidget::requestIcon()
