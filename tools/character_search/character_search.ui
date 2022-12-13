@@ -102,10 +102,81 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="vLayoutEquip"/>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="vLayoutAccessory"/>
+         <widget class="QTabWidget" name="tabCharacter">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>장비</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="hLayoutTabCharacter">
+            <property name="spacing">
+             <number>1</number>
+            </property>
+            <item>
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>759</width>
+                 <height>527</height>
+                </rect>
+               </property>
+               <layout class="QHBoxLayout" name="hLayoutCharacterScroll">
+                <property name="spacing">
+                 <number>1</number>
+                </property>
+                <item>
+                 <layout class="QVBoxLayout" name="vLayoutEquip">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="vLayoutAccessory">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="title">
+            <string>스킬</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QScrollArea" name="scrollArea_2">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_2">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>759</width>
+                 <height>527</height>
+                </rect>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>

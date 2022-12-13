@@ -22,6 +22,7 @@ private:
 
     void initConnect();
     void initAlignment();
+    void initStyleSheet();
     void initNetworkManagerPool();
     void initNetworkReplyHandlers();
 
