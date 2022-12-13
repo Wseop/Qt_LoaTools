@@ -50,7 +50,6 @@ void Others::initButtons()
     for (const QString& server : servers)
     {
         movePos(MoveType::Server);
-        // TODO. memory release
         QLabel* serverLabel = new QLabel("@ " + server);
         ui->gridOthers->addWidget(serverLabel, m_gridPos.row, m_gridPos.col, 1, 3);
         movePos(MoveType::Server);

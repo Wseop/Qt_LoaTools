@@ -13,6 +13,7 @@
 #include "game_data/engrave/engrave_manager.h"
 #include "game_data/card/card.h"
 #include "tools/character_search/ui/others.h"
+#include "tools/character_search/ui/profile_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -29,7 +30,8 @@ CharacterSearch::CharacterSearch() :
     ui(new Ui::CharacterSearch),
     m_pCharacter(nullptr),
     m_replyHandleStatus(0x00),
-    m_pOthers(nullptr)
+    m_pOthers(nullptr),
+    m_pProfileWidget(nullptr)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -65,7 +67,7 @@ void CharacterSearch::initConnect()
     connect(ui->leCharacterName, &QLineEdit::returnPressed, this, &CharacterSearch::sendRequests);
     for (int i = 0; i < NETWORK_POOL_COUNT; i++)
         connect(m_networkManagers[i], &QNetworkAccessManager::finished, m_replyHandlers[i]);
-    connect(ui->pbOthers, &QPushButton::pressed, [&](){
+    connect(ui->pbOthers, &QPushButton::pressed, this, [&](){
         this->setDisabled(true);
         m_pOthers->show();
     });
@@ -76,7 +78,7 @@ void CharacterSearch::initAlignment()
     ui->vLayoutBase->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->hLayoutGroupSearch->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->vLayoutProfile->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 }
 
@@ -101,15 +103,7 @@ void CharacterSearch::initNetworkReplyHandlers()
 
 void CharacterSearch::sendRequests()
 {
-    if (m_pCharacter != nullptr)
-        delete m_pCharacter;
-    m_pCharacter = new Character();
-
-    if (m_pOthers != nullptr)
-        delete m_pOthers;
-
-    m_replyHandleStatus = 0x00;
-
+    reset();
     ui->pbSearch->setDisabled(true);
 
     QStringList params;
@@ -129,10 +123,30 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
     if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
     {
         ui->pbSearch->setEnabled(true);
-
         ui->groupCharacter->show();
+
         m_pOthers = new Others(this, m_pCharacter->getOthers());
+
+        m_pProfileWidget = new ProfileWidget(this, m_pCharacter->getProfile());
+        ui->vLayoutProfile->addWidget(m_pProfileWidget);
     }
+}
+
+void CharacterSearch::reset()
+{
+    if (m_pCharacter != nullptr)
+        delete m_pCharacter;
+    m_pCharacter = new Character();
+
+    if (m_pOthers != nullptr)
+        delete m_pOthers;
+    m_pOthers = nullptr;
+
+    if (m_pProfileWidget != nullptr)
+        delete m_pProfileWidget;
+    m_pProfileWidget = nullptr;
+
+    m_replyHandleStatus = 0x00;
 }
 
 void CharacterSearch::handleCharacters(QNetworkReply* reply)
@@ -140,6 +154,8 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
+        CharacterSearch::getInstance()->ui->groupCharacter->hide();
+
         QMessageBox msgBox;
         msgBox.setText("존재하지 않는 캐릭터입니다.");
         msgBox.exec();
