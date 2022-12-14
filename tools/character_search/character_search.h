@@ -68,6 +68,7 @@ private:
     class BraceletWidget* m_pBraceletWidget;
     QList<class GemWidget*> m_gemWidgets;
     class EngraveWidget* m_pEngraveWidget;
+    class CardWidget* m_pCardWidget;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

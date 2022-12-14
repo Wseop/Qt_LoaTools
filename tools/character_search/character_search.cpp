@@ -21,6 +21,7 @@
 #include "tools/character_search/ui/bracelet_widget.h"
 #include "tools/character_search/ui/gem_widget.h"
 #include "tools/character_search/ui/engrave_widget.h"
+#include "tools/character_search/ui/card_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -41,7 +42,8 @@ CharacterSearch::CharacterSearch() :
     m_pProfileWidget(nullptr),
     m_pStoneWidget(nullptr),
     m_pBraceletWidget(nullptr),
-    m_pEngraveWidget(nullptr)
+    m_pEngraveWidget(nullptr),
+    m_pCardWidget(nullptr)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -235,6 +237,13 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_pEngraveWidget = new EngraveWidget(this, pEngrave);
             ui->vLayoutEtc->addWidget(m_pEngraveWidget);
         }
+
+        const Card* pCard = m_pCharacter->getCard();
+        if (pCard != nullptr)
+        {
+            m_pCardWidget = new CardWidget(this, pCard);
+            ui->vLayoutProfile->addWidget(m_pCardWidget);
+        }
     }
 }
 
@@ -275,6 +284,10 @@ void CharacterSearch::reset()
     if (m_pEngraveWidget != nullptr)
         delete m_pEngraveWidget;
     m_pEngraveWidget = nullptr;
+
+    if (m_pCardWidget != nullptr)
+        delete m_pCardWidget;
+    m_pCardWidget = nullptr;
 
     m_replyHandleStatus = 0x00;
 }
