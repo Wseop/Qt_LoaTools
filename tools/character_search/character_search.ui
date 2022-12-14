@@ -146,6 +146,13 @@
                   </property>
                  </layout>
                 </item>
+                <item>
+                 <layout class="QVBoxLayout" name="vLayoutEtc">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </item>
                </layout>
               </widget>
              </widget>

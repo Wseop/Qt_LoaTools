@@ -32,6 +32,7 @@ SOURCES += \
     loatools.cpp \
     tools/auction_calc/auction_calc.cpp \
     tools/character_search/character_search.cpp \
+    tools/character_search/ui/abilitystone_widget.cpp \
     tools/character_search/ui/accessory_widget.cpp \
     tools/character_search/ui/equip_widget.cpp \
     tools/character_search/ui/others.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
     loatools.h \
     tools/auction_calc/auction_calc.h \
     tools/character_search/character_search.h \
+    tools/character_search/ui/abilitystone_widget.h \
     tools/character_search/ui/accessory_widget.h \
     tools/character_search/ui/equip_widget.h \
     tools/character_search/ui/others.h \
@@ -90,6 +92,7 @@ FORMS += \
     loatools.ui \
     tools/auction_calc/auctioncalc.ui \
     tools/character_search/character_search.ui \
+    tools/character_search/ui/abilitystone_widget.ui \
     tools/character_search/ui/accessory_widget.ui \
     tools/character_search/ui/equip_widget.ui \
     tools/character_search/ui/others.ui \

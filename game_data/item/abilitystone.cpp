@@ -1,7 +1,8 @@
 #include "abilitystone.h"
 
 AbilityStone::AbilityStone() :
-    Item(ItemType::어빌리티_스톤)
+    Item(ItemType::어빌리티_스톤),
+    m_penalty({"", 0})
 {
 
 }
