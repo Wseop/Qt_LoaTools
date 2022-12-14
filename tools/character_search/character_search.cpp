@@ -18,6 +18,7 @@
 #include "tools/character_search/ui/equip_widget.h"
 #include "tools/character_search/ui/accessory_widget.h"
 #include "tools/character_search/ui/abilitystone_widget.h"
+#include "tools/character_search/ui/bracelet_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -36,7 +37,8 @@ CharacterSearch::CharacterSearch() :
     m_replyHandleStatus(0x00),
     m_pOthers(nullptr),
     m_pProfileWidget(nullptr),
-    m_pStoneWidget(nullptr)
+    m_pStoneWidget(nullptr),
+    m_pBraceletWidget(nullptr)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -203,6 +205,13 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_pStoneWidget = new AbilityStoneWidget(this, pStone);
             ui->vLayoutEtc->addWidget(m_pStoneWidget);
         }
+
+        const Bracelet* pBracelet = m_pCharacter->getBracelet();
+        if (pBracelet != nullptr)
+        {
+            m_pBraceletWidget = new BraceletWidget(this, pBracelet);
+            ui->vLayoutEtc->addWidget(m_pBraceletWidget);
+        }
     }
 }
 
@@ -231,6 +240,10 @@ void CharacterSearch::reset()
     if (m_pStoneWidget != nullptr)
         delete m_pStoneWidget;
     m_pStoneWidget = nullptr;
+
+    if (m_pBraceletWidget != nullptr)
+        delete m_pBraceletWidget;
+    m_pBraceletWidget = nullptr;
 
     m_replyHandleStatus = 0x00;
 }
@@ -598,7 +611,12 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                             if (endIdx == -1)
                                 endIdx = effect.size();
 
-                            bracelet->addEffect(effect.sliced(startIdx, endIdx - startIdx));
+                            QString slicedStr = effect.sliced(startIdx, endIdx - startIdx);
+                            if (slicedStr.startsWith('['))
+                            {
+                                slicedStr = slicedStr.sliced(0, slicedStr.indexOf("]") + 1);
+                            }
+                            bracelet->addEffect(slicedStr);
 
                             startIdx = effect.indexOf("@", startIdx);
                         }

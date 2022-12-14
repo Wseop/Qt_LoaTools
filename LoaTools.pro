@@ -34,6 +34,7 @@ SOURCES += \
     tools/character_search/character_search.cpp \
     tools/character_search/ui/abilitystone_widget.cpp \
     tools/character_search/ui/accessory_widget.cpp \
+    tools/character_search/ui/bracelet_widget.cpp \
     tools/character_search/ui/equip_widget.cpp \
     tools/character_search/ui/others.cpp \
     tools/character_search/ui/profile_widget.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     tools/character_search/character_search.h \
     tools/character_search/ui/abilitystone_widget.h \
     tools/character_search/ui/accessory_widget.h \
+    tools/character_search/ui/bracelet_widget.h \
     tools/character_search/ui/equip_widget.h \
     tools/character_search/ui/others.h \
     tools/character_search/ui/profile_widget.h \
@@ -94,6 +96,7 @@ FORMS += \
     tools/character_search/character_search.ui \
     tools/character_search/ui/abilitystone_widget.ui \
     tools/character_search/ui/accessory_widget.ui \
+    tools/character_search/ui/bracelet_widget.ui \
     tools/character_search/ui/equip_widget.ui \
     tools/character_search/ui/others.ui \
     tools/character_search/ui/profile_widget.ui \
