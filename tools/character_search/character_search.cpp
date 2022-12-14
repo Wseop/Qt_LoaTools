@@ -19,6 +19,7 @@
 #include "tools/character_search/ui/accessory_widget.h"
 #include "tools/character_search/ui/abilitystone_widget.h"
 #include "tools/character_search/ui/bracelet_widget.h"
+#include "tools/character_search/ui/gem_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -88,11 +89,13 @@ void CharacterSearch::initAlignment()
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->hLayoutGroupSearch->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->hLayoutCharacterScroll->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    ui->hLayoutCharacterScroll->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->vLayoutProfile->setAlignment(Qt::AlignTop);
     ui->vLayoutEquip->setAlignment(Qt::AlignTop);
     ui->vLayoutAccessory->setAlignment(Qt::AlignTop);
     ui->vLayoutEtc->setAlignment(Qt::AlignTop);
+    ui->vLayoutGem1->setAlignment(Qt::AlignTop);
+    ui->vLayoutGem2->setAlignment(Qt::AlignTop);
 }
 
 void CharacterSearch::initStyleSheet()
@@ -212,6 +215,17 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_pBraceletWidget = new BraceletWidget(this, pBracelet);
             ui->vLayoutEtc->addWidget(m_pBraceletWidget);
         }
+
+        const QList<Gem*>& gems = m_pCharacter->getGems();
+        for (const Gem* gem : gems)
+        {
+            GemWidget* gemWidget = new GemWidget(this, gem);
+            m_gemWidgets.append(gemWidget);
+            if (gem->getGemType() == GemType::멸화)
+                ui->vLayoutGem1->addWidget(gemWidget);
+            else
+                ui->vLayoutGem2->addWidget(gemWidget);
+        }
     }
 }
 
@@ -244,6 +258,10 @@ void CharacterSearch::reset()
     if (m_pBraceletWidget != nullptr)
         delete m_pBraceletWidget;
     m_pBraceletWidget = nullptr;
+
+    for (GemWidget* gemWidget : m_gemWidgets)
+        delete gemWidget;
+    m_gemWidgets.clear();
 
     m_replyHandleStatus = 0x00;
 }
@@ -767,18 +785,32 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
         gem->setIconPath(gemObj.find("Icon")->toString());
         gem->setLevel(gemObj.find("Level")->toInt());
         gem->setGrade(strToItemGrade(gemObj.find("Grade")->toString()));
+        if (gem->getName().contains("멸화"))
+            gem->setGemType(GemType::멸화);
+        else if (gem->getName().contains("홍염"))
+            gem->setGemType(GemType::홍염);
         slotToGem[slot] = gem;
     }
 
+    QList<Gem*> gemList;
     for (const QJsonValue& effectValue : gemEffects)
     {
         const QJsonObject& effectObj = effectValue.toObject();
         int slot = effectObj.find("GemSlot")->toInt();
-        QString effectStr = QString("%1 %2").arg(effectObj.find("Name")->toString(), effectObj.find("Description")->toString());
+        QString effectStr = QString("%1").arg(effectObj.find("Name")->toString());
 
         Gem* gem = slotToGem[slot];
         gem->setEffect(effectStr);
 
+        gemList.append(gem);
+    }
+
+    std::sort(gemList.begin(), gemList.end(), [&](Gem* a, Gem* b){
+        return a->getLevel() > b->getLevel();
+    });
+
+    for (Gem* gem : gemList)
+    {
         CharacterSearch::getInstance()->m_pCharacter->addGem(gem);
     }
 

@@ -16,6 +16,11 @@ QString Gem::getEffect() const
     return m_effect;
 }
 
+GemType Gem::getGemType() const
+{
+    return m_gemType;
+}
+
 void Gem::setLevel(int level)
 {
     m_level = level;
@@ -24,4 +29,9 @@ void Gem::setLevel(int level)
 void Gem::setEffect(const QString& effect)
 {
     m_effect = effect;
+}
+
+void Gem::setGemType(GemType type)
+{
+    m_gemType = type;
 }

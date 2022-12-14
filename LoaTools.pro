@@ -36,6 +36,7 @@ SOURCES += \
     tools/character_search/ui/accessory_widget.cpp \
     tools/character_search/ui/bracelet_widget.cpp \
     tools/character_search/ui/equip_widget.cpp \
+    tools/character_search/ui/gem_widget.cpp \
     tools/character_search/ui/others.cpp \
     tools/character_search/ui/profile_widget.cpp \
     tools/engrave_simulator/engrave_simulator.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     game_data/item/abilitystone.h \
     game_data/item/accessory.h \
     game_data/item/bracelet.h \
+    game_data/item/enum/gem_type.h \
     game_data/item/enum/item_grade.h \
     game_data/item/enum/item_type.h \
     game_data/item/enum/set_effect.h \
@@ -79,6 +81,7 @@ HEADERS += \
     tools/character_search/ui/accessory_widget.h \
     tools/character_search/ui/bracelet_widget.h \
     tools/character_search/ui/equip_widget.h \
+    tools/character_search/ui/gem_widget.h \
     tools/character_search/ui/others.h \
     tools/character_search/ui/profile_widget.h \
     tools/character_search/ui/quality_color.h \
@@ -98,6 +101,7 @@ FORMS += \
     tools/character_search/ui/accessory_widget.ui \
     tools/character_search/ui/bracelet_widget.ui \
     tools/character_search/ui/equip_widget.ui \
+    tools/character_search/ui/gem_widget.ui \
     tools/character_search/ui/others.ui \
     tools/character_search/ui/profile_widget.ui \
     tools/engrave_simulator/engravesimulator.ui \

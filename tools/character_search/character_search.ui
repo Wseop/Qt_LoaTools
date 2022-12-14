@@ -130,7 +130,7 @@
                </property>
                <layout class="QHBoxLayout" name="hLayoutCharacterScroll">
                 <property name="spacing">
-                 <number>1</number>
+                 <number>6</number>
                 </property>
                 <item>
                  <layout class="QVBoxLayout" name="vLayoutEquip">
@@ -152,6 +152,12 @@
                    <number>0</number>
                   </property>
                  </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="vLayoutGem1"/>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="vLayoutGem2"/>
                 </item>
                </layout>
               </widget>
