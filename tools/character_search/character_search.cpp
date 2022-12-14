@@ -20,6 +20,7 @@
 #include "tools/character_search/ui/abilitystone_widget.h"
 #include "tools/character_search/ui/bracelet_widget.h"
 #include "tools/character_search/ui/gem_widget.h"
+#include "tools/character_search/ui/engrave_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -39,7 +40,8 @@ CharacterSearch::CharacterSearch() :
     m_pOthers(nullptr),
     m_pProfileWidget(nullptr),
     m_pStoneWidget(nullptr),
-    m_pBraceletWidget(nullptr)
+    m_pBraceletWidget(nullptr),
+    m_pEngraveWidget(nullptr)
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -226,6 +228,13 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             else
                 ui->vLayoutGem2->addWidget(gemWidget);
         }
+
+        const Engrave* pEngrave = m_pCharacter->getEngrave();
+        if (pEngrave != nullptr)
+        {
+            m_pEngraveWidget = new EngraveWidget(this, pEngrave);
+            ui->vLayoutEtc->addWidget(m_pEngraveWidget);
+        }
     }
 }
 
@@ -262,6 +271,10 @@ void CharacterSearch::reset()
     for (GemWidget* gemWidget : m_gemWidgets)
         delete gemWidget;
     m_gemWidgets.clear();
+
+    if (m_pEngraveWidget != nullptr)
+        delete m_pEngraveWidget;
+    m_pEngraveWidget = nullptr;
 
     m_replyHandleStatus = 0x00;
 }

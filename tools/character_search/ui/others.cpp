@@ -15,6 +15,7 @@ Others::Others(QWidget *parent, const QList<Other>& others) :
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
     this->setWindowTitle("보유 캐릭터");
+    ui->gridOthers->setAlignment(Qt::AlignTop);
 
     initButtons();
 }

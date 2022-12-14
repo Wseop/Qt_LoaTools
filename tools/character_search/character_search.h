@@ -67,6 +67,7 @@ private:
     class AbilityStoneWidget* m_pStoneWidget;
     class BraceletWidget* m_pBraceletWidget;
     QList<class GemWidget*> m_gemWidgets;
+    class EngraveWidget* m_pEngraveWidget;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;
