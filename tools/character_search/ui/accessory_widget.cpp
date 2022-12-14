@@ -19,13 +19,13 @@ AccessoryWidget::AccessoryWidget(QWidget* parent, const Accessory* accessory) :
     ui->setupUi(this);
     ui->groupAccessory->setTitle(itemTypeToStr(m_pAccessory->getType()));
 
-    initAlignment();
+    setAlignment();
     requestIcon();
     setTexts();
     setQuality();
     addAbilities();
     addEngraves();
-    initFonts();
+    setFonts();
 }
 
 AccessoryWidget::~AccessoryWidget()
@@ -41,7 +41,7 @@ AccessoryWidget::~AccessoryWidget()
     delete ui;
 }
 
-void AccessoryWidget::initFonts()
+void AccessoryWidget::setFonts()
 {
     FontManager* fontManager = FontManager::getInstance();
     QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
@@ -56,7 +56,7 @@ void AccessoryWidget::initFonts()
     ui->groupAccessory->setFont(nanumRegular10);
 }
 
-void AccessoryWidget::initAlignment()
+void AccessoryWidget::setAlignment()
 {
     ui->vLayoutLeft->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->vLayoutRight->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);

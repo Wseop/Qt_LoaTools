@@ -19,8 +19,8 @@ public:
     ~AccessoryWidget();
 
 private:
-    void initFonts();
-    void initAlignment();
+    void setFonts();
+    void setAlignment();
     void requestIcon();
     void setTexts();
     void setQuality();

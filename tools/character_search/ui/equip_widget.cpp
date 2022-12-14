@@ -19,8 +19,9 @@ EquipWidget::EquipWidget(QWidget *parent, const Equip* equip) :
     ui->setupUi(this);
     ui->groupEquip->setTitle(itemTypeToStr(m_pEquip->getType()));
 
-    initFonts();
-    initAlignment();
+    setFonts();
+    setAlignment();
+    setStyleSheets();
     requestIcon();
     setTexts();
     setQuality();
@@ -32,7 +33,7 @@ EquipWidget::~EquipWidget()
     delete ui;
 }
 
-void EquipWidget::initFonts()
+void EquipWidget::setFonts()
 {
     FontManager* fontManager = FontManager::getInstance();
     QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
@@ -45,10 +46,25 @@ void EquipWidget::initFonts()
     ui->groupEquip->setFont(nanumRegular10);
 }
 
-void EquipWidget::initAlignment()
+void EquipWidget::setAlignment()
 {
     ui->vLayoutLeft->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->vLayoutRight->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+}
+
+void EquipWidget::setStyleSheets()
+{
+    QString labelColor = QString("QLabel { color: %1 }");
+
+    ui->lbName->setStyleSheet(labelColor.arg(colorCode(m_pEquip->getGrade())));
+    if (m_pEquip->isElla())
+    {
+        ui->lbSetEffectElla->setStyleSheet(labelColor.arg(colorCode(ItemGrade::에스더)));
+    }
+    else
+    {
+        ui->lbSetEffectElla->setStyleSheet(labelColor.arg("#000000"));
+    }
 }
 
 void EquipWidget::requestIcon()
@@ -69,20 +85,17 @@ void EquipWidget::requestIcon()
 void EquipWidget::setTexts()
 {
     ui->lbName->setText(m_pEquip->getName());
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(colorCode(m_pEquip->getGrade())));
     ui->lbLevelTier->setText(m_pEquip->getLevelTier());
 
     SetEffect setEffect = m_pEquip->getSetEffect();
     if (setEffect == SetEffect::에스더 && m_pEquip->isElla())
     {
         ui->lbSetEffectElla->setText("엘라 부여");
-        ui->lbSetEffectElla->setStyleSheet(QString("QLabel { color: %1 }").arg(colorCode(ItemGrade::에스더)));
     }
     else
     {
         QString setEffectText = QString("%1 Lv.%2").arg(setEffectToStr(setEffect)).arg(m_pEquip->getSetLevel());
         ui->lbSetEffectElla->setText(setEffectText);
-        ui->lbSetEffectElla->setStyleSheet("QLabel { color: #000000 }");
     }
 }
 

@@ -11,8 +11,8 @@ ProfileWidget::ProfileWidget(QWidget* parent, const Profile* profile) :
     ui->setupUi(this);
 
     setTexts();
-    initFonts();
-    initStyleSheets();
+    setFonts();
+    setStyleSheets();
 }
 
 ProfileWidget::~ProfileWidget()
@@ -24,7 +24,7 @@ ProfileWidget::~ProfileWidget()
     delete ui;
 }
 
-void ProfileWidget::initFonts()
+void ProfileWidget::setFonts()
 {
     FontManager* fontManager = FontManager::getInstance();
     QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
@@ -46,13 +46,13 @@ void ProfileWidget::initFonts()
     ui->groupAbility->setFont(nanumRegular10);
 }
 
-void ProfileWidget::initStyleSheets()
+void ProfileWidget::setStyleSheets()
 {
-    QString styleSheet = QString("QLabel { color: %1 }");
+    QString labelColor = QString("QLabel { color: %1 }");
 
-    ui->lbServer->setStyleSheet(styleSheet.arg("#B178FF"));
-    ui->lbExpLevel->setStyleSheet(styleSheet.arg("#F7B838"));
-    ui->lbItemLevel->setStyleSheet(styleSheet.arg("#FF009B"));
+    ui->lbServer->setStyleSheet(labelColor.arg("#B178FF"));
+    ui->lbExpLevel->setStyleSheet(labelColor.arg("#F7B838"));
+    ui->lbItemLevel->setStyleSheet(labelColor.arg("#FF009B"));
 }
 
 void ProfileWidget::setTexts()
