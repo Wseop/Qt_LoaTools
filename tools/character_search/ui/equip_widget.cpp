@@ -2,6 +2,7 @@
 #include "ui_equip_widget.h"
 #include "game_data/item/equip.h"
 #include "tools/character_search/ui/quality_color.h"
+#include "font/font_manager.h"
 
 #include <QPixmap>
 #include <QNetworkAccessManager>
@@ -18,6 +19,7 @@ EquipWidget::EquipWidget(QWidget *parent, const Equip* equip) :
     ui->setupUi(this);
     ui->groupEquip->setTitle(itemTypeToStr(m_pEquip->getType()));
 
+    initFonts();
     initAlignment();
     requestIcon();
     setTexts();
@@ -28,6 +30,19 @@ EquipWidget::~EquipWidget()
 {
     delete m_pNetworkManager;
     delete ui;
+}
+
+void EquipWidget::initFonts()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->lbName->setFont(nanumBold10);
+    ui->lbLevelTier->setFont(nanumBold10);
+    ui->lbSetEffectElla->setFont(nanumBold10);
+    ui->pbarQuality->setFont(nanumBold10);
+    ui->groupEquip->setFont(nanumRegular10);
 }
 
 void EquipWidget::initAlignment()
@@ -61,11 +76,13 @@ void EquipWidget::setTexts()
     if (setEffect == SetEffect::에스더 && m_pEquip->isElla())
     {
         ui->lbSetEffectElla->setText("엘라 부여");
+        ui->lbSetEffectElla->setStyleSheet(QString("QLabel { color: %1 }").arg(colorCode(ItemGrade::에스더)));
     }
     else
     {
         QString setEffectText = QString("%1 Lv.%2").arg(setEffectToStr(setEffect)).arg(m_pEquip->getSetLevel());
         ui->lbSetEffectElla->setText(setEffectText);
+        ui->lbSetEffectElla->setStyleSheet("QLabel { color: #000000 }");
     }
 }
 

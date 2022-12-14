@@ -1,6 +1,7 @@
 #include "profile_widget.h"
 #include "ui_profile_widget.h"
 #include "game_data/profile/profile.h"
+#include "font/font_manager.h"
 
 ProfileWidget::ProfileWidget(QWidget* parent, const Profile* profile) :
     ui(new Ui::ProfileWidget),
@@ -10,6 +11,8 @@ ProfileWidget::ProfileWidget(QWidget* parent, const Profile* profile) :
     ui->setupUi(this);
 
     setTexts();
+    initFonts();
+    initStyleSheets();
 }
 
 ProfileWidget::~ProfileWidget()
@@ -19,6 +22,37 @@ ProfileWidget::~ProfileWidget()
     m_abilityLabels.clear();
 
     delete ui;
+}
+
+void ProfileWidget::initFonts()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->lbServer->setFont(nanumBold10);
+    ui->lbClass->setFont(nanumBold10);
+    ui->lbCharacterLevel->setFont(nanumBold10);
+    ui->lbCharacterName->setFont(nanumBold10);
+    ui->lbExpLevel->setFont(nanumBold10);
+    ui->lbItemLevel->setFont(nanumBold10);
+    ui->lbTitle->setFont(nanumBold10);
+    ui->lbGuild->setFont(nanumBold10);
+    for (QLabel* label : m_abilityLabels)
+        label->setFont(nanumBold10);
+
+    ui->groupTitle->setFont(nanumRegular10);
+    ui->groupGuild->setFont(nanumRegular10);
+    ui->groupAbility->setFont(nanumRegular10);
+}
+
+void ProfileWidget::initStyleSheets()
+{
+    QString styleSheet = QString("QLabel { color: %1 }");
+
+    ui->lbServer->setStyleSheet(styleSheet.arg("#B178FF"));
+    ui->lbExpLevel->setStyleSheet(styleSheet.arg("#F7B838"));
+    ui->lbItemLevel->setStyleSheet(styleSheet.arg("#FF009B"));
 }
 
 void ProfileWidget::setTexts()

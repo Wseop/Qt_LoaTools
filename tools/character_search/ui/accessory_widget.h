@@ -19,6 +19,7 @@ public:
     ~AccessoryWidget();
 
 private:
+    void initFonts();
     void initAlignment();
     void requestIcon();
     void setTexts();

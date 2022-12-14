@@ -1,6 +1,7 @@
 #include "others.h"
 #include "ui_others.h"
 #include "tools/character_search/character_search.h"
+#include "font/font_manager.h"
 
 #include <QCloseEvent>
 #include <QLabel>
@@ -46,11 +47,16 @@ void Others::initButtons()
         serverToOthers[other.server].append(other);
     }
 
+    QFont nanumBold16 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 16);
+
     const QStringList& servers = serverToOthers.keys();
     for (const QString& server : servers)
     {
         movePos(MoveType::Server);
         QLabel* serverLabel = new QLabel("@ " + server);
+        serverLabel->setStyleSheet("QLabel { color: #B178FF; background-color: #444A5B }");
+        serverLabel->setFont(nanumBold16);
+        serverLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         ui->gridOthers->addWidget(serverLabel, m_gridPos.row, m_gridPos.col, 1, 3);
         movePos(MoveType::Server);
 
@@ -86,8 +92,11 @@ void Others::movePos(MoveType type)
 
 QPushButton* Others::createButton(Class cls, int level, double itemLevel, QString name)
 {
+    QFont nanumBold10 = FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10);
+
     QString btnText = QString("%1 Lv.%2 [%3]\n%4").arg(classToStr(cls)).arg(level).arg(itemLevel).arg(name);
     QPushButton* btn = new QPushButton(btnText);
+    btn->setFont(nanumBold10);
     m_btnToName[btn] = name;
 
     connect(btn, &QPushButton::pressed, this, [&](){

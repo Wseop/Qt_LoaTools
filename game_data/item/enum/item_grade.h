@@ -79,9 +79,9 @@ static inline QString colorCode(ItemGrade grade)
     case ItemGrade::유물:
         return "#FA5D00";
     case ItemGrade::고대:
-        return "#DCB496";
+        return "#D7AC87";
     case ItemGrade::에스더:
-        return "#3CF2E6";
+        return "#36D6CC";
     default:
         return "#000000";
     }

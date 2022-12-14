@@ -23,6 +23,7 @@ private:
     void initConnect();
     void initAlignment();
     void initStyleSheet();
+    void initFont();
     void initNetworkManagerPool();
     void initNetworkReplyHandlers();
 

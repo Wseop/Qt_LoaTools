@@ -18,6 +18,7 @@ public:
     ~EquipWidget();
 
 private:
+    void initFonts();
     void initAlignment();
     void requestIcon();
     void setTexts();

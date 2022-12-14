@@ -19,6 +19,8 @@ public:
     ~ProfileWidget();
 
 private:
+    void initFonts();
+    void initStyleSheets();
     void setTexts();
     void setAbilities();
 

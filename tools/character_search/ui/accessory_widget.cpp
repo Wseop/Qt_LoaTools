@@ -2,6 +2,7 @@
 #include "ui_accessory_widget.h"
 #include "game_data/item/accessory.h"
 #include "tools/character_search/ui/quality_color.h"
+#include "font/font_manager.h"
 
 #include <QPixmap>
 #include <QNetworkAccessManager>
@@ -19,12 +20,12 @@ AccessoryWidget::AccessoryWidget(QWidget* parent, const Accessory* accessory) :
     ui->groupAccessory->setTitle(itemTypeToStr(m_pAccessory->getType()));
 
     initAlignment();
-
     requestIcon();
     setTexts();
     setQuality();
     addAbilities();
     addEngraves();
+    initFonts();
 }
 
 AccessoryWidget::~AccessoryWidget()
@@ -38,6 +39,21 @@ AccessoryWidget::~AccessoryWidget()
     m_engraveLabels.clear();
 
     delete ui;
+}
+
+void AccessoryWidget::initFonts()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->lbName->setFont(nanumBold10);
+    for (QLabel* label : m_abilityLabels)
+        label->setFont(nanumBold10);
+    for (QLabel* label : m_engraveLabels)
+        label->setFont(nanumBold10);
+    ui->pbarQuality->setFont(nanumBold10);
+    ui->groupAccessory->setFont(nanumRegular10);
 }
 
 void AccessoryWidget::initAlignment()
@@ -98,6 +114,7 @@ void AccessoryWidget::addEngraves()
         QLabel* engraveLabel = new QLabel(labelText);
         engraveLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         engraveLabel->setFixedSize(150, 25);
+        engraveLabel->setStyleSheet("QLabel { color: #F7B838 }");
         m_engraveLabels.append(engraveLabel);
         ui->vLayoutRight->addWidget(engraveLabel);
     }
@@ -109,6 +126,7 @@ void AccessoryWidget::addEngraves()
         QLabel* penaltyLabel = new QLabel(labelText);
         penaltyLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         penaltyLabel->setFixedSize(150, 25);
+        penaltyLabel->setStyleSheet("QLabel { color: red }");
         m_engraveLabels.append(penaltyLabel);
         ui->vLayoutRight->addWidget(penaltyLabel);
     }

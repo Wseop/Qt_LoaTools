@@ -12,6 +12,7 @@
 #include "game_data/engrave/engrave.h"
 #include "game_data/engrave/engrave_manager.h"
 #include "game_data/card/card.h"
+#include "font/font_manager.h"
 #include "tools/character_search/ui/others.h"
 #include "tools/character_search/ui/profile_widget.h"
 #include "tools/character_search/ui/equip_widget.h"
@@ -43,6 +44,7 @@ CharacterSearch::CharacterSearch() :
 
     initAlignment();
     initStyleSheet();
+    initFont();
     initNetworkManagerPool();
     initNetworkReplyHandlers();
     initConnect();
@@ -92,6 +94,18 @@ void CharacterSearch::initStyleSheet()
 {
     ui->tab->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
     ui->tab_2->setStyleSheet("QWidget { background-color: rgb(240, 240, 240) }");
+}
+
+void CharacterSearch::initFont()
+{
+    FontManager* fontManager = FontManager::getInstance();
+    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->leCharacterName->setFont(nanumBold10);
+    ui->pbSearch->setFont(nanumBold10);
+    ui->pbOthers->setFont(nanumBold10);
+    ui->tabCharacter->setFont(nanumRegular10);
 }
 
 void CharacterSearch::initNetworkManagerPool()
