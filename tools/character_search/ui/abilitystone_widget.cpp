@@ -31,6 +31,7 @@ AbilityStoneWidget::~AbilityStoneWidget()
         delete label;
     m_engraveLabels.clear();
 
+    delete m_pNetworkManager;
     delete ui;
 }
 
