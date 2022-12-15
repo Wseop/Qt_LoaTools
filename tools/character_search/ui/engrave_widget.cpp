@@ -6,34 +6,68 @@
 
 #include <QPixmap>
 
-EngraveWidget::EngraveWidget(QWidget *parent, const Engrave* engrave) :
+EngraveWidget::EngraveWidget(QWidget* pParent, const Engrave* pEngrave) :
     ui(new Ui::EngraveWidget),
-    m_pParent(parent),
-    m_pEngrave(engrave)
+    m_pParent(pParent),
+    m_pEngrave(pEngrave)
 {
     ui->setupUi(this);
 
-    addEngraveLayouts();
+    setEngraveLayouts();
     setFonts();
-    setAlignments();
-    setStyleSheets();
+    setLayoutAlignments();
 }
 
 EngraveWidget::~EngraveWidget()
 {
-    for (QLabel* label : m_engraveLabels)
-        delete label;
-    m_engraveLabels.clear();
+    for (QLabel* pLabel : m_labels)
+        delete pLabel;
+    m_labels.clear();
 
-    for (QLabel* label : m_penaltyLabels)
-        delete label;
-    m_penaltyLabels.clear();
-
-    for (QHBoxLayout* layout : m_hLayouts)
-        delete layout;
+    for (QHBoxLayout* pLayout : m_hLayouts)
+        delete pLayout;
     m_hLayouts.clear();
 
     delete ui;
+}
+
+void EngraveWidget::setEngraveLayouts()
+{
+    const auto& engraves = m_pEngrave->getEngraves();
+    for (const QPair<QString, int>& engrave : engraves)
+    {
+        QHBoxLayout* pLayout = createHLayout();
+        ui->vLayoutEngraves->addLayout(pLayout);
+
+        QLabel* pIconLabel = createIconLabel(EngraveManager::getInstance()->getEngravePath(engrave.first));
+        pLayout->addWidget(pIconLabel);
+        QLabel* pNameLabel = createNameLabel(engrave.first);
+        pLayout->addWidget(pNameLabel);
+        QLabel* pLevelLabel = createLevelLabel(engrave.second);
+        pLayout->addWidget(pLevelLabel);
+    }
+
+    const auto& penalties = m_pEngrave->getPenalties();
+    for (const QPair<QString, int>& penalty : penalties)
+    {
+        QHBoxLayout* pLayout = createHLayout();
+        ui->vLayoutEngraves->addLayout(pLayout);
+
+        QLabel* pIconLabel = createIconLabel(EngraveManager::getInstance()->getEngravePath(penalty.first));
+        pLayout->addWidget(pIconLabel);
+        QLabel* pNameLabel = createNameLabel(penalty.first);
+        pLayout->addWidget(pNameLabel);
+        QLabel* pLevelLabel = createLevelLabel(penalty.second);
+        pLayout->addWidget(pLevelLabel);
+    }
+}
+
+QHBoxLayout* EngraveWidget::createHLayout()
+{
+    QHBoxLayout* pLayout = new QHBoxLayout();
+    pLayout->setSpacing(9);
+    m_hLayouts.append(pLayout);
+    return pLayout;
 }
 
 void EngraveWidget::setFonts()
@@ -42,93 +76,41 @@ void EngraveWidget::setFonts()
     QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
     QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
 
-    for (QLabel* label : m_engraveLabels)
-        label->setFont(nanumBold10);
-    for (QLabel* label : m_penaltyLabels)
-        label->setFont(nanumBold10);
+    for (QLabel* pLabel : m_labels)
+        pLabel->setFont(nanumBold10);
     ui->groupEngrave->setFont(nanumRegular10);
 }
 
-void EngraveWidget::setAlignments()
+QLabel* EngraveWidget::createIconLabel(QString iconPath)
 {
-    ui->vLayoutEngraves->setAlignment(Qt::AlignTop);
-    for (QHBoxLayout* layout : m_hLayouts)
-        layout->setAlignment(Qt::AlignVCenter);
-    for (QLabel* label : m_engraveLabels)
-        label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    for (QLabel* label : m_penaltyLabels)
-        label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-}
-
-void EngraveWidget::setStyleSheets()
-{
-    QString labelColor = QString("QLabel { color: %1 }");
-
-    for (QLabel* label : m_penaltyLabels)
-        label->setStyleSheet(labelColor.arg("red"));
-}
-
-void EngraveWidget::addEngraveLayouts()
-{
-    const QList<QPair<QString, int>>& engraves = m_pEngrave->getEngraves();
-    for (const auto& engrave : engraves)
-    {
-        QHBoxLayout* layout = new QHBoxLayout();
-        m_hLayouts.append(layout);
-        ui->vLayoutEngraves->addLayout(layout);
-
-        QLabel* lbIcon = createIcon(engrave.first);
-        QLabel* lbName = createName(engrave.first);
-        QLabel* lbLevel = createLevel(engrave.second);
-        m_engraveLabels.append(lbIcon);
-        m_engraveLabels.append(lbName);
-        m_engraveLabels.append(lbLevel);
-        layout->addWidget(lbIcon);
-        layout->addWidget(lbName);
-        layout->addWidget(lbLevel);
-    }
-
-    const QList<QPair<QString, int>>& penalties = m_pEngrave->getPenalties();
-    for (const auto& penalty : penalties)
-    {
-        QHBoxLayout* layout = new QHBoxLayout();
-        m_hLayouts.append(layout);
-        ui->vLayoutEngraves->addLayout(layout);
-
-        QLabel* lbIcon = createIcon(penalty.first);
-        QLabel* lbName = createName(penalty.first);
-        QLabel* lbLevel = createLevel(penalty.second);
-        m_penaltyLabels.append(lbIcon);
-        m_penaltyLabels.append(lbName);
-        m_penaltyLabels.append(lbLevel);
-        layout->addWidget(lbIcon);
-        layout->addWidget(lbName);
-        layout->addWidget(lbLevel);
-    }
-}
-
-QLabel* EngraveWidget::createIcon(QString engrave)
-{
-    QLabel* label = new QLabel();
-
-    QString iconPath = EngraveManager::getInstance()->getEngravePath(engrave);
+    QLabel* pLabel = new QLabel();
+    pLabel->setFixedSize(50, 50);
+    m_labels.append(pLabel);
     QPixmap icon;
-    if (!icon.load(iconPath))
-        return label;
-    label->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
-    return label;
+    if (icon.load(iconPath))
+    {
+        pLabel->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        pLabel->setStyleSheet("QLabel { border: 1px solid black }");
+    }
+    return pLabel;
 }
 
-QLabel* EngraveWidget::createName(QString engrave)
+QLabel* EngraveWidget::createNameLabel(QString engrave)
 {
-    QLabel* label = new QLabel(engrave);
-    return label;
+    QLabel* pLabel = new QLabel(engrave);
+    m_labels.append(pLabel);
+    return pLabel;
 }
 
-QLabel* EngraveWidget::createLevel(int level)
+QLabel* EngraveWidget::createLevelLabel(int level)
 {
     QString labelText = QString("Lv.%1").arg(level);
-    QLabel* label = new QLabel(labelText);
-    return label;
+    QLabel* pLabel = new QLabel(labelText);
+    m_labels.append(pLabel);
+    return pLabel;
+}
+
+void EngraveWidget::setLayoutAlignments()
+{
+    ui->vLayoutEngraves->setAlignment(Qt::AlignVCenter);
 }

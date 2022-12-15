@@ -94,7 +94,7 @@ void CharacterSearch::initAlignment()
     ui->vLayoutMain->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     ui->hLayoutGroupSearch->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->hLayoutGroupCharacter->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    ui->hLayoutCharacterScroll->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->hLayoutCharacterScroll->setAlignment(Qt::AlignTop);
     ui->vLayoutProfile->setAlignment(Qt::AlignTop);
     ui->vLayoutEquip->setAlignment(Qt::AlignTop);
     ui->vLayoutAccessory->setAlignment(Qt::AlignTop);

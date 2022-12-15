@@ -9,26 +9,51 @@
 #include <QNetworkReply>
 #include <QUrl>
 
-GemWidget::GemWidget(QWidget* parent, const Gem* gem) :
+GemWidget::GemWidget(QWidget* pParent, const Gem* pGem) :
     ui(new Ui::GemWidget),
-    m_pParent(parent),
-    m_pGem(gem),
+    m_pParent(pParent),
+    m_pGem(pGem),
     m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
     ui->groupGem->setTitle(gemTypeToStr(m_pGem->getGemType()));
 
-    setTexts();
-    requestIcon();
+    loadIcon();
+    setLabels();
     setFonts();
-    setAlignments();
-    setStyleSheets();
+    setLayoutAlignments();
 }
 
 GemWidget::~GemWidget()
 {
     delete m_pNetworkManager;
     delete ui;
+}
+
+void GemWidget::loadIcon()
+{
+    QNetworkRequest request;
+    request.setUrl(QUrl(m_pGem->getIconPath()));
+
+    connect(m_pNetworkManager, &QNetworkAccessManager::finished, this, [&](QNetworkReply* pReply){
+        QPixmap icon;
+        if (icon.loadFromData(pReply->readAll(), "PNG"))
+        {
+            ui->lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+            ui->lbIcon->setStyleSheet("QLabel { border: 1px solid black }");
+        }
+    });
+    m_pNetworkManager->get(request);
+}
+
+void GemWidget::setLabels()
+{
+    QString labelColor = QString("QLabel { color: %1 }");
+
+    ui->lbName->setText(m_pGem->getName());
+    ui->lbName->setStyleSheet(labelColor.arg(colorCode(m_pGem->getGrade())));
+
+    ui->lbEffect->setText(m_pGem->getEffect());
 }
 
 void GemWidget::setFonts()
@@ -42,37 +67,7 @@ void GemWidget::setFonts()
     ui->groupGem->setFont(nanumRegular10);
 }
 
-void GemWidget::setAlignments()
+void GemWidget::setLayoutAlignments()
 {
-    ui->lbName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    ui->lbEffect->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-}
-
-void GemWidget::setStyleSheets()
-{
-    QString labelColor = QString("QLabel { color: %1 }");
-    QString labelBorder = QString("QLabel { border: %1 %2 %3 }");
-
-    ui->lbName->setStyleSheet(labelColor.arg(colorCode(m_pGem->getGrade())));
-    ui->lbIcon->setStyleSheet(labelBorder.arg("1px", "solid", "black"));
-}
-
-void GemWidget::setTexts()
-{
-    ui->lbName->setText(m_pGem->getName());
-    ui->lbEffect->setText(m_pGem->getEffect());
-}
-
-void GemWidget::requestIcon()
-{
-    QNetworkRequest request;
-    request.setUrl(QUrl(m_pGem->getIconPath()));
-
-    connect(m_pNetworkManager, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply){
-        QPixmap icon;
-        if (!icon.loadFromData(reply->readAll(), "PNG"))
-            return;
-        ui->lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    });
-    m_pNetworkManager->get(request);
+    ui->vLayoutRight->setAlignment(Qt::AlignVCenter);
 }

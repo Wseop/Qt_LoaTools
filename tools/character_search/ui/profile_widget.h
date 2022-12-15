@@ -15,14 +15,13 @@ class ProfileWidget : public QWidget
     Q_OBJECT
 
 public:
-    ProfileWidget(QWidget* parent, const Profile* profile);
+    ProfileWidget(QWidget* pParent, const Profile* pProfile);
     ~ProfileWidget();
 
 private:
+    void setLabels();
+    void setAbilityLabel();
     void setFonts();
-    void setStyleSheets();
-    void setTexts();
-    void setAbilities();
 
 private:
     Ui::ProfileWidget *ui;

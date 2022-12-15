@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>268</width>
-    <height>170</height>
+    <height>109</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>268</width>
-    <height>170</height>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -27,7 +27,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>6</number>
+    <number>1</number>
    </property>
    <property name="leftMargin">
     <number>9</number>
@@ -46,7 +46,7 @@
      <property name="minimumSize">
       <size>
        <width>250</width>
-       <height>170</height>
+       <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -60,18 +60,30 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item>
        <layout class="QVBoxLayout" name="vLayoutLeft">
         <property name="spacing">
-         <number>0</number>
+         <number>1</number>
+        </property>
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <property name="rightMargin">
+         <number>9</number>
+        </property>
+        <property name="bottomMargin">
+         <number>9</number>
         </property>
         <item>
          <widget class="QLabel" name="lbIcon">
@@ -125,6 +137,18 @@
       <item>
        <layout class="QVBoxLayout" name="vLayoutRight">
         <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -152,6 +176,18 @@
         <item>
          <layout class="QHBoxLayout" name="hLayoutAbility">
           <property name="spacing">
+           <number>1</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
          </layout>

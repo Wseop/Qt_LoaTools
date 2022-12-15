@@ -15,25 +15,23 @@ class AccessoryWidget : public QWidget
     Q_OBJECT
 
 public:
-    AccessoryWidget(QWidget* parent, const Accessory* accessory);
+    AccessoryWidget(QWidget* pParent, const Accessory* pAccessory);
     ~AccessoryWidget();
 
 private:
+    void loadIcon();
+    void setQualityBar();
+    void setLabels();
+    QLabel* createLabel(QString labelText, QString labelColor);
     void setFonts();
-    void setAlignment();
-    void requestIcon();
-    void setTexts();
-    void setQuality();
-    void addAbilities();
-    void addEngraves();
+    void setLayoutAlignments();
 
 private:
     Ui::AccessoryWidget *ui;
     QWidget* m_pParent;
     const Accessory* m_pAccessory;
     class QNetworkAccessManager* m_pNetworkManager;
-    QList<QLabel*> m_abilityLabels;
-    QList<QLabel*> m_engraveLabels;
+    QList<QLabel*> m_labels;
 };
 
 #endif // ACCESSORY_WIDGET_H

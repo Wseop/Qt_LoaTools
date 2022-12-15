@@ -14,15 +14,14 @@ class GemWidget : public QWidget
     Q_OBJECT
 
 public:
-    GemWidget(QWidget* parent, const Gem* gem);
+    GemWidget(QWidget* pParent, const Gem* pGem);
     ~GemWidget();
 
 private:
+    void loadIcon();
+    void setLabels();
     void setFonts();
-    void setAlignments();
-    void setStyleSheets();
-    void setTexts();
-    void requestIcon();
+    void setLayoutAlignments();
 
 private:
     Ui::GemWidget *ui;

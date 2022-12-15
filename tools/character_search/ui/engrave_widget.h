@@ -16,25 +16,24 @@ class EngraveWidget : public QWidget
     Q_OBJECT
 
 public:
-    EngraveWidget(QWidget* parent, const Engrave* engrave);
+    EngraveWidget(QWidget* pParent, const Engrave* pEngrave);
     ~EngraveWidget();
 
 private:
+    void setEngraveLayouts();
+    QHBoxLayout* createHLayout();
+    QLabel* createIconLabel(QString iconPath);
+    QLabel* createNameLabel(QString engrave);
+    QLabel* createLevelLabel(int level);
     void setFonts();
-    void setAlignments();
-    void setStyleSheets();
-    void addEngraveLayouts();
-    QLabel* createIcon(QString engrave);
-    QLabel* createName(QString engrave);
-    QLabel* createLevel(int level);
+    void setLayoutAlignments();
 
 private:
     Ui::EngraveWidget *ui;
     QWidget* m_pParent;
     const Engrave* m_pEngrave;
     QList<QHBoxLayout*> m_hLayouts;
-    QList<QLabel*> m_engraveLabels;
-    QList<QLabel*> m_penaltyLabels;
+    QList<QLabel*> m_labels;
 };
 
 #endif // ENGRAVE_WIDGET_H

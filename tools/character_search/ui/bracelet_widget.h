@@ -15,23 +15,22 @@ class BraceletWidget : public QWidget
     Q_OBJECT
 
 public:
-    BraceletWidget(QWidget* parent, const Bracelet* bracelet);
+    BraceletWidget(QWidget* pParent, const Bracelet* pBracelet);
     ~BraceletWidget();
 
 private:
+    void loadIcon();
+    void setLabels();
+    QLabel* createEffectLabels(QString labelText);
     void setFonts();
-    void setAlignments();
-    void setStyleSheets();
-    void requestIcon();
-    void setTexts();
-    void addEffectLabels();
+    void setLayoutAlignments();
 
 private:
     Ui::BraceletWidget *ui;
     QWidget* m_pParent;
     const Bracelet* m_pBracelet;
     class QNetworkAccessManager* m_pNetworkManager;
-    QList<QLabel*> m_effectLabels;
+    QList<QLabel*> m_labels;
 };
 
 #endif // BRACELET_WIDGET_H

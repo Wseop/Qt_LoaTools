@@ -14,16 +14,15 @@ class EquipWidget : public QWidget
     Q_OBJECT
 
 public:
-    EquipWidget(QWidget *parent, const Equip* equip);
+    EquipWidget(QWidget *pParent, const Equip* pEquip);
     ~EquipWidget();
 
 private:
+    void loadIcon();
+    void setQualityBar();
+    void setLabels();
     void setFonts();
-    void setAlignment();
-    void setStyleSheets();
-    void requestIcon();
-    void setTexts();
-    void setQuality();
+    void setLayoutAlignments();
 
 private:
     Ui::EquipWidget *ui;

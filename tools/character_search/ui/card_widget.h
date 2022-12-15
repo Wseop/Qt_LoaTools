@@ -15,16 +15,15 @@ class CardWidget : public QWidget
     Q_OBJECT
 
 public:
-    CardWidget(QWidget* parent, const Card* card);
+    CardWidget(QWidget* pParent, const Card* pCard);
     ~CardWidget();
 
 private:
+    void setLabels();
+    QLabel* createNameLabel(const QString& name);
+    QLabel* createDescLabel(const QString& desc);
     void setFonts();
-    void setAlignments();
-    void setStyleSheets();
-    void addCards();
-    QLabel* createName(const QString& name);
-    QLabel* createDesc(const QString& desc);
+    void setLayoutAlignments();
 
 private:
     Ui::CardWidget *ui;

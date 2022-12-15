@@ -16,16 +16,16 @@ class SkillWidget : public QWidget
     Q_OBJECT
 
 public:
-    SkillWidget(QWidget* parent, const Skill* skill);
+    SkillWidget(QWidget* pParent, const Skill* pSkill);
     ~SkillWidget();
 
 private:
-    void setFonts();
     void setTexts();
     void setTripods();
     void setRune();
-    void requestSkillIcon();
-    void requestRuneIcon(QString iconPath, QLabel* pLbRuneIcon);
+    void loadSkillIcon();
+    void loadRuneIcon(QString iconPath, QLabel* pLbRuneIcon);
+    void setFonts();
 
 private:
     Ui::SkillWidget *ui;

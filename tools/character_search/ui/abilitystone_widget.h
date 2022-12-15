@@ -15,15 +15,15 @@ class AbilityStoneWidget : public QWidget
     Q_OBJECT
 
 public:
-    AbilityStoneWidget(QWidget* parent, const AbilityStone* stone);
+    AbilityStoneWidget(QWidget* pParent, const AbilityStone* pStone);
     ~AbilityStoneWidget();
 
 private:
+    void loadIcon();
+    void setLabels();
+    QLabel* createEngraveLabel(QString labelText, QString labelColor);
     void setFonts();
-    void setStyleSheets();
-    void requestIcon();
-    void setTexts();
-    void addEngraveLabels();
+    void setLayoutAlignments();
 
 private:
     Ui::AbilityStoneWidget *ui;

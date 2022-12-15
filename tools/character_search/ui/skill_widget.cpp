@@ -9,14 +9,14 @@
 #include <QNetworkReply>
 #include <QUrl>
 
-SkillWidget::SkillWidget(QWidget* parent, const Skill* skill) :
+SkillWidget::SkillWidget(QWidget* pParent, const Skill* pSkill) :
     ui(new Ui::SkillWidget),
-    m_pParent(parent),
-    m_pSkill(skill)
+    m_pParent(pParent),
+    m_pSkill(pSkill)
 {
     ui->setupUi(this);
 
-    requestSkillIcon();
+    loadSkillIcon();
     setTexts();
     setTripods();
     setRune();
@@ -40,20 +40,6 @@ SkillWidget::~SkillWidget()
     delete ui;
 }
 
-void SkillWidget::setFonts()
-{
-    FontManager* pFontManager = FontManager::getInstance();
-    QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
-    QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-
-    ui->lbName->setFont(nanumBold10);
-    ui->lbLevel->setFont(nanumBold10);
-    for (QLabel* pLabel : m_labels)
-        pLabel->setFont(nanumBold10);
-    ui->groupTripod->setFont(nanumRegular10);
-    ui->groupRune->setFont(nanumRegular10);
-}
-
 void SkillWidget::setTexts()
 {
     ui->lbName->setText(m_pSkill->getName());
@@ -73,23 +59,23 @@ void SkillWidget::setTripods()
         QString colorCode = tripodColorCode(tripod.tier);
         QString labelColor = QString("QLabel { color: %1 }").arg(colorCode);
 
-        QLabel* lbTripodTier = new QLabel(QString("%1:").arg(tripod.tier + 1));
-        lbTripodTier->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        lbTripodTier->setStyleSheet(labelColor);
-        m_labels.append(lbTripodTier);
-        hLayout->addWidget(lbTripodTier);
+        QLabel* pLbTripodTier = new QLabel(QString("%1:").arg(tripod.tier + 1));
+        pLbTripodTier->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        pLbTripodTier->setStyleSheet(labelColor);
+        m_labels.append(pLbTripodTier);
+        hLayout->addWidget(pLbTripodTier);
 
-        QLabel* lbTripodName = new QLabel(tripod.name);
-        lbTripodName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        lbTripodName->setStyleSheet(labelColor);
-        m_labels.append(lbTripodName);
-        hLayout->addWidget(lbTripodName);
+        QLabel* pLbTripodName = new QLabel(tripod.name);
+        pLbTripodName->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        pLbTripodName->setStyleSheet(labelColor);
+        m_labels.append(pLbTripodName);
+        hLayout->addWidget(pLbTripodName);
 
-        QLabel* lbTripodLevel = new QLabel(QString("Lv. %1").arg(tripod.level));
-        lbTripodLevel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        lbTripodLevel->setStyleSheet(labelColor);
-        m_labels.append(lbTripodLevel);
-        hLayout->addWidget(lbTripodLevel);
+        QLabel* pLbTripodLevel = new QLabel(QString("Lv. %1").arg(tripod.level));
+        pLbTripodLevel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        pLbTripodLevel->setStyleSheet(labelColor);
+        m_labels.append(pLbTripodLevel);
+        hLayout->addWidget(pLbTripodLevel);
     }
 }
 
@@ -103,7 +89,7 @@ void SkillWidget::setRune()
     pLbRuneIcon->setFixedSize(50, 50);
     m_labels.append(pLbRuneIcon);
     ui->hLayoutRune->addWidget(pLbRuneIcon);
-    requestRuneIcon(pRune->getIconPath(), pLbRuneIcon);
+    loadRuneIcon(pRune->getIconPath(), pLbRuneIcon);
 
     QLabel* pLbRuneName = new QLabel(pRune->getName());
     pLbRuneName->setStyleSheet(QString("QLabel { color: %1 }").arg(colorCode(pRune->getGrade())));
@@ -111,7 +97,7 @@ void SkillWidget::setRune()
     ui->hLayoutRune->addWidget(pLbRuneName);
 }
 
-void SkillWidget::requestSkillIcon()
+void SkillWidget::loadSkillIcon()
 {
     QNetworkAccessManager* pNetworkManager = new QNetworkAccessManager();
     m_networkManagers.append(pNetworkManager);
@@ -119,9 +105,9 @@ void SkillWidget::requestSkillIcon()
     QNetworkRequest request;
     request.setUrl(QUrl(m_pSkill->getIconPath()));
 
-    connect(pNetworkManager, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply){
+    connect(pNetworkManager, &QNetworkAccessManager::finished, this, [&](QNetworkReply* pReply){
         QPixmap icon;
-        if (icon.loadFromData(reply->readAll(), "PNG"))
+        if (icon.loadFromData(pReply->readAll(), "PNG"))
         {
             ui->lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
             ui->lbIcon->setStyleSheet("QLabel { border: 1px solid black }");
@@ -130,7 +116,7 @@ void SkillWidget::requestSkillIcon()
     pNetworkManager->get(request);
 }
 
-void SkillWidget::requestRuneIcon(QString iconPath, QLabel* pLbRuneIcon)
+void SkillWidget::loadRuneIcon(QString iconPath, QLabel* pLbRuneIcon)
 {
     QNetworkAccessManager* pNetworkManager = new QNetworkAccessManager();
     m_networkManagers.append(pNetworkManager);
@@ -138,13 +124,28 @@ void SkillWidget::requestRuneIcon(QString iconPath, QLabel* pLbRuneIcon)
     QNetworkRequest request;
     request.setUrl(QUrl(iconPath));
 
-    connect(pNetworkManager, &QNetworkAccessManager::finished, this, [pLbRuneIcon](QNetworkReply* reply){
+    connect(pNetworkManager, &QNetworkAccessManager::finished, this, [pLbRuneIcon](QNetworkReply* pReply){
         QPixmap icon;
-        if (icon.loadFromData(reply->readAll(), "PNG"))
+        if (icon.loadFromData(pReply->readAll(), "PNG"))
         {
             pLbRuneIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
             pLbRuneIcon->setStyleSheet("QLabel { border: 1px solid black }");
         }
     });
     pNetworkManager->get(request);
+}
+
+
+void SkillWidget::setFonts()
+{
+    FontManager* pFontManager = FontManager::getInstance();
+    QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->lbName->setFont(nanumBold10);
+    ui->lbLevel->setFont(nanumBold10);
+    for (QLabel* pLabel : m_labels)
+        pLabel->setFont(nanumBold10);
+    ui->groupTripod->setFont(nanumRegular10);
+    ui->groupRune->setFont(nanumRegular10);
 }

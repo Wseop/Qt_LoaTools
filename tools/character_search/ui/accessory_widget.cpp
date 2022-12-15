@@ -10,68 +10,38 @@
 #include <QNetworkReply>
 #include <QUrl>
 
-AccessoryWidget::AccessoryWidget(QWidget* parent, const Accessory* accessory) :
+AccessoryWidget::AccessoryWidget(QWidget* pParent, const Accessory* pAccessory) :
     ui(new Ui::AccessoryWidget),
-    m_pParent(parent),
-    m_pAccessory(accessory),
+    m_pParent(pParent),
+    m_pAccessory(pAccessory),
     m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
     ui->groupAccessory->setTitle(itemTypeToStr(m_pAccessory->getType()));
 
-    setAlignment();
-    requestIcon();
-    setTexts();
-    setQuality();
-    addAbilities();
-    addEngraves();
+    loadIcon();
+    setQualityBar();
+    setLabels();
     setFonts();
+    setLayoutAlignments();
 }
 
 AccessoryWidget::~AccessoryWidget()
 {
-    for (QLabel* label : m_abilityLabels)
-        delete label;
-    m_abilityLabels.clear();
-
-    for (QLabel* label : m_engraveLabels)
-        delete label;
-    m_engraveLabels.clear();
-
+    for (QLabel* pLabel : m_labels)
+        delete pLabel;
     delete m_pNetworkManager;
     delete ui;
 }
 
-void AccessoryWidget::setFonts()
-{
-    FontManager* fontManager = FontManager::getInstance();
-    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
-    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-
-    ui->lbName->setFont(nanumBold10);
-    for (QLabel* label : m_abilityLabels)
-        label->setFont(nanumBold10);
-    for (QLabel* label : m_engraveLabels)
-        label->setFont(nanumBold10);
-    ui->pbarQuality->setFont(nanumBold10);
-    ui->groupAccessory->setFont(nanumRegular10);
-}
-
-void AccessoryWidget::setAlignment()
-{
-    ui->vLayoutLeft->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    ui->vLayoutRight->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    ui->hLayoutAbility->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-}
-
-void AccessoryWidget::requestIcon()
+void AccessoryWidget::loadIcon()
 {
     QNetworkRequest request;
     request.setUrl(QUrl(m_pAccessory->getIconPath()));
 
-    connect(m_pNetworkManager, &QNetworkAccessManager::finished, [&](QNetworkReply* reply){
+    connect(m_pNetworkManager, &QNetworkAccessManager::finished, [&](QNetworkReply* pReply){
         QPixmap icon;
-        if (!icon.loadFromData(reply->readAll(), "PNG"))
+        if (!icon.loadFromData(pReply->readAll(), "PNG"))
             return;
         ui->lbIcon->setPixmap(icon.scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         ui->lbIcon->setStyleSheet(QString("QLabel { border: 1px solid black }"));
@@ -79,56 +49,68 @@ void AccessoryWidget::requestIcon()
     m_pNetworkManager->get(request);
 }
 
-void AccessoryWidget::setTexts()
-{
-    ui->lbName->setText(m_pAccessory->getName());
-    ui->lbName->setStyleSheet(QString("QLabel { color: %1 }").arg(colorCode(m_pAccessory->getGrade())));
-}
-
-void AccessoryWidget::setQuality()
+void AccessoryWidget::setQualityBar()
 {
     int quality = m_pAccessory->getQuality();
     ui->pbarQuality->setValue(quality);
     ui->pbarQuality->setStyleSheet(QString("QProgressBar::chunk { background-color: %1 }").arg(getQualityColor(quality)));
 }
 
-void AccessoryWidget::addAbilities()
+void AccessoryWidget::setLabels()
 {
+    QString labelColor = QString("QLabel { color: %1 }");
+
+    ui->lbName->setText(m_pAccessory->getName());
+    ui->lbName->setStyleSheet(labelColor.arg(colorCode(m_pAccessory->getGrade())));
+
     const auto& abilities = m_pAccessory->getAbilities();
     for (const QPair<Ability, int>& ability : abilities)
     {
         QString labelText = QString("%1 +%2").arg(abilityToStr(ability.first)).arg(ability.second);
-        QLabel* abilityLabel = new QLabel(labelText);
-        abilityLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        abilityLabel->setFixedSize(70, 25);
-        m_abilityLabels.append(abilityLabel);
-        ui->hLayoutAbility->addWidget(abilityLabel);
+        QLabel* pAbilityLabel = createLabel(labelText, labelColor.arg("#000000"));
+        ui->hLayoutAbility->addWidget(pAbilityLabel);
     }
-}
 
-void AccessoryWidget::addEngraves()
-{
     const auto& engraves = m_pAccessory->getEngraves();
     for (const QPair<QString, int>& engrave : engraves)
     {
         QString labelText = QString("[%1] +%2").arg(engrave.first).arg(engrave.second);
-        QLabel* engraveLabel = new QLabel(labelText);
-        engraveLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        engraveLabel->setFixedSize(150, 25);
-        engraveLabel->setStyleSheet("QLabel { color: #F7B838 }");
-        m_engraveLabels.append(engraveLabel);
-        ui->vLayoutRight->addWidget(engraveLabel);
+        QLabel* pEngraveLabel = createLabel(labelText, labelColor.arg("#F7B838"));
+        ui->vLayoutRight->addWidget(pEngraveLabel);
     }
 
     const QPair<QString, int>& penalty = m_pAccessory->getPenalty();
     if (penalty.first != "")
     {
         QString labelText = QString("[%1] +%2").arg(penalty.first).arg(penalty.second);
-        QLabel* penaltyLabel = new QLabel(labelText);
-        penaltyLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        penaltyLabel->setFixedSize(150, 25);
-        penaltyLabel->setStyleSheet("QLabel { color: red }");
-        m_engraveLabels.append(penaltyLabel);
-        ui->vLayoutRight->addWidget(penaltyLabel);
+        QLabel* pPenaltyLabel = createLabel(labelText, labelColor.arg("red"));
+        ui->vLayoutRight->addWidget(pPenaltyLabel);
     }
+}
+
+QLabel* AccessoryWidget::createLabel(QString labelText, QString labelColor)
+{
+    QLabel* pLabel = new QLabel(labelText);
+    pLabel->setStyleSheet(labelColor);
+    m_labels.append(pLabel);
+    return pLabel;
+}
+
+void AccessoryWidget::setFonts()
+{
+    FontManager* pFontManager = FontManager::getInstance();
+    QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+
+    ui->lbName->setFont(nanumBold10);
+    for (QLabel* pLabel : m_labels)
+        pLabel->setFont(nanumBold10);
+    ui->pbarQuality->setFont(nanumBold10);
+    ui->groupAccessory->setFont(nanumRegular10);
+}
+
+void AccessoryWidget::setLayoutAlignments()
+{
+    ui->vLayoutLeft->setAlignment(Qt::AlignVCenter);
+    ui->vLayoutRight->setAlignment(Qt::AlignVCenter);
 }
