@@ -69,6 +69,7 @@ private:
     QList<class GemWidget*> m_gemWidgets;
     class EngraveWidget* m_pEngraveWidget;
     class CardWidget* m_pCardWidget;
+    QList<class SkillWidget*> m_skillWidgets;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

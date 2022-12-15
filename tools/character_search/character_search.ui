@@ -184,6 +184,11 @@
                  <height>527</height>
                 </rect>
                </property>
+               <layout class="QVBoxLayout" name="vLayoutSkill">
+                <property name="spacing">
+                 <number>1</number>
+                </property>
+               </layout>
               </widget>
              </widget>
             </item>

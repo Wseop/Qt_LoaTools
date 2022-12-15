@@ -41,6 +41,7 @@ SOURCES += \
     tools/character_search/ui/gem_widget.cpp \
     tools/character_search/ui/others.cpp \
     tools/character_search/ui/profile_widget.cpp \
+    tools/character_search/ui/skill_widget.cpp \
     tools/engrave_simulator/engrave_simulator.cpp \
     tools/meteor_timer/meteor_timer.cpp \
     tools/ranking_board/ranking_board.cpp \
@@ -89,6 +90,7 @@ HEADERS += \
     tools/character_search/ui/others.h \
     tools/character_search/ui/profile_widget.h \
     tools/character_search/ui/quality_color.h \
+    tools/character_search/ui/skill_widget.h \
     tools/engrave_simulator/engrave_simulator.h \
     tools/meteor_timer/meteor_timer.h \
     tools/ranking_board/ranking_board.h \
@@ -110,6 +112,7 @@ FORMS += \
     tools/character_search/ui/gem_widget.ui \
     tools/character_search/ui/others.ui \
     tools/character_search/ui/profile_widget.ui \
+    tools/character_search/ui/skill_widget.ui \
     tools/engrave_simulator/engravesimulator.ui \
     tools/meteor_timer/meteortimer.ui \
     tools/ranking_board/ranking_board.ui \

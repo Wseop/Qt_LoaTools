@@ -22,6 +22,7 @@
 #include "tools/character_search/ui/gem_widget.h"
 #include "tools/character_search/ui/engrave_widget.h"
 #include "tools/character_search/ui/card_widget.h"
+#include "tools/character_search/ui/skill_widget.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -100,6 +101,7 @@ void CharacterSearch::initAlignment()
     ui->vLayoutEtc->setAlignment(Qt::AlignTop);
     ui->vLayoutGem1->setAlignment(Qt::AlignTop);
     ui->vLayoutGem2->setAlignment(Qt::AlignTop);
+    ui->vLayoutSkill->setAlignment(Qt::AlignTop);
 }
 
 void CharacterSearch::initStyleSheet()
@@ -244,6 +246,14 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_pCardWidget = new CardWidget(this, pCard);
             ui->vLayoutProfile->addWidget(m_pCardWidget);
         }
+
+        const QList<Skill*>& skills = m_pCharacter->getSkills();
+        for (const Skill* skill : skills)
+        {
+            SkillWidget* skillWidget = new SkillWidget(this, skill);
+            m_skillWidgets.append(skillWidget);
+            ui->vLayoutSkill->addWidget(skillWidget);
+        }
     }
 }
 
@@ -288,6 +298,10 @@ void CharacterSearch::reset()
     if (m_pCardWidget != nullptr)
         delete m_pCardWidget;
     m_pCardWidget = nullptr;
+
+    for (SkillWidget* skillWidget : m_skillWidgets)
+        delete skillWidget;
+    m_skillWidgets.clear();
 
     m_replyHandleStatus = 0x00;
 }
