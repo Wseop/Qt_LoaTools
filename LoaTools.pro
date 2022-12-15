@@ -27,7 +27,6 @@ SOURCES += \
     game_data/skill/skillrune.cpp \
     game_data/skill/skillrune_manager.cpp \
     http_client/http_client.cpp \
-    http_client/json_builder.cpp \
     main.cpp \
     loatools.cpp \
     tools/auction_calc/auction_calc.cpp \
@@ -76,7 +75,6 @@ HEADERS += \
     game_data/skill/skillrune.h \
     game_data/skill/skillrune_manager.h \
     http_client/http_client.h \
-    http_client/json_builder.h \
     loatools.h \
     tools/auction_calc/auction_calc.h \
     tools/character_search/character_search.h \
