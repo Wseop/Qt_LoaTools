@@ -170,7 +170,6 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
     m_replyHandleStatus |= statusBit;
     if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
     {
-        ui->pbSearch->setEnabled(true);
         ui->groupCharacter->show();
 
         m_pOthers = new Others(this, m_pCharacter->getOthers());
@@ -375,6 +374,8 @@ void CharacterSearch::insertToDb()
 
     bsoncxx::document::value docValueSettingV2 = DocumentManager::buildDocumentSettingV2(pProfile->getCharacterName(), pProfile->getClass(), settingCode).extract();
     m_pDbRequest->insertOrUpdateDocument(Collection::SettingV2, docValueSettingV2, "Name", pProfile->getCharacterName());
+
+    ui->pbSearch->setEnabled(true);
 }
 
 void CharacterSearch::handleCharacters(QNetworkReply* reply)
