@@ -11,7 +11,7 @@ class SettingCodeManager : public QObject
     Q_OBJECT
 
 public:
-    static QString generateSettingCode(QList<Ability> abilities, QList<SetEffect> setEffects, QList<QPair<QString, int>> engraves);
+    static QString generateSettingCode(const QList<Ability>& abilities, const QList<SetEffect>& setEffects, const QList<QPair<QString, int>>& engraves);
     static QList<Ability> parseAbilities(QString settingCode);
     static QList<SetEffect> parseSetEffects(QString settingCode);
     static QList<QPair<QString, int>> parseClassEngraves(QString settingCode);

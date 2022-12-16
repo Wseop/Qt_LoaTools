@@ -32,6 +32,8 @@ private:
 
     void reset();
 
+    void insertToDb();
+
 private:
     // QNetworkReply data handlers
     static void handleCharacters(QNetworkReply* reply);
@@ -70,6 +72,9 @@ private:
     class EngraveWidget* m_pEngraveWidget;
     class CardWidget* m_pCardWidget;
     QList<class SkillWidget*> m_skillWidgets;
+
+    class QThread* m_pDbRequestThread;
+    class DBRequest* m_pDbRequest;
 
     static CharacterSearch* m_pCharacterSearch;
     static QRegularExpression m_regExpHtmlTag;

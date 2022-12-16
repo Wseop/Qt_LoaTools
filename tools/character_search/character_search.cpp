@@ -23,6 +23,9 @@
 #include "tools/character_search/ui/engrave_widget.h"
 #include "tools/character_search/ui/card_widget.h"
 #include "tools/character_search/ui/skill_widget.h"
+#include "db/db_request.h"
+#include "db/document/document_manager.h"
+#include "db/document/settingcode_manager.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -30,6 +33,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QMessageBox>
+#include <QThread>
 #include <algorithm>
 
 CharacterSearch* CharacterSearch::m_pCharacterSearch = nullptr;
@@ -44,7 +48,9 @@ CharacterSearch::CharacterSearch() :
     m_pStoneWidget(nullptr),
     m_pBraceletWidget(nullptr),
     m_pEngraveWidget(nullptr),
-    m_pCardWidget(nullptr)
+    m_pCardWidget(nullptr),
+    m_pDbRequestThread(new QThread()),
+    m_pDbRequest(new DBRequest())
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -58,6 +64,8 @@ CharacterSearch::CharacterSearch() :
     initNetworkManagerPool();
     initNetworkReplyHandlers();
     initConnect();
+
+    m_pDbRequest->moveToThread(m_pDbRequestThread);
 }
 
 CharacterSearch::~CharacterSearch()
@@ -254,6 +262,8 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_skillWidgets.append(skillWidget);
             ui->vLayoutSkill->addWidget(skillWidget);
         }
+
+        insertToDb();
     }
 }
 
@@ -304,6 +314,67 @@ void CharacterSearch::reset()
     m_skillWidgets.clear();
 
     m_replyHandleStatus = 0x00;
+}
+
+void CharacterSearch::insertToDb()
+{
+    // Insert Character
+    const Profile* pProfile = m_pCharacter->getProfile();
+    if (pProfile == nullptr || pProfile->getItemLevel() < 1540)
+        return;
+
+    bsoncxx::document::value docValueCharacter = DocumentManager::buildDocumentCharacter(pProfile->getCharacterName(), pProfile->getClass(), pProfile->getItemLevel()).extract();
+    m_pDbRequest->insertOrUpdateDocument(Collection::Character, docValueCharacter, "Name", pProfile->getCharacterName());
+
+    // Insert SettingV2
+    QList<Ability> abilities;
+    for (int i = static_cast<int>(ItemType::목걸이); i <= static_cast<int>(ItemType::반지); i++)
+    {
+        ItemType type = static_cast<ItemType>(i);
+        if (type == ItemType::목걸이)
+        {
+            const Accessory* pAcc = m_pCharacter->getAccessory(type);
+            if (pAcc == nullptr)
+                return;
+
+            const auto& accAbilities = pAcc->getAbilities();
+            abilities.append(accAbilities[0].first);
+            abilities.append(accAbilities[1].first);
+        }
+        else
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                const Accessory* pAcc = m_pCharacter->getAccessory(type, j);
+                if (pAcc == nullptr)
+                    return;
+
+                const auto& accAbilities = pAcc->getAbilities();
+                abilities.append(accAbilities[0].first);
+            }
+        }
+    }
+    QList<SetEffect> setEffects;
+    for (int i = 0; i <= static_cast<int>(ItemType::어깨); i++)
+    {
+        ItemType type = static_cast<ItemType>(i);
+        const Equip* pEquip = m_pCharacter->getEquip(type);
+        if (pEquip == nullptr || pEquip->getGrade() < ItemGrade::유물)
+            return;
+
+        if (pEquip->getGrade() == ItemGrade::에스더 && type == ItemType::무기)
+        {
+            setEffects.append(m_pCharacter->getEquip(ItemType::장갑)->getSetEffect());
+        }
+        else
+        {
+            setEffects.append(pEquip->getSetEffect());
+        }
+    }
+    QString settingCode = SettingCodeManager::generateSettingCode(abilities, setEffects, m_pCharacter->getEngrave()->getEngraves());
+
+    bsoncxx::document::value docValueSettingV2 = DocumentManager::buildDocumentSettingV2(pProfile->getCharacterName(), pProfile->getClass(), settingCode).extract();
+    m_pDbRequest->insertOrUpdateDocument(Collection::SettingV2, docValueSettingV2, "Name", pProfile->getCharacterName());
 }
 
 void CharacterSearch::handleCharacters(QNetworkReply* reply)

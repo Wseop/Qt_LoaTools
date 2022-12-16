@@ -7,7 +7,7 @@
 #include <QMap>
 #include <QDebug>
 
-QString SettingCodeManager::generateSettingCode(QList<Ability> abilities, QList<SetEffect> setEffects, QList<QPair<QString, int>> engraves)
+QString SettingCodeManager::generateSettingCode(const QList<Ability>& abilities, const QList<SetEffect>& setEffects, const QList<QPair<QString, int>>& engraves)
 {
     return generateAbilityCode(abilities) +
            generateSetEffectCode(setEffects) +
