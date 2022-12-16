@@ -47,17 +47,20 @@ void EngraveWidget::setEngraveLayouts()
         pLayout->addWidget(pLevelLabel);
     }
 
+    QString penaltyLabelColor = QString("QLabel { color: red }");
     const auto& penalties = m_pEngrave->getPenalties();
     for (const QPair<QString, int>& penalty : penalties)
     {
         QHBoxLayout* pLayout = createHLayout();
         ui->vLayoutEngraves->addLayout(pLayout);
 
-        QLabel* pIconLabel = createIconLabel(EngraveManager::getInstance()->getEngravePath(penalty.first));
+        QLabel* pIconLabel = createIconLabel(EngraveManager::getInstance()->getPenaltyPath(penalty.first));
         pLayout->addWidget(pIconLabel);
         QLabel* pNameLabel = createNameLabel(penalty.first);
+        pNameLabel->setStyleSheet(penaltyLabelColor);
         pLayout->addWidget(pNameLabel);
         QLabel* pLevelLabel = createLevelLabel(penalty.second);
+        pLevelLabel->setStyleSheet(penaltyLabelColor);
         pLayout->addWidget(pLevelLabel);
     }
 }
