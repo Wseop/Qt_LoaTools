@@ -139,7 +139,7 @@ void RankingBoard::requestAllCharacters()
     disableInput();
 
     connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
-    emit m_pDBRequest->requestAllDocuments(Collection::Character, -1, "Level");
+    //emit m_pDBRequest->requestAllDocuments(Collection::Character, -1, "Level");
 }
 
 QLabel *RankingBoard::createLabel(QString text)

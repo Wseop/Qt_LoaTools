@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     db/db.cpp \
     db/db_request.cpp \
+    db/document/document_manager.cpp \
     db/document/settingcode_manager.cpp \
     font/font_manager.cpp \
     game_data/card/card.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
 HEADERS += \
     db/db.h \
     db/db_request.h \
+    db/document/document_manager.h \
     db/document/settingcode_manager.h \
     db/enum/collection.h \
     font/font_manager.h \
