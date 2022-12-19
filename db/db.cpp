@@ -40,6 +40,8 @@ mongocxx::collection DB::getCollection(Collection collection)
         return m_db["Setting_v2"];
     case Collection::LostarkAPI:
         return m_db["LostarkAPI"];
+    case Collection::CharacterV2:
+        return m_db["Character_v2"];
     }
 }
 

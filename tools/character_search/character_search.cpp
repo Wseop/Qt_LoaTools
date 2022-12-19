@@ -323,7 +323,7 @@ void CharacterSearch::insertToDb()
         return;
 
     bsoncxx::document::value docValueCharacter = DocumentManager::buildDocumentCharacter(pProfile->getCharacterName(), pProfile->getClass(), pProfile->getItemLevel()).extract();
-    m_pDbRequest->insertOrUpdateDocument(Collection::Character, docValueCharacter, "Name", pProfile->getCharacterName());
+    m_pDbRequest->insertOrUpdateDocument(Collection::CharacterV2, docValueCharacter, "Name", pProfile->getCharacterName());
 
     // Insert SettingV2
     QList<Ability> abilities;

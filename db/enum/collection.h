@@ -6,7 +6,8 @@ enum class Collection
     Character,
     Setting,
     SettingV2,
-    LostarkAPI
+    LostarkAPI,
+    CharacterV2,
 };
 
 #endif // COLLECTION_H
