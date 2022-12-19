@@ -5,6 +5,7 @@
 #include "tools/setting_adviser/class_selector.h"
 
 #include <QWidget>
+#include <QJsonArray>
 
 namespace Ui {
 class RankingBoard;
@@ -18,14 +19,6 @@ private:
     RankingBoard();
     ~RankingBoard();
 
-public:
-    void setSelectedClass(Class cls);
-
-public:
-    static RankingBoard* getInstance();
-    static void destroyInstance();
-
-private:
     void initAlignment();
     void initFont();
     void initConnect();
@@ -43,6 +36,13 @@ private:
 
     void renderCharacters(bool bInitialize);
 
+public:
+    void setSelectedClass(Class cls);
+
+public:
+    static RankingBoard* getInstance();
+    static void destroyInstance();
+
 private slots:
     // hSliderSelectItemLevel
     void slotSetSelectItemLevel(int value);
@@ -53,8 +53,7 @@ private slots:
     void slotRenderMore();
     // pbSelectAllClass
     void slotRenderAll();
-    // handle DB datas
-    void slotHandleCharacters(QVariantList characters);
+    void slotSetCharacters(QJsonArray characters);
 
 private:
     Ui::RankingBoard *ui;
@@ -62,13 +61,15 @@ private:
     const int RENDER_COUNT;
 
     class DBRequest* m_pDBRequest;
-    QVariantList m_characters;
+    QJsonArray m_characters;
     int m_rankIndex;
     int m_characterIndex;
     int m_selectedItemLevel;
     Class m_selectedClass;
     ClassSelector* m_pClassSelector = nullptr;
     QList<QLabel*> m_labels;
+
+    class QThread* m_pThread;
 
 private:
     static RankingBoard* m_pRankingBoard;

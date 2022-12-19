@@ -6,6 +6,8 @@
 #include <bsoncxx/builder/stream/document.hpp>
 
 #include <QObject>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class DBRequest : public QObject
 {
@@ -14,7 +16,13 @@ class DBRequest : public QObject
 public:
     DBRequest();
 
+    void findDocument(Collection collection, QString filterField, QString filterValue);
+    void findDocuments(Collection collection, int order, QString orderField, QString filterField = "", QString filterValue = "");
     void insertOrUpdateDocument(Collection collection, bsoncxx::document::value doc, QString dupCheckField, QString dupCheckValue);
+
+signals:
+    void findDocumentFinished(QJsonObject);
+    void findDocumentsFinished(QJsonArray);
 
 private:
     DB* m_pDb;

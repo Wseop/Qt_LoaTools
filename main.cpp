@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     // run http_client
     QThread* httpThread = new QThread();
     HttpClient::getInstance()->moveToThread(httpThread);
+    httpThread->start();
 
     // run main widget
     LoaTools w;

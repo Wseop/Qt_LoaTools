@@ -6,6 +6,11 @@
 #include <QJsonObject>
 #include <QThread>
 
+void loadCharacters(DBRequest* pDbRequest)
+{
+    pDbRequest->findDocuments(Collection::Character, -1, "Level");
+}
+
 RankingBoard* RankingBoard::m_pRankingBoard = nullptr;
 
 RankingBoard::RankingBoard() :
@@ -28,15 +33,12 @@ RankingBoard::RankingBoard() :
     initFont();
     initConnect();
 
-    QThread* dbThread = new QThread();
-    m_pDBRequest->moveToThread(dbThread);
-    dbThread->start();
-
     requestAllCharacters();
 }
 
 RankingBoard::~RankingBoard()
 {
+    delete m_pDBRequest;
     delete ui;
     destroyInstance();
 }
@@ -75,9 +77,9 @@ void RankingBoard::initAlignment()
 
 void RankingBoard::initFont()
 {
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
-    QFont fontNanumBold12 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
+    FontManager* pFontManager = FontManager::getInstance();
+    QFont fontNanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont fontNanumBold12 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
 
     ui->lbSelectedClass->setFont(fontNanumBold10);
     ui->lbSelectItemLevel->setFont(fontNanumBold10);
@@ -100,6 +102,8 @@ void RankingBoard::initConnect()
     connect(ui->pbSelectAllClass, SIGNAL(pressed()), this, SLOT(slotRenderAll()));
     connect(ui->pbSelectClass, SIGNAL(pressed()), this, SLOT(slotShowClassSelector()));
     connect(ui->pbRenderMore, SIGNAL(pressed()), this, SLOT(slotRenderMore()));
+
+    connect(m_pDBRequest, &DBRequest::findDocumentsFinished, this, &RankingBoard::slotSetCharacters);
 }
 
 void RankingBoard::disableInput()
@@ -125,10 +129,10 @@ void RankingBoard::enableInput()
 void RankingBoard::clear()
 {
     // release labels
-    for (QLabel* label : m_labels)
+    for (QLabel* pLabel : m_labels)
     {
-        ui->gridRankingBoard->removeWidget(label);
-        delete label;
+        ui->gridRankingBoard->removeWidget(pLabel);
+        delete pLabel;
     }
     m_labels.clear();
 }
@@ -138,32 +142,32 @@ void RankingBoard::requestAllCharacters()
     ui->lbSelectedClass->setText("전체 랭킹");
     disableInput();
 
-    connect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
-    //emit m_pDBRequest->requestAllDocuments(Collection::Character, -1, "Level");
+    m_pThread = QThread::create(loadCharacters, m_pDBRequest);
+    m_pThread->start();
 }
 
-QLabel *RankingBoard::createLabel(QString text)
+QLabel* RankingBoard::createLabel(QString text)
 {
-    QLabel* label = new QLabel(text);
-    label->setFixedSize(150, 50);
-    label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-    return label;
+    QLabel* pLabel = new QLabel(text);
+    pLabel->setFixedSize(150, 50);
+    pLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    m_labels.append(pLabel);
+    return pLabel;
 }
 
 QString RankingBoard::getCharacterName(int index)
 {
-    return m_characters[index].toJsonObject().find("Name")->toString();
+    return m_characters[index].toObject().find("Name")->toString();
 }
 
 double RankingBoard::getCharacterItemLevel(int index)
 {
-    return m_characters[index].toJsonObject().find("Level")->toDouble();
+    return m_characters[index].toObject().find("Level")->toDouble();
 }
 
 Class RankingBoard::getCharacterClass(int index)
 {
-    return strToClass(m_characters[index].toJsonObject().find("Class")->toString());
+    return strToClass(m_characters[index].toObject().find("Class")->toString());
 }
 
 void RankingBoard::renderCharacters(bool bInitialize)
@@ -190,24 +194,19 @@ void RankingBoard::renderCharacters(bool bInitialize)
         {
             QString name = getCharacterName(m_characterIndex);
 
-            QLabel* lbRank = createLabel(QString("%1").arg(m_rankIndex + 1));
-            lbRank->setFont(fontNanumBold10);
-            QLabel* lbName = createLabel(name);
-            lbName->setFont(fontNanumBold10);
-            QLabel* lbItemLevel = createLabel(QString("%1").arg(itemLevel));
-            lbItemLevel->setFont(fontNanumBold10);
-            QLabel* lbClass = createLabel(classToStr(cls));
-            lbClass->setFont(fontNanumBold10);
+            QLabel* pLbRank = createLabel(QString("%1").arg(m_rankIndex + 1));
+            pLbRank->setFont(fontNanumBold10);
+            QLabel* pLbName = createLabel(name);
+            pLbName->setFont(fontNanumBold10);
+            QLabel* pLbItemLevel = createLabel(QString("%1").arg(itemLevel));
+            pLbItemLevel->setFont(fontNanumBold10);
+            QLabel* pLbClass = createLabel(classToStr(cls));
+            pLbClass->setFont(fontNanumBold10);
 
-            m_labels.append(lbRank);
-            m_labels.append(lbName);
-            m_labels.append(lbItemLevel);
-            m_labels.append(lbClass);
-
-            ui->gridRankingBoard->addWidget(lbRank, m_rankIndex, 0);
-            ui->gridRankingBoard->addWidget(lbName, m_rankIndex, 1);
-            ui->gridRankingBoard->addWidget(lbItemLevel, m_rankIndex, 2);
-            ui->gridRankingBoard->addWidget(lbClass, m_rankIndex, 3);
+            ui->gridRankingBoard->addWidget(pLbRank, m_rankIndex, 0);
+            ui->gridRankingBoard->addWidget(pLbName, m_rankIndex, 1);
+            ui->gridRankingBoard->addWidget(pLbItemLevel, m_rankIndex, 2);
+            ui->gridRankingBoard->addWidget(pLbClass, m_rankIndex, 3);
 
             m_rankIndex++;
             i++;
@@ -246,10 +245,8 @@ void RankingBoard::slotRenderAll()
     renderCharacters(true);
 }
 
-void RankingBoard::slotHandleCharacters(QVariantList characters)
+void RankingBoard::slotSetCharacters(QJsonArray characters)
 {
-    disconnect(m_pDBRequest, SIGNAL(finished(QVariantList)), this, SLOT(slotHandleCharacters(QVariantList)));
-
     m_characters = characters;
     enableInput();
     renderCharacters(true);

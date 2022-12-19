@@ -1,11 +1,63 @@
 #include "db_request.h"
 
+#include <bsoncxx/json.hpp>
+#include <mongocxx/cursor.hpp>
+#include <mongocxx/options/find.hpp>
+
+#include <QJsonDocument>
+
 using namespace bsoncxx::builder::stream;
 
 DBRequest::DBRequest() :
     m_pDb(DB::getInstance())
 {
 
+}
+
+void DBRequest::findDocument(Collection collection, QString filterField, QString filterValue)
+{
+    m_pDb->lock();
+
+    QJsonObject result;
+    auto doc = m_pDb->getCollection(collection).find_one(document{} << filterField.toStdString() << filterValue.toStdString() << finalize);
+    if (doc)
+    {
+        result = QJsonDocument::fromJson(bsoncxx::to_json(*doc).data()).object();
+    }
+
+    m_pDb->unlock();
+
+    emit findDocumentFinished(result);
+}
+
+void DBRequest::findDocuments(Collection collection, int order, QString orderField, QString filterField, QString filterValue)
+{
+    // set sort option
+    mongocxx::options::find options{};
+    document orderDoc{};
+    if (order == 1 || order == -1)
+        orderDoc << orderField.toStdString() << order;
+    options.sort(orderDoc.view());
+
+    // set filter
+    document filterDoc{};
+    if (filterField != "")
+    {
+        filterDoc << filterField.toStdString() << filterValue.toStdString();
+    }
+
+    m_pDb->lock();
+
+    QJsonArray result;
+    mongocxx::cursor cursor = m_pDb->getCollection(collection).find(filterDoc.view(), options);
+    for (auto doc : cursor)
+    {
+        result.append(QJsonDocument::fromJson(bsoncxx::to_json(doc).data()).object());
+    }
+
+    m_pDb->unlock();
+
+    emit findDocumentsFinished(result);
 }
 
 void DBRequest::insertOrUpdateDocument(Collection collection, bsoncxx::document::value doc, QString dupCheckField, QString dupCheckValue)
