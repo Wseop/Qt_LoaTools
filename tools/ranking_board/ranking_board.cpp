@@ -8,7 +8,7 @@
 
 void loadCharacters(DBRequest* pDbRequest)
 {
-    pDbRequest->findDocuments(Collection::Character, -1, "Level");
+    pDbRequest->findDocuments(Collection::CharacterV2, -1, "Level");
 }
 
 RankingBoard* RankingBoard::m_pRankingBoard = nullptr;
