@@ -1,7 +1,11 @@
 #ifndef SETTING_WIDGET_H
 #define SETTING_WIDGET_H
 
+#include "game_data/profile/enum/ability.h"
+#include "game_data/item/enum/set_effect.h"
+
 #include <QWidget>
+#include <QLabel>
 
 namespace Ui {
 class SettingWidget;
@@ -12,45 +16,22 @@ class SettingWidget : public QWidget
     Q_OBJECT
 
 public:
-    SettingWidget();
+    SettingWidget(QString settingCode, int rank, double adoptRate, int characterCount);
     ~SettingWidget();
 
-    void setIndex(int index);
-    void setNumOfCharacters(int numOfCharacters);
-    void setAdoptRatio(double adoptRatio);
-    void setTitle(QString title);
-    void setAbilities(QStringList abilities);
-    void setSetEffects(QStringList setEffects);
-    void setClassEngraves(QList<QPair<QString, int>> classEngraves);
-    void setNormalEngraves(QList<QPair<QString, int>> normalEngraves);
-
 private:
-    void initFont();
-
-    void renderAbility();
-    void renderSetEffect();
-    void renderClassEngrave();
-    void renderNormalEngrave();
-
-    bool is97Stone();
+    void setFonts();
+    void setAlignments();
+    void setAdoptRate(int rank, double adoptRate, int characterCount);
+    void setAbility(QList<Ability> abilities);
+    void setSetEffect(QList<SetEffect> setEffects);
+    void setEngrave(QList<QPair<QString, int>> classEngraves, QList<QPair<QString, int>> normalEngraves);
+    QLabel* createIconLabel(QString engrave);
 
 private:
     Ui::SettingWidget *ui;
 
-    int m_index;
-    int m_numOfCharacters;
-    double m_adoptRatio;
-    QStringList m_abilities;
-    QStringList m_setEffects;
-    QList<QPair<QString, int>> m_classEngraves;
-    QList<QPair<QString, int>> m_normalEngraves;
-
-    QMap<class QHBoxLayout*, class QVBoxLayout*> m_mapClassLayout;
-    QMap<class QLabel*, class QHBoxLayout*> m_mapClassIcon;
-    QMap<class QLabel*, class QHBoxLayout*> m_mapClassEngrave;
-    QMap<class QVBoxLayout*, class QHBoxLayout*> m_mapNormalLayout;
-    QMap<class QLabel*, class QVBoxLayout*> m_mapNormalIcon;
-    QMap<class QLabel*, class QVBoxLayout*> m_mapNormalEngrave;
+    QList<QLabel*> m_iconLabels;
 };
 
 #endif // SETTING_WIDGET_H

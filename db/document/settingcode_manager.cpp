@@ -66,7 +66,7 @@ QList<QPair<QString, int>> SettingCodeManager::parseClassEngraves(QString settin
     int endIndex = settingCode.indexOf("CL");
     QString engraveNameCode = settingCode.sliced(startIndex, endIndex - startIndex);
 
-    startIndex = settingCode.indexOf("CL") + 1;
+    startIndex = settingCode.indexOf("CL") + 2;
     endIndex = settingCode.indexOf("N");
     QString engraveLevelCode = settingCode.sliced(startIndex, endIndex - startIndex);
 
@@ -96,7 +96,7 @@ QList<QPair<QString, int>> SettingCodeManager::parseNormalEngraves(QString setti
     int endIndex = settingCode.indexOf("NL");
     QString engraveNameCode = settingCode.sliced(startIndex, endIndex - startIndex);
 
-    startIndex = settingCode.indexOf("NL") + 1;
+    startIndex = settingCode.indexOf("NL") + 2;
     endIndex = settingCode.size();
     QString engraveLevelCode = settingCode.sliced(startIndex, endIndex - startIndex);
 

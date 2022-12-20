@@ -14,35 +14,14 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>1</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="hLayoutTop">
-     <item>
-      <widget class="QPushButton" name="pbTopSetting">
-       <property name="minimumSize">
-        <size>
-         <width>150</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>나눔스퀘어_ac Bold</family>
-         <pointsize>10</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>직업별
-인기 세팅</string>
-       </property>
-      </widget>
-     </item>
+     <property name="spacing">
+      <number>1</number>
+     </property>
      <item>
       <widget class="QPushButton" name="pbSelectClass">
        <property name="minimumSize">
@@ -157,80 +136,13 @@
         <x>0</x>
         <y>0</y>
         <width>1056</width>
-        <height>584</height>
+        <height>589</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="hLayoutSettings">
-         <item>
-          <widget class="QGroupBox" name="groupSetting1">
-           <property name="font">
-            <font>
-             <family>나눔스퀘어 네오 ExtraBold</family>
-             <pointsize>16</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <layout class="QVBoxLayout" name="vLayoutSetting1"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupSetting2">
-           <property name="font">
-            <font>
-             <family>나눔스퀘어 네오 ExtraBold</family>
-             <pointsize>16</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <layout class="QVBoxLayout" name="vLayoutSetting2"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupSetting3">
-           <property name="font">
-            <font>
-             <family>나눔스퀘어 네오 ExtraBold</family>
-             <pointsize>16</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item>
-             <layout class="QVBoxLayout" name="vLayoutSetting3"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
+      <layout class="QVBoxLayout" name="vLayoutScrollArea">
+       <property name="spacing">
+        <number>1</number>
+       </property>
       </layout>
      </widget>
     </widget>

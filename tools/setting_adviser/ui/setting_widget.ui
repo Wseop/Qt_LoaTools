@@ -6,291 +6,225 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
-    <height>300</height>
+    <width>498</width>
+    <height>464</height>
    </rect>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>16777215</width>
-    <height>300</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>1</number>
+   </property>
    <item>
-    <widget class="QGroupBox" name="groupSetting">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>300</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>나눔스퀘어 네오 ExtraBold</family>
-       <pointsize>14</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
+    <widget class="QGroupBox" name="groupSettingWidget">
      <property name="title">
       <string/>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="spacing">
+       <number>1</number>
+      </property>
       <item>
-       <layout class="QHBoxLayout" name="hLayout1">
+       <widget class="QGroupBox" name="groupRate">
+        <property name="title">
+         <string>채용률</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lbRate">
+           <property name="text">
+            <string>ex.) 10.25% (n개 캐릭터)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="hLayoutAbilitySetEffect">
+        <property name="spacing">
+         <number>1</number>
+        </property>
         <item>
          <widget class="QGroupBox" name="groupAbility">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>나눔스퀘어 네오 ExtraBold</family>
-            <pointsize>10</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
           <property name="title">
            <string>특성</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="spacing">
+            <number>1</number>
+           </property>
            <item>
-            <layout class="QHBoxLayout" name="hLayoutNeck">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 ExtraBold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>목걸이</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbNeck1">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbNeck2">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QGroupBox" name="groupNeck">
+             <property name="title">
+              <string>목걸이</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <property name="spacing">
+               <number>1</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lbNeck1">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>1</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbNeck2">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>2</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="hLayoutEar">
-             <item>
-              <widget class="QLabel" name="label_5">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 ExtraBold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>귀걸이</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbEar1">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbEar2">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QGroupBox" name="groupEar">
+             <property name="title">
+              <string>귀걸이</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <property name="spacing">
+               <number>1</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lbEar1">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>1</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbEar2">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>2</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="hLayoutRing">
-             <item>
-              <widget class="QLabel" name="label_8">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 ExtraBold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>반지</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbRing1">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="lbRing2">
-               <property name="font">
-                <font>
-                 <family>나눔스퀘어 네오 Bold</family>
-                 <pointsize>12</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QGroupBox" name="groupRing">
+             <property name="title">
+              <string>반지</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <property name="spacing">
+               <number>1</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lbRing1">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>1</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbRing2">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>2</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
          <widget class="QGroupBox" name="groupSetEffect">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>나눔스퀘어 네오 ExtraBold</family>
-            <pointsize>10</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
           <property name="title">
-           <string>세트 효과</string>
+           <string>세트효과</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="QLabel" name="lbSetEffect">
-             <property name="font">
-              <font>
-               <family>나눔스퀘어 네오 Bold</family>
-               <pointsize>12</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
              <property name="text">
-              <string/>
+              <string>세트 효과</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -300,57 +234,48 @@
           </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QGroupBox" name="groupClassEngrave">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>나눔스퀘어 네오 ExtraBold</family>
-            <pointsize>10</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="title">
-           <string>직업 각인</string>
-          </property>
-          <layout class="QVBoxLayout" name="vLayoutClassEngrave"/>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
        <widget class="QGroupBox" name="groupEngrave">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>120</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>나눔스퀘어 네오 ExtraBold</family>
-          <pointsize>10</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
         <property name="title">
-         <string/>
+         <string>각인</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignCenter</set>
         </property>
-        <layout class="QHBoxLayout" name="hLayoutNormalEngrave"/>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="hLayoutEngraveIcon">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="lbEngraveName">
+           <property name="text">
+            <string>각인명 (ex. 원예저심아)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lbEngraveLevel">
+           <property name="text">
+            <string>각인 레벨 (ex. 333331)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

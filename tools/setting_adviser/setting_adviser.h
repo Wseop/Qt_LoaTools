@@ -4,14 +4,13 @@
 #include "game_data/profile/enum/class.h"
 
 #include <QWidget>
+#include <QJsonArray>
+
+class SettingWidget;
 
 namespace Ui {
 class SettingAdviser;
 }
-
-class QNetworkReply;
-
-using SettingCodeCount = QPair<QString, int>;
 
 class SettingAdviser : public QWidget
 {
@@ -21,6 +20,15 @@ private:
     SettingAdviser();
     ~SettingAdviser();
 
+    void setConnects();
+    void setFonts();
+    void setAlignments();
+    void clearData();
+    void setSettings(QJsonArray settings);
+    void setSettingCounts();
+    void renderSettings();
+    SettingWidget* createSettingWidget(QString settingCode, int rank, double adoptRate, int characterCount);
+
 public:
     void setSelectedClass(Class cls);
 
@@ -29,37 +37,16 @@ public:
     static void destroyInstance();
 
 private:
-    void initFont();
-    void initAlignment();
-    void initConnect();
-    void clearData();
-
-    void requestSettingsBySelectedClass();
-    void renderSettings();
-    void renderTopSettings();
-
-private slots:
-    void slotHandleSettingsBySelectedClass(QVariantList jsonSettings);
-    void slotRequestAllSettings();
-    void slotShowClassSelector();
-    void slotHandleAllSettings(QVariantList jsonSettings);
-
-private:
     Ui::SettingAdviser *ui;
 
-    const int MAX_RENDER_COUNT = 10;
-
     class DBRequest* m_pDBRequest;
-    QWidget* m_pParent = nullptr;
     class ClassSelector* m_pClassSelector = nullptr;
 
+    const int RENDER_COUNT = 30;
     Class m_selectedClass;
-    int m_numOfCharacters;
-    QList<SettingCodeCount> m_settingCodes;
-    QList<QList<SettingCodeCount>> m_topSettingCodes;
-    QList<int> m_classCounts;
-
-    QMap<class SettingWidget*, class QVBoxLayout*> m_mapSettingWidgetLayout;
+    QJsonArray m_settings;
+    QList<QPair<QString, int>> m_settingCounts;
+    QList<SettingWidget*> m_settingWidgets;
 
     static SettingAdviser* m_pSettingAdviser;
 };

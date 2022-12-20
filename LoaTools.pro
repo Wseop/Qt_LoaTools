@@ -48,7 +48,6 @@ SOURCES += \
     tools/ranking_board/ranking_board.cpp \
     tools/setting_adviser/class_selector.cpp \
     tools/setting_adviser/setting_adviser.cpp \
-    tools/setting_adviser/setting_code.cpp \
     tools/setting_adviser/ui/setting_widget.cpp
 
 HEADERS += \
@@ -98,7 +97,6 @@ HEADERS += \
     tools/ranking_board/ranking_board.h \
     tools/setting_adviser/class_selector.h \
     tools/setting_adviser/setting_adviser.h \
-    tools/setting_adviser/setting_code.h \
     tools/setting_adviser/ui/setting_widget.h
 
 FORMS += \
