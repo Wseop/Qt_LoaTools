@@ -110,6 +110,7 @@ void CharacterSearch::initAlignment()
     ui->vLayoutGem1->setAlignment(Qt::AlignTop);
     ui->vLayoutGem2->setAlignment(Qt::AlignTop);
     ui->vLayoutSkill->setAlignment(Qt::AlignTop);
+    ui->lbTripodStatus->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 }
 
 void CharacterSearch::initStyleSheet()
@@ -120,13 +121,15 @@ void CharacterSearch::initStyleSheet()
 
 void CharacterSearch::initFont()
 {
-    FontManager* fontManager = FontManager::getInstance();
-    QFont nanumBold10 = fontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
-    QFont nanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    FontManager* pFontManager = FontManager::getInstance();
+    QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumBold11 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 11);
+    QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
 
     ui->leCharacterName->setFont(nanumBold10);
     ui->pbSearch->setFont(nanumBold10);
     ui->pbOthers->setFont(nanumBold10);
+    ui->lbTripodStatus->setFont(nanumBold11);
     ui->tabCharacter->setFont(nanumRegular10);
 }
 
@@ -255,12 +258,28 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
         }
 
         const QList<Skill*>& skills = m_pCharacter->getSkills();
-        for (const Skill* skill : skills)
+        int levelCount4 = 0;
+        int levelCount5 = 0;
+        for (const Skill* pSkill : skills)
         {
-            SkillWidget* skillWidget = new SkillWidget(this, skill);
-            m_skillWidgets.append(skillWidget);
-            ui->vLayoutSkill->addWidget(skillWidget);
+            const QList<Tripod>& tripods = pSkill->getTripods();
+            for (const Tripod& tripod : tripods)
+            {
+                if (tripod.level == 4)
+                    levelCount4++;
+                else if (tripod.level == 5)
+                    levelCount5++;
+            }
+
+            SkillWidget* pSkillWidget = new SkillWidget(this, pSkill);
+            m_skillWidgets.append(pSkillWidget);
+            ui->vLayoutSkill->addWidget(pSkillWidget);
         }
+        QString tripodStatusText;
+        if (levelCount4 > 0)
+            tripodStatusText += QString("Lv.4 트라이포드 활성화 (%1) / ").arg(levelCount4);
+        tripodStatusText += QString("Lv.5 트라이포드 활성화 (%1)").arg(levelCount5);
+        ui->lbTripodStatus->setText(tripodStatusText);
 
         insertToDb();
     }
