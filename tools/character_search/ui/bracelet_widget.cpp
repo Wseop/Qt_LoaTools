@@ -60,16 +60,23 @@ void BraceletWidget::setLabels()
     const QStringList& effects = m_pBracelet->getEffects();
     for (const QString& effect : effects)
     {
-        QLabel* effectLabel = createEffectLabels(effect);
-        ui->vLayoutEffect->addWidget(effectLabel);
+        QLabel* pEffectLabel = createEffectLabels(effect);
+        ui->vLayoutEffect->addWidget(pEffectLabel);
+    }
+
+    const QStringList& specialEffects = m_pBracelet->getSpecialEffects();
+    for (const QString& effect : specialEffects)
+    {
+        QLabel* pEffectLabel = createEffectLabels(effect);
+        ui->vLayoutEffect->addWidget(pEffectLabel);
     }
 }
 
 QLabel* BraceletWidget::createEffectLabels(QString labelText)
 {
-    QLabel* label = new QLabel(labelText);
-    m_labels.append(label);
-    return label;
+    QLabel* pLabel = new QLabel(labelText);
+    m_labels.append(pLabel);
+    return pLabel;
 }
 
 void BraceletWidget::setFonts()
@@ -79,8 +86,8 @@ void BraceletWidget::setFonts()
     QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
 
     ui->lbName->setFont(nanumBold10);
-    for (QLabel* label : m_labels)
-        label->setFont(nanumBold10);
+    for (QLabel* pLabel : m_labels)
+        pLabel->setFont(nanumBold10);
     ui->groupBracelet->setFont(nanumRegular10);
 }
 
