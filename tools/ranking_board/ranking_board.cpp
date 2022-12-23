@@ -2,6 +2,7 @@
 #include "ui_ranking_board.h"
 #include "db/db_request.h"
 #include "font/font_manager.h"
+#include "tools/character_search/character_search.h"
 
 #include <QJsonObject>
 #include <QThread>
@@ -155,6 +156,17 @@ QLabel* RankingBoard::createLabel(QString text)
     return pLabel;
 }
 
+QPushButton* RankingBoard::createButton(QString text)
+{
+    QPushButton* pButton = new QPushButton(text);
+    pButton->setFixedSize(150, 50);
+    m_btns.append(pButton);
+    connect(pButton, &QPushButton::pressed, this, [pButton](){
+        CharacterSearch::getInstance()->changeCharacter(pButton->text());
+    });
+    return pButton;
+}
+
 QString RankingBoard::getCharacterName(int index)
 {
     return m_characters[index].toObject().find("Name")->toString();
@@ -196,15 +208,15 @@ void RankingBoard::renderCharacters(bool bInitialize)
 
             QLabel* pLbRank = createLabel(QString("%1").arg(m_rankIndex + 1));
             pLbRank->setFont(fontNanumBold10);
-            QLabel* pLbName = createLabel(name);
-            pLbName->setFont(fontNanumBold10);
+            QPushButton* pBtnName = createButton(name);
+            pBtnName->setFont(fontNanumBold10);
             QLabel* pLbItemLevel = createLabel(QString("%1").arg(itemLevel));
             pLbItemLevel->setFont(fontNanumBold10);
             QLabel* pLbClass = createLabel(classToStr(cls));
             pLbClass->setFont(fontNanumBold10);
 
             ui->gridRankingBoard->addWidget(pLbRank, m_rankIndex, 0);
-            ui->gridRankingBoard->addWidget(pLbName, m_rankIndex, 1);
+            ui->gridRankingBoard->addWidget(pBtnName, m_rankIndex, 1);
             ui->gridRankingBoard->addWidget(pLbItemLevel, m_rankIndex, 2);
             ui->gridRankingBoard->addWidget(pLbClass, m_rankIndex, 3);
 

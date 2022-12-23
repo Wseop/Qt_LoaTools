@@ -30,6 +30,7 @@ private:
     void requestAllCharacters();
 
     class QLabel* createLabel(QString text);
+    class QPushButton* createButton(QString text);
     QString getCharacterName(int index);
     double getCharacterItemLevel(int index);
     Class getCharacterClass(int index);
@@ -68,6 +69,7 @@ private:
     Class m_selectedClass;
     ClassSelector* m_pClassSelector = nullptr;
     QList<QLabel*> m_labels;
+    QList<QPushButton*> m_btns;
 
     class QThread* m_pThread;
 
