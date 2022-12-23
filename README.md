@@ -23,9 +23,8 @@ SettingCode = A121111S222222C044CL3N002004029032034NL13333
 - 레벨은 해당하는 각인이 적힌 순서와 매칭이 되도록 코드 생성
 ```
 ### [직업별 세팅 조회](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/setting_adviser)
-* 직업 선택 시, 유저들이 가장 많이 채용한 세팅을 직업각인별로 최대 10개까지 제공
-* 전체 직업의 Top3 세팅 조회 기능 제공
-> database 데이터 기반<br>유효한 세팅 제공을 위해 현재 database에 1600레벨 이상 캐릭터(약 90,000개)만 등록되어 있음
+* 직업 선택 시, 유저들이 가장 많이 채용한 세팅을 최대 30개까지 제공
+> database 데이터 기반<br>유효한 세팅 제공을 위해 현재 상위권 약90000개 캐릭터의 정보가 등록되어 있음
 ### [캐릭터 랭킹](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/ranking_board)
 * 아이템 레벨을 기준으로 캐릭터 랭킹 조회
 * 전체 랭킹, 직업별 랭킹 조회 가능
@@ -42,22 +41,19 @@ SettingCode = A121111S222222C044CL3N002004029032034NL13333
 * `캐릭터 조회`기능 에서 캐릭터 조회시 DB에 캐릭터 정보 저장
 * 저장된 캐릭터 정보는 `직업별 세팅 조회` 기능에서 활용
 ### Document Format (Example)
-#### Character (캐릭터)
+#### Character_v2 (캐릭터)
 ```json
 {
-  "Name":"CharacterName",
-  "Class":"Berserker"
-  "Level":1561.43
+  "Name": "DogDwarf",
+  "Class": "버서커"
+  "Level": 1571.67
 }
 ```
-#### Setting (캐릭터 세팅)
+#### Setting_v2 (캐릭터 세팅)
 ```json
 {
-  "Name":"CharacterName",
-  "Class":"Berserker",
-  "Abilities":["특화", "치명", "특화", "특화", "특화", "치명"],
-  "EngraveNames":["원한", "기습의 대가", "광전사의 비기"],
-  "EngraveLevels":[3, 3, 1],
-  "SetEffects":["사멸", "사멸", "악몽", "악몽", "악몽", "악몽"]
+  "Name": "DogDwarf",
+  "Class": "버서커",
+  "SettingCode": "A121111S222222C044CL3N002004029032034NL13333"
 }
 ```
