@@ -5,7 +5,7 @@
 ### [캐릭터 조회](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/character_search)
 * 캐릭터의 스펙을 한 화면으로 볼 수 있게 로스트아크 전투정보실 정보를 재가공하여 제공
 > 실시간 정보 반영<br>조회 시 database에 추가됨
-* 캐릭터의 특성, 세트효과, 각인을 기반으로 [SettingCode](https://github.com/Wseop/Qt_LoaTools/blob/master/tools/setting_adviser/setting_code.cpp)를 생성하여 database에 추가
+* 캐릭터의 특성, 세트효과, 각인을 기반으로 [SettingCode](https://github.com/Wseop/Qt_LoaTools/blob/master/db/document/settingcode_manager.cpp)를 생성하여 database에 추가
 > SettingCode (Example)
 ```
 SettingCode = A121111S222222C044CL3N002004029032034NL13333
