@@ -70,7 +70,7 @@ void RankingBoard::initAlignment()
 {
     ui->vLayoutRankingBoard->setAlignment(Qt::AlignHCenter);
     ui->hLayoutSelector->setAlignment(Qt::AlignHCenter);
-    ui->vLayoutScrollArea->setAlignment(Qt::AlignHCenter);
+    ui->vLayoutScrollArea->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->gridRankingLabels->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->gridRankingBoard->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 }
