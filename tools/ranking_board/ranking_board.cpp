@@ -136,6 +136,13 @@ void RankingBoard::clear()
         delete pLabel;
     }
     m_labels.clear();
+
+    for (QPushButton* pBtn : m_btns)
+    {
+        ui->gridRankingBoard->removeWidget(pBtn);
+        delete pBtn;
+    }
+    m_btns.clear();
 }
 
 void RankingBoard::requestAllCharacters()
