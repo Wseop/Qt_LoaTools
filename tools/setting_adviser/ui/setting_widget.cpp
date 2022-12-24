@@ -3,14 +3,16 @@
 #include "font/font_manager.h"
 #include "db/document/settingcode_manager.h"
 #include "game_data/engrave/engrave_manager.h"
+#include "tools/setting_adviser/ui/characters_widget.h"
 
 #include <QPixmap>
 
-SettingWidget::SettingWidget(QString settingCode, int rank, double adoptRate, int characterCount) :
+SettingWidget::SettingWidget(const QStringList& characters, QString settingCode, int rank, double adoptRate, int characterCount) :
     ui(new Ui::SettingWidget)
 {
     ui->setupUi(this);
 
+    setCharacters(characters);
     setAdoptRate(rank, adoptRate, characterCount);
     setAbility(SettingCodeManager::parseAbilities(settingCode));
     setSetEffect(SettingCodeManager::parseSetEffects(settingCode));
@@ -23,6 +25,7 @@ SettingWidget::~SettingWidget()
 {
     for (QLabel* pLabel : m_iconLabels)
         delete pLabel;
+    delete m_pCharactersWidget;
 
     delete ui;
 }
@@ -43,6 +46,7 @@ void SettingWidget::setFonts()
     ui->lbRing1->setFont(nanumBold10);
     ui->lbRing2->setFont(nanumBold10);
     ui->lbSetEffect->setFont(nanumBold10);
+    ui->pbShowCharacterList->setFont(nanumBold10);
 
     ui->groupEngrave->setFont(nanumRegular10);
     ui->groupRate->setFont(nanumRegular10);
@@ -56,6 +60,14 @@ void SettingWidget::setFonts()
 void SettingWidget::setAlignments()
 {
 
+}
+
+void SettingWidget::setCharacters(QStringList characters)
+{
+    m_pCharactersWidget = new CharactersWidget(characters);
+    connect(ui->pbShowCharacterList, &QPushButton::pressed, this, [&](){
+        m_pCharactersWidget->show();
+    });
 }
 
 void SettingWidget::setAdoptRate(int rank, double adoptRate, int characterCount)

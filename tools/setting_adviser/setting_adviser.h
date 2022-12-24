@@ -27,7 +27,7 @@ private:
     void setSettings(QJsonArray settings);
     void setSettingCounts();
     void renderSettings();
-    SettingWidget* createSettingWidget(QString settingCode, int rank, double adoptRate, int characterCount);
+    SettingWidget* createSettingWidget(const QStringList& characters, QString settingCode, int rank, double adoptRate, int characterCount);
 
 public:
     void setSelectedClass(Class cls);
@@ -46,6 +46,7 @@ private:
     Class m_selectedClass;
     QJsonArray m_settings;
     QList<QPair<QString, int>> m_settingCounts;
+    QMap<QString, QStringList> m_settingCodeToCharacters;
     QList<SettingWidget*> m_settingWidgets;
 
     static SettingAdviser* m_pSettingAdviser;

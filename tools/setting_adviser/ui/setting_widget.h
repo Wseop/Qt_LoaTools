@@ -16,12 +16,13 @@ class SettingWidget : public QWidget
     Q_OBJECT
 
 public:
-    SettingWidget(QString settingCode, int rank, double adoptRate, int characterCount);
+    SettingWidget(const QStringList& characters, QString settingCode, int rank, double adoptRate, int characterCount);
     ~SettingWidget();
 
 private:
     void setFonts();
     void setAlignments();
+    void setCharacters(QStringList characters);
     void setAdoptRate(int rank, double adoptRate, int characterCount);
     void setAbility(QList<Ability> abilities);
     void setSetEffect(QList<SetEffect> setEffects);
@@ -32,6 +33,7 @@ private:
     Ui::SettingWidget *ui;
 
     QList<QLabel*> m_iconLabels;
+    class CharactersWidget* m_pCharactersWidget;
 };
 
 #endif // SETTING_WIDGET_H

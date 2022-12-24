@@ -71,6 +71,7 @@ void SettingAdviser::clearData()
     m_settingCounts.clear();
     for (SettingWidget* pSettingWidget : m_settingWidgets)
         delete pSettingWidget;
+    m_settingCodeToCharacters.clear();
     m_settingWidgets.clear();
 }
 
@@ -87,7 +88,11 @@ void SettingAdviser::setSettingCounts()
 
     for (const QJsonValue& setting : m_settings)
     {
-        settingToCount[setting.toObject().find("SettingCode")->toString()]++;
+        const QJsonObject& settingObj = setting.toObject();
+        const QString& settingCode = settingObj.find("SettingCode")->toString();
+
+        settingToCount[settingCode]++;
+        m_settingCodeToCharacters[settingCode] << settingObj.find("Name")->toString();
     }
 
     m_settingCounts = QList<QPair<QString, int>>(settingToCount.keyValueBegin(), settingToCount.keyValueEnd());
@@ -102,7 +107,7 @@ void SettingAdviser::renderSettings()
 {
     ui->lbSelectedClass->setText(classToStr(m_selectedClass));
     ui->lbTotal->setText(QString("등록된 캐릭터 수 : %1개 캐릭터").arg(m_settings.size()));
-    ui->lbInfo->setText("카던 및 pvp세팅이 포함되어 있을 수 있습니다.");
+    ui->lbInfo->setText("카던 및 pvp세팅이 포함되어 있을 수 있으며, 변경된 세팅은 캐릭터 조회 후 적용됩니다.");
 
     for (int i = 0; i < RENDER_COUNT; i++)
     {
@@ -110,14 +115,14 @@ void SettingAdviser::renderSettings()
         int characterCount = settingCount.second;
         double adoptRate = ((double)characterCount / m_settings.size()) * 100;
 
-        SettingWidget* pSettingWidget = createSettingWidget(settingCount.first, i + 1, adoptRate, characterCount);
+        SettingWidget* pSettingWidget = createSettingWidget(m_settingCodeToCharacters[settingCount.first], settingCount.first, i + 1, adoptRate, characterCount);
         ui->vLayoutScrollArea->addWidget(pSettingWidget);
     }
 }
 
-SettingWidget* SettingAdviser::createSettingWidget(QString settingCode, int rank, double adoptRate, int characterCount)
+SettingWidget* SettingAdviser::createSettingWidget(const QStringList& characters, QString settingCode, int rank, double adoptRate, int characterCount)
 {
-    SettingWidget* pSettingWidget = new SettingWidget(settingCode, rank, adoptRate, characterCount);
+    SettingWidget* pSettingWidget = new SettingWidget(characters, settingCode, rank, adoptRate, characterCount);
     m_settingWidgets.append(pSettingWidget);
     return pSettingWidget;
 }

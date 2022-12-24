@@ -24,8 +24,15 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <property name="spacing">
-       <number>1</number>
+       <number>6</number>
       </property>
+      <item>
+       <widget class="QPushButton" name="pbShowCharacterList">
+        <property name="text">
+         <string>캐릭터 목록</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QGroupBox" name="groupRate">
         <property name="title">
