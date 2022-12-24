@@ -275,10 +275,10 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             m_skillWidgets.append(pSkillWidget);
             ui->vLayoutSkill->addWidget(pSkillWidget);
         }
-        QString tripodStatusText;
+        QString tripodStatusText = QString("[Lv.4 이상 트라이포드 활성화 (%1/18)]\n").arg(levelCount4 + levelCount5);
         if (levelCount4 > 0)
-            tripodStatusText += QString("Lv.4 트라이포드 활성화 (%1) / ").arg(levelCount4);
-        tripodStatusText += QString("Lv.5 트라이포드 활성화 (%1)").arg(levelCount5);
+            tripodStatusText += QString("Lv.4 : %1개\n").arg(levelCount4);
+        tripodStatusText += QString("Lv.5 : %1개").arg(levelCount5);
         ui->lbTripodStatus->setText(tripodStatusText);
 
         insertToDb();
