@@ -170,6 +170,8 @@ QPushButton* RankingBoard::createButton(QString text)
     m_btns.append(pButton);
     connect(pButton, &QPushButton::pressed, this, [pButton](){
         CharacterSearch::getInstance()->changeCharacter(pButton->text());
+        if (CharacterSearch::getInstance()->isHidden())
+            CharacterSearch::getInstance()->show();
     });
     return pButton;
 }

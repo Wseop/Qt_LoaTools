@@ -52,6 +52,8 @@ QPushButton* CharactersWidget::createButton(const QString name)
     m_btns.append(pButton);
     connect(pButton, &QPushButton::pressed, this, [&, pButton](){
         CharacterSearch::getInstance()->changeCharacter(pButton->text());
+        if (CharacterSearch::getInstance()->isHidden())
+            CharacterSearch::getInstance()->show();
         this->close();
     });
     return pButton;
