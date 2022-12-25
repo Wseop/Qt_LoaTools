@@ -399,15 +399,22 @@ void CharacterSearch::insertToDb()
 
 void CharacterSearch::handleCharacters(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->ui->groupCharacter->hide();
+        pInstance->ui->groupCharacter->hide();
 
         QMessageBox msgBox;
         msgBox.setText("존재하지 않는 캐릭터입니다.");
         msgBox.exec();
-        CharacterSearch::getInstance()->ui->pbSearch->setEnabled(true);
+        pInstance->ui->pbSearch->setEnabled(true);
+
+        // delete if data exist
+        QString name = pInstance->m_pCharacter->getProfile()->getCharacterName();
+        pInstance->m_pDbRequest->deleteDocument(Collection::CharacterV2, "Name", name);
+        pInstance->m_pDbRequest->deleteDocument(Collection::SettingV2, "Name", name);
         return;
     }
 
@@ -431,10 +438,10 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
 
     for (const Other& other : others)
     {
-        CharacterSearch::getInstance()->m_pCharacter->addOther(other);
+        pInstance->m_pCharacter->addOther(other);
     }
 
-    CharacterSearch::getInstance()->updateStatus(1 << 0);
+    pInstance->updateStatus(1 << 0);
 }
 
 void CharacterSearch::handleProfiles(QNetworkReply* reply)
@@ -467,16 +474,19 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
         }
     }
 
-    CharacterSearch::getInstance()->m_pCharacter->setProfile(profile);
-    CharacterSearch::getInstance()->updateStatus(1 << 1);
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+    pInstance->m_pCharacter->setProfile(profile);
+    pInstance->updateStatus(1 << 1);
 }
 
 void CharacterSearch::handleEquipments(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->updateStatus(1 << 2);
+        pInstance->updateStatus(1 << 2);
         return;
     }
 
@@ -524,7 +534,7 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
             if (equip->getGrade() == ItemGrade::에스더)
                 equip->setSetEffect(SetEffect::에스더);
 
-            CharacterSearch::getInstance()->m_pCharacter->setEquip(itemType, equip);
+            pInstance->m_pCharacter->setEquip(itemType, equip);
         }
         else if (itemType >= ItemType::투구 && itemType <= ItemType::어깨)
         {
@@ -555,7 +565,7 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                 }
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->setEquip(itemType, equip);
+            pInstance->m_pCharacter->setEquip(itemType, equip);
         }
         else if (itemType == ItemType::목걸이)
         {
@@ -622,7 +632,7 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                 }
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->setAccessory(itemType, accessory);
+            pInstance->m_pCharacter->setAccessory(itemType, accessory);
         }
         else if (itemType == ItemType::귀걸이 || itemType == ItemType::반지)
         {
@@ -675,7 +685,7 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                 }
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->setAccessory(itemType, accessory);
+            pInstance->m_pCharacter->setAccessory(itemType, accessory);
         }
         else if (itemType == ItemType::어빌리티_스톤)
         {
@@ -725,7 +735,7 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                 }
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->setAbilityStone(stone);
+            pInstance->m_pCharacter->setAbilityStone(stone);
         }
         else if (itemType == ItemType::팔찌)
         {
@@ -773,19 +783,21 @@ void CharacterSearch::handleEquipments(QNetworkReply* reply)
                 }
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->setBracelet(bracelet);
+            pInstance->m_pCharacter->setBracelet(bracelet);
         }
     }
 
-    CharacterSearch::getInstance()->updateStatus(1 << 2);
+    pInstance->updateStatus(1 << 2);
 }
 
 void CharacterSearch::handleSkills(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->updateStatus(1 << 3);
+        pInstance->updateStatus(1 << 3);
         return;
     }
 
@@ -827,19 +839,21 @@ void CharacterSearch::handleSkills(QNetworkReply* reply)
                 skill->setRune(rune);
             }
 
-            CharacterSearch::getInstance()->m_pCharacter->addSkill(skill);
+            pInstance->m_pCharacter->addSkill(skill);
         }
     }
 
-    CharacterSearch::getInstance()->updateStatus(1 << 3);
+    pInstance->updateStatus(1 << 3);
 }
 
 void CharacterSearch::handleEngraves(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->updateStatus(1 << 4);
+        pInstance->updateStatus(1 << 4);
         return;
     }
 
@@ -860,16 +874,18 @@ void CharacterSearch::handleEngraves(QNetworkReply* reply)
             engrave->addPenalty(name, level);
     }
 
-    CharacterSearch::getInstance()->m_pCharacter->setEngrave(engrave);
-    CharacterSearch::getInstance()->updateStatus(1 << 4);
+    pInstance->m_pCharacter->setEngrave(engrave);
+    pInstance->updateStatus(1 << 4);
 }
 
 void CharacterSearch::handleCards(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->updateStatus(1 << 5);
+        pInstance->updateStatus(1 << 5);
         return;
     }
 
@@ -888,16 +904,18 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
         }
     }
 
-    CharacterSearch::getInstance()->m_pCharacter->setCard(card);
-    CharacterSearch::getInstance()->updateStatus(1 << 5);
+    pInstance->m_pCharacter->setCard(card);
+    pInstance->updateStatus(1 << 5);
 }
 
 void CharacterSearch::handleGems(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
     {
-        CharacterSearch::getInstance()->updateStatus(1 << 6);
+        pInstance->updateStatus(1 << 6);
         return;
     }
 
@@ -942,10 +960,10 @@ void CharacterSearch::handleGems(QNetworkReply* reply)
 
     for (Gem* gem : gemList)
     {
-        CharacterSearch::getInstance()->m_pCharacter->addGem(gem);
+        pInstance->m_pCharacter->addGem(gem);
     }
 
-    CharacterSearch::getInstance()->updateStatus(1 << 6);
+    pInstance->updateStatus(1 << 6);
 }
 
 void CharacterSearch::changeCharacter(QString name)
