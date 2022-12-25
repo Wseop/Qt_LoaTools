@@ -81,3 +81,12 @@ void DBRequest::insertOrUpdateDocument(Collection collection, bsoncxx::document:
 
     m_pDb->unlock();
 }
+
+void DBRequest::deleteDocument(Collection collection, QString filterField, QString filterValue)
+{
+    m_pDb->lock();
+
+    m_pDb->getCollection(collection).delete_one(document{} << filterField.toStdString() << filterValue.toStdString() << finalize);
+
+    m_pDb->unlock();
+}

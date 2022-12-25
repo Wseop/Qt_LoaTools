@@ -19,6 +19,7 @@ public:
     void findDocument(Collection collection, QString filterField, QString filterValue);
     void findDocuments(Collection collection, int order, QString orderField, QString filterField = "", QString filterValue = "");
     void insertOrUpdateDocument(Collection collection, bsoncxx::document::value doc, QString dupCheckField, QString dupCheckValue);
+    void deleteDocument(Collection collection, QString filterField, QString filterValue);
 
 signals:
     void findDocumentFinished(QJsonObject);
