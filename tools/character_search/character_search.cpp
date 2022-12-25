@@ -164,7 +164,7 @@ void CharacterSearch::sendRequests()
     for (int i = 0; i < NETWORK_POOL_COUNT; i++)
     {
         QNetworkAccessManager* networkManager = m_networkManagers[i];
-        HttpClient::getInstance()->sendGetRequest(networkManager, static_cast<LostarkApi>(i), params);
+        HttpClient::getInstance()->sendGetRequest(networkManager, static_cast<LostarkApi>(i), 0, params);
     }
 }
 

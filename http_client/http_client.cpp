@@ -11,13 +11,15 @@
 #include <QNetworkRequest>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 HttpClient* HttpClient::m_pHttpClient = nullptr;
 
-HttpClient::HttpClient()
+HttpClient::HttpClient() :
+    m_pDB(DB::getInstance())
 {
     loadApi();
-    loadApiKey();
+    loadApiKeys();
 }
 
 HttpClient::~HttpClient()
@@ -42,23 +44,26 @@ void HttpClient::loadApi()
     file.close();
 }
 
-void HttpClient::loadApiKey()
+void HttpClient::loadApiKeys()
 {
-    DB::getInstance()->lock();
+    m_pDB->lock();
 
-    auto doc = DB::getInstance()->getCollection(Collection::LostarkAPI).find_one(bsoncxx::builder::stream::document{} << "Type" << "ApiKey" << bsoncxx::builder::stream::finalize);
+    auto doc = m_pDB->getCollection(Collection::LostarkAPI).find_one(bsoncxx::builder::stream::document{} << "Type" << "ApiKeys" << bsoncxx::builder::stream::finalize);
     if (doc)
     {
-        QString docStr = bsoncxx::to_json(*doc).c_str();
-        QJsonObject docObj(QJsonDocument::fromJson(docStr.toUtf8()).object());
-        m_apiKey = docObj.find("Key")->toString();
+        QJsonObject docObj = QJsonDocument::fromJson(bsoncxx::to_json(*doc).data()).object();
+        const QJsonArray& keys = docObj.find("Keys")->toArray();
+        for (const QJsonValue& key : keys)
+        {
+            m_apiKeys << key.toString();
+        }
     }
     else
     {
-        qDebug() << Q_FUNC_INFO << ": ApiKey load fail";
+        qDebug() << Q_FUNC_INFO << ": ApiKeys load fail";
     }
 
-    DB::getInstance()->unlock();
+    m_pDB->unlock();
 }
 
 HttpClient* HttpClient::getInstance()
@@ -78,7 +83,7 @@ void HttpClient::destroyInstance()
     m_pHttpClient = nullptr;
 }
 
-void HttpClient::sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, const QStringList& params)
+void HttpClient::sendGetRequest(QNetworkAccessManager* pNetworkManager, LostarkApi api, int keyIndex, const QStringList& params)
 {
     // generate url
     QString url = m_apis[static_cast<int>(api)];
@@ -88,7 +93,7 @@ void HttpClient::sendGetRequest(QNetworkAccessManager* networkManager, LostarkAp
     // generate & send request
     QNetworkRequest request;
     request.setRawHeader("accept", "application/json");
-    request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKey).toUtf8());
+    request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKeys[keyIndex]).toUtf8());
     request.setUrl(QUrl(url));
-    networkManager->get(request);
+    pNetworkManager->get(request);
 }

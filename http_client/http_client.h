@@ -24,19 +24,21 @@ private:
     ~HttpClient();
 
     void loadApi();
-    void loadApiKey();
+    void loadApiKeys();
 
 public:
     static HttpClient* getInstance();
     static void destroyInstance();
 
-    void sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, const QStringList& params);
+    void sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, int keyIndex, const QStringList& params);
 
 private:
     static HttpClient* m_pHttpClient;
 
     QStringList m_apis;
     QString m_apiKey;
+    QStringList m_apiKeys;
+    class DB* m_pDB;
 };
 
 #endif // HTTPCLIENT_H
