@@ -420,7 +420,7 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
         int characterLevel = character.find("CharacterLevel")->toInt();
         QString characterName = character.find("CharacterName")->toString();
         Class cls = strToClass(character.find("CharacterClassName")->toString());
-        double itemLevel = character.find("ItemMaxLevel")->toString().remove(",").toDouble();
+        double itemLevel = character.find("ItemAvgLevel")->toString().remove(",").toDouble();
         others.append({server, characterLevel, characterName, cls, itemLevel});
     }
 
@@ -452,7 +452,7 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
     profile->setTitle(profileObj.find("Title")->toString());
     profile->setGuild(profileObj.find("GuildName")->toString());
     profile->setExpLevel(profileObj.find("ExpeditionLevel")->toInt());
-    profile->setItemLevel(profileObj.find("ItemMaxLevel")->toString().remove(",").toDouble());
+    profile->setItemLevel(profileObj.find("ItemAvgLevel")->toString().remove(",").toDouble());
 
     const QJsonArray& abilities = profileObj.find("Stats")->toArray();
     for (const QJsonValue& value : abilities)
