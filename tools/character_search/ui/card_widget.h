@@ -15,7 +15,7 @@ class CardWidget : public QWidget
     Q_OBJECT
 
 public:
-    CardWidget(QWidget* pParent, const Card* pCard);
+    CardWidget(QWidget* pParent, const Card* pCard, int setIndex);
     ~CardWidget();
 
 private:

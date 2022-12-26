@@ -48,7 +48,6 @@ CharacterSearch::CharacterSearch() :
     m_pStoneWidget(nullptr),
     m_pBraceletWidget(nullptr),
     m_pEngraveWidget(nullptr),
-    m_pCardWidget(nullptr),
     m_pDbRequestThread(new QThread()),
     m_pDbRequest(new DBRequest())
 {
@@ -250,11 +249,13 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
             ui->vLayoutEtc->addWidget(m_pEngraveWidget);
         }
 
-        const Card* pCard = m_pCharacter->getCard();
-        if (pCard != nullptr)
+        const QList<Card*> cards = m_pCharacter->getCards();
+        //for (const Card* pCard : cards)
+        for (int i = 0; i < cards.size(); i++)
         {
-            m_pCardWidget = new CardWidget(this, pCard);
-            ui->vLayoutProfile->addWidget(m_pCardWidget);
+            CardWidget* pCardWidget = new CardWidget(this, cards[i], i);
+            m_cardWidgets.append(pCardWidget);
+            ui->vLayoutProfile->addWidget(pCardWidget);
         }
 
         const QList<Skill*>& skills = m_pCharacter->getSkills();
@@ -299,12 +300,12 @@ void CharacterSearch::reset()
         delete m_pProfileWidget;
     m_pProfileWidget = nullptr;
 
-    for (EquipWidget* equipWidget : m_equipWidgets)
-        delete equipWidget;
+    for (EquipWidget* pEquipWidget : m_equipWidgets)
+        delete pEquipWidget;
     m_equipWidgets.clear();
 
-    for (AccessoryWidget* accessoryWidget : m_accessoryWidgets)
-        delete accessoryWidget;
+    for (AccessoryWidget* pAccessoryWidget : m_accessoryWidgets)
+        delete pAccessoryWidget;
     m_accessoryWidgets.clear();
 
     if (m_pStoneWidget != nullptr)
@@ -315,20 +316,20 @@ void CharacterSearch::reset()
         delete m_pBraceletWidget;
     m_pBraceletWidget = nullptr;
 
-    for (GemWidget* gemWidget : m_gemWidgets)
-        delete gemWidget;
+    for (GemWidget* pGemWidget : m_gemWidgets)
+        delete pGemWidget;
     m_gemWidgets.clear();
 
     if (m_pEngraveWidget != nullptr)
         delete m_pEngraveWidget;
     m_pEngraveWidget = nullptr;
 
-    if (m_pCardWidget != nullptr)
-        delete m_pCardWidget;
-    m_pCardWidget = nullptr;
+    for (CardWidget* pCardWidget : m_cardWidgets)
+        delete pCardWidget;
+    m_cardWidgets.clear();
 
-    for (SkillWidget* skillWidget : m_skillWidgets)
-        delete skillWidget;
+    for (SkillWidget* pSkillWidget : m_skillWidgets)
+        delete pSkillWidget;
     m_skillWidgets.clear();
 
     m_replyHandleStatus = 0x00;
@@ -890,21 +891,25 @@ void CharacterSearch::handleCards(QNetworkReply* reply)
     }
 
     const QJsonArray& cards = response.object().find("Effects")->toArray();
-    Card* card = new Card();
-
     for (const QJsonValue& value : cards)
     {
+        Card* pCard = new Card();
+
         const QJsonArray& cardEffects = value.toObject().find("Items")->toArray();
         for (const QJsonValue& effectValue : cardEffects)
         {
             const QJsonObject& effectObj = effectValue.toObject();
             QString name = effectObj.find("Name")->toString();
             QString desc = effectObj.find("Description")->toString();
-            card->addCardEffect(name, desc);
+            pCard->addCardEffect(name, desc);
         }
+
+        if (pCard->getEffectNames().size() != 0)
+            pInstance->m_pCharacter->addCard(pCard);
+        else
+            delete pCard;
     }
 
-    pInstance->m_pCharacter->setCard(card);
     pInstance->updateStatus(1 << 5);
 }
 

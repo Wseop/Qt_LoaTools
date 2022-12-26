@@ -70,7 +70,7 @@ private:
     class BraceletWidget* m_pBraceletWidget;
     QList<class GemWidget*> m_gemWidgets;
     class EngraveWidget* m_pEngraveWidget;
-    class CardWidget* m_pCardWidget;
+    QList<class CardWidget*> m_cardWidgets;
     QList<class SkillWidget*> m_skillWidgets;
 
     class QThread* m_pDbRequestThread;

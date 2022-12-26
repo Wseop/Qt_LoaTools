@@ -21,7 +21,6 @@ Character::Character() :
     m_pRing1(nullptr), m_pRing2(nullptr),
     m_pStone(nullptr), m_pBracelet(nullptr),
     m_pEngrave(new Engrave()),
-    m_pCard(new Card()),
     m_earIndex(0),
     m_ringIndex(0)
 {
@@ -60,13 +59,14 @@ Character::~Character()
         delete m_pBracelet;
     if (m_pEngrave != nullptr)
         delete m_pEngrave;
-    for (Gem* gem : m_gems)
-        delete gem;
+    for (Gem* pGem : m_gems)
+        delete pGem;
     m_gems.clear();
-    if (m_pCard != nullptr)
-        delete m_pCard;
-    for (Skill* skill : m_skills)
-        delete skill;
+    for (Card* pCard : m_cards)
+        delete pCard;
+    m_cards.clear();
+    for (Skill* pSkill : m_skills)
+        delete pSkill;
     m_skills.clear();
 }
 
@@ -146,9 +146,9 @@ const Engrave* Character::getEngrave() const
     return m_pEngrave;
 }
 
-const Card* Character::getCard() const
+const QList<Card*>& Character::getCards() const
 {
-    return m_pCard;
+    return m_cards;
 }
 
 const QList<Skill*>& Character::getSkills() const
@@ -281,11 +281,9 @@ void Character::setEngrave(Engrave* engrave)
     m_pEngrave = engrave;
 }
 
-void Character::setCard(Card* card)
+void Character::addCard(Card* card)
 {
-    if (m_pCard != nullptr)
-        delete m_pCard;
-    m_pCard = card;
+    m_cards.append(card);
 }
 
 void Character::addSkill(Skill* skill)

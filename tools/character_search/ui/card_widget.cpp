@@ -3,12 +3,13 @@
 #include "game_data/card/card.h"
 #include "font/font_manager.h"
 
-CardWidget::CardWidget(QWidget* pParent, const Card* pCard) :
+CardWidget::CardWidget(QWidget* pParent, const Card* pCard, int setIndex) :
     ui(new Ui::CardWidget),
     m_pParent(pParent),
     m_pCard(pCard)
 {
     ui->setupUi(this);
+    ui->groupCard->setTitle(QString("카드 세트 %1").arg(setIndex + 1));
 
     setLabels();
     setFonts();

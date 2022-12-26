@@ -40,7 +40,7 @@ public:
     const Bracelet* getBracelet() const;
     const QList<Gem*>& getGems() const;
     const Engrave* getEngrave() const;
-    const Card* getCard() const;
+    const QList<Card*>& getCards() const;
     const QList<Skill*>& getSkills() const;
 
     void addOther(const Other& other);
@@ -51,7 +51,7 @@ public:
     void setBracelet(Bracelet* bracelet);
     void addGem(Gem* gem);
     void setEngrave(Engrave* engrave);
-    void setCard(Card* card);
+    void addCard(Card* card);
     void addSkill(Skill* skill);
 
 private:
@@ -72,7 +72,7 @@ private:
     Bracelet* m_pBracelet;
     QList<Gem*> m_gems;
     Engrave* m_pEngrave;
-    Card* m_pCard;
+    QList<Card*> m_cards;
     QList<Skill*> m_skills;
 
     int m_earIndex;
