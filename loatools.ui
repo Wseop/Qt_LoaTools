@@ -179,6 +179,26 @@
         <item>
          <layout class="QHBoxLayout" name="hLayoutCharacter2">
           <item>
+           <widget class="QPushButton" name="pbSpecChecker">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>군장
+검사</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pbEngrave">
             <property name="minimumSize">
              <size>

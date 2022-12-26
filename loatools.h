@@ -17,11 +17,12 @@ public:
 
 private:
     Ui::LoaTools *ui;
-    class MeteorTimer* m_meteorTimer = nullptr;
-    class AuctionCalc* m_auctionCalc = nullptr;
-    class EngraveSimulator* m_engrave = nullptr;
-    class CharacterSearch* m_characterSearch = nullptr;
-    class SettingAdviser* m_settingAdviser = nullptr;
+    class MeteorTimer* m_pMeteorTimer = nullptr;
+    class AuctionCalc* m_pAuctionCalc = nullptr;
+    class EngraveSimulator* m_pEngrave = nullptr;
+    class CharacterSearch* m_pCharacterSearch = nullptr;
+    class SettingAdviser* m_pSettingAdviser = nullptr;
+    class SpecChecker* m_pSpecChecker = nullptr;
 
 private:
     void initConnect();
@@ -35,5 +36,6 @@ private slots:
     void slotOpenCharacterSearch();
     void slotOpenSettingAdviser();
     void slotOpenRankingBoard();
+    void slotOpenSpecChecker();
 };
 #endif // LOATOOLS_H

@@ -6,6 +6,7 @@
 #include "tools/setting_adviser/setting_adviser.h"
 #include "tools/ranking_board/ranking_board.h"
 #include "tools/character_search/character_search.h"
+#include "tools/spec_checker/spec_checker.h"
 #include "font/font_manager.h"
 
 LoaTools::LoaTools(QWidget *parent)
@@ -33,13 +34,14 @@ void LoaTools::initConnect()
     connect(ui->pbCharacterSearch, SIGNAL(pressed()), this, SLOT(slotOpenCharacterSearch()));
     connect(ui->pbSettingAdviser, SIGNAL(pressed()), this, SLOT(slotOpenSettingAdviser()));
     connect(ui->pbRankingBoard, SIGNAL(pressed()), this, SLOT(slotOpenRankingBoard()));
+    connect(ui->pbSpecChecker, SIGNAL(pressed()), this, SLOT(slotOpenSpecChecker()));
 }
 
 void LoaTools::initFont()
 {
-    FontManager* fontManager = FontManager::getInstance();
-    QFont fontNanumRegular10 = fontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
-    QFont fontNanumExtraBold16 = fontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
+    FontManager* pFontManager = FontManager::getInstance();
+    QFont fontNanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
+    QFont fontNanumExtraBold16 = pFontManager->getFont(FontFamily::NanumSquareNeoExtraBold, 16);
 
     ui->pbAuctionCalc->setFont(fontNanumExtraBold16);
     ui->pbEngrave->setFont(fontNanumExtraBold16);
@@ -47,6 +49,7 @@ void LoaTools::initFont()
     ui->pbCharacterSearch->setFont(fontNanumExtraBold16);
     ui->pbSettingAdviser->setFont(fontNanumExtraBold16);
     ui->pbRankingBoard->setFont(fontNanumExtraBold16);
+    ui->pbSpecChecker->setFont(fontNanumExtraBold16);
 
     ui->groupCharacter->setFont(fontNanumRegular10);
     ui->groupRaid->setFont(fontNanumRegular10);
@@ -87,4 +90,9 @@ void LoaTools::slotOpenSettingAdviser()
 void LoaTools::slotOpenRankingBoard()
 {
     RankingBoard::getInstance()->show();
+}
+
+void LoaTools::slotOpenSpecChecker()
+{
+    SpecChecker::getInstance()->show();
 }

@@ -49,7 +49,9 @@ SOURCES += \
     tools/setting_adviser/class_selector.cpp \
     tools/setting_adviser/setting_adviser.cpp \
     tools/setting_adviser/ui/characters_widget.cpp \
-    tools/setting_adviser/ui/setting_widget.cpp
+    tools/setting_adviser/ui/setting_widget.cpp \
+    tools/spec_checker/spec_checker.cpp \
+    tools/spec_checker/ui/spec_widget.cpp
 
 HEADERS += \
     db/db.h \
@@ -99,7 +101,9 @@ HEADERS += \
     tools/setting_adviser/class_selector.h \
     tools/setting_adviser/setting_adviser.h \
     tools/setting_adviser/ui/characters_widget.h \
-    tools/setting_adviser/ui/setting_widget.h
+    tools/setting_adviser/ui/setting_widget.h \
+    tools/spec_checker/spec_checker.h \
+    tools/spec_checker/ui/spec_widget.h
 
 FORMS += \
     loatools.ui \
@@ -121,7 +125,9 @@ FORMS += \
     tools/setting_adviser/class_selector.ui \
     tools/setting_adviser/setting_adviser.ui \
     tools/setting_adviser/ui/characters_widget.ui \
-    tools/setting_adviser/ui/setting_widget.ui
+    tools/setting_adviser/ui/setting_widget.ui \
+    tools/spec_checker/spec_checker.ui \
+    tools/spec_checker/ui/spec_widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
