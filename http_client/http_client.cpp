@@ -85,6 +85,12 @@ void HttpClient::destroyInstance()
 
 void HttpClient::sendGetRequest(QNetworkAccessManager* pNetworkManager, LostarkApi api, int keyIndex, const QStringList& params)
 {
+    if (keyIndex >= MAX_APIKEY)
+    {
+        qDebug() << Q_FUNC_INFO << ": Invalid key index";
+        return;
+    }
+
     // generate url
     QString url = m_apis[static_cast<int>(api)];
     for (const QString& param : params)

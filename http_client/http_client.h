@@ -35,8 +35,8 @@ public:
 private:
     static HttpClient* m_pHttpClient;
 
+    const int MAX_APIKEY = 5;
     QStringList m_apis;
-    QString m_apiKey;
     QStringList m_apiKeys;
     class DB* m_pDB;
 };
