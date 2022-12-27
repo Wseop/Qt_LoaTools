@@ -307,7 +307,10 @@ void SpecWidget::setSetEffectData()
         }
 
         SetEffect setEffect = pEquip->getSetEffect();
+        if (setEffect == SetEffect::Size)
+            continue;
         setEffectCounts[static_cast<int>(setEffect)]++;
+        setLevel += QString::number(pEquip->getSetLevel());
     }
 
     QString setEffectText;
