@@ -12,6 +12,8 @@ EngraveWidget::EngraveWidget(QWidget* pParent, const Engrave* pEngrave) :
     m_pEngrave(pEngrave)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/resources/Home.ico"));
+    this->setWindowTitle("각인");
 
     setEngraveLayouts();
     setFonts();

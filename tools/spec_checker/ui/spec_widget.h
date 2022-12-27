@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class Character;
+class EngraveWidget;
 
 namespace Ui {
 class SpecWidget;
@@ -37,6 +38,7 @@ private:
     Ui::SpecWidget *ui;
 
     Character* m_pCharacter;
+    EngraveWidget* m_pEngravingWidget;
 };
 
 #endif // SPEC_WIDGET_H

@@ -11,10 +11,12 @@
 #include "font/font_manager.h"
 #include "tools/character_search/character_search.h"
 #include "tools/character_search/ui/quality_color.h"
+#include "tools/character_search/ui/engrave_widget.h"
 
 SpecWidget::SpecWidget() :
     ui(new Ui::SpecWidget),
-    m_pCharacter(nullptr)
+    m_pCharacter(nullptr),
+    m_pEngravingWidget(nullptr)
 {
     ui->setupUi(this);
 
@@ -26,6 +28,7 @@ SpecWidget::SpecWidget() :
 SpecWidget::~SpecWidget()
 {
     delete m_pCharacter;
+    delete m_pEngravingWidget;
     delete ui;
 }
 
@@ -59,7 +62,7 @@ void SpecWidget::setFonts()
     ui->lbSpecification->setFont(nanumBold10);
     ui->lbSwiftness->setFont(nanumBold10);
     ui->lbAbilitySum->setFont(nanumBold10);
-    ui->lbEngraving->setFont(nanumBold10);
+    ui->pbEngraving->setFont(nanumBold10);
     ui->lbPenalty->setFont(nanumBold10);
     ui->lbGemMyul->setFont(nanumBold10);
     ui->lbGemHong->setFont(nanumBold10);
@@ -89,6 +92,10 @@ void SpecWidget::setConnects()
     connect(ui->pbName, &QPushButton::pressed, this, [&](){
         CharacterSearch::getInstance()->changeCharacter(ui->pbName->text());
         CharacterSearch::getInstance()->show();
+    });
+    connect(ui->pbEngraving, &QPushButton::pressed, this, [&](){
+        if (m_pEngravingWidget != nullptr)
+            m_pEngravingWidget->show();
     });
 }
 
@@ -127,7 +134,7 @@ void SpecWidget::setEngravingData()
     {
         engravingLevels += QString::number(engraving.second);
     }
-    ui->lbEngraving->setText(engravingLevels);
+    ui->pbEngraving->setText(engravingLevels);
 
     const auto& penalties = pEngrave->getPenalties();
     QString penaltyLevels = "감소 ";
@@ -143,6 +150,8 @@ void SpecWidget::setEngravingData()
         }
     }
     ui->lbPenalty->setText(penaltyLevels);
+
+    m_pEngravingWidget = new EngraveWidget(this, pEngrave);
 }
 
 void SpecWidget::setGemData()
@@ -292,6 +301,7 @@ void SpecWidget::setSetEffectData()
 {
     const Equip* pEquip = nullptr;
     QList<int> setEffectCounts(static_cast<int>(SetEffect::Size), 0);
+    QString setLevel;
 
     for (int i = static_cast<int>(ItemType::무기); i <= static_cast<int>(ItemType::어깨); i++)
     {
@@ -321,6 +331,7 @@ void SpecWidget::setSetEffectData()
             setEffectText += QString("%1%2 ").arg(setEffectCounts[i]).arg(setEffectToStr(static_cast<SetEffect>(i)));
         }
     }
+    setEffectText += QString(" (%1)").arg(setLevel);
 
     ui->lbSetEffect->setText(setEffectText);
 }
