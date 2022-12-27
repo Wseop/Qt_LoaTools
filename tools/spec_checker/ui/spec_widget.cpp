@@ -180,14 +180,14 @@ void SpecWidget::setGemData()
     QString myulText = QString("%1 멸화").arg(myulCount);
     if (myulCount != 0)
     {
-        myulText += QString(" (평균 %1)").arg(sumOfMyulLevel / (double)myulCount, 0, 'f', 2, QChar(' '));
+        myulText += QString(" (평균 Lv. %1)").arg(sumOfMyulLevel / (double)myulCount, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemMyul->setText(myulText);
 
     QString hongText = QString("%1 홍염").arg(hongCount);
     if (hongCount != 0)
     {
-        hongText += QString(" (평균 %1)").arg(sumOfHongLevel / (double)hongCount, 0, 'f', 2, QChar(' '));
+        hongText += QString(" (평균 Lv. %1)").arg(sumOfHongLevel / (double)hongCount, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemHong->setText(hongText);
 }
