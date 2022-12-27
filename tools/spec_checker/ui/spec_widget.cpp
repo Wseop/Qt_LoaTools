@@ -347,18 +347,19 @@ void SpecWidget::setCardData()
         QString setName = pCard->getEffectNames()[pCard->getEffectNames().size() - 1];
         int nameStartIndex = 0;
         int nameEndIndex = setName.indexOf("세트") - 2;
-        int awakenStartIndex = setName.indexOf("(") + 1;
+        int awakenStartIndex = setName.indexOf("(");
         int awakenEndIndex = setName.indexOf("각성합계");
         if (nameEndIndex == -1)
             continue;
 
         cardText += setName.sliced(nameStartIndex, nameEndIndex - nameStartIndex);
-        if (awakenStartIndex == -1)
+        if (awakenStartIndex == -1 || awakenEndIndex == -1)
         {
             cardText += " 0각";
         }
         else
         {
+            awakenStartIndex += 1;
             cardText += QString(" %1각").arg(setName.sliced(awakenStartIndex, awakenEndIndex - awakenStartIndex));
         }
 
