@@ -13,6 +13,7 @@ enum class LostarkApi
     Engraves,
     Cards,
     Gems,
+    Auction,
 };
 
 class HttpClient : public QObject
@@ -30,7 +31,8 @@ public:
     static HttpClient* getInstance();
     static void destroyInstance();
 
-    void sendGetRequest(QNetworkAccessManager* networkManager, LostarkApi api, int keyIndex, const QStringList& params);
+    void sendGetRequest(QNetworkAccessManager* pNetworkManager, LostarkApi api, int keyIndex, const QStringList& params);
+    void sendPostRequest(QNetworkAccessManager* pNetworkManager, LostarkApi api, int keyIndex, QByteArray data);
 
 private:
     static HttpClient* m_pHttpClient;

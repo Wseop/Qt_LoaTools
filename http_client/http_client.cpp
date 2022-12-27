@@ -103,3 +103,20 @@ void HttpClient::sendGetRequest(QNetworkAccessManager* pNetworkManager, LostarkA
     request.setUrl(QUrl(url));
     pNetworkManager->get(request);
 }
+
+void HttpClient::sendPostRequest(QNetworkAccessManager* pNetworkManager, LostarkApi api, int keyIndex, QByteArray data)
+{
+    if (keyIndex >= MAX_APIKEY)
+    {
+        qDebug() << Q_FUNC_INFO << ": Invalid key index";
+        return;
+    }
+
+    QString url = m_apis[static_cast<int>(api)];
+    QNetworkRequest request;
+    request.setRawHeader("accept", "application/json");
+    request.setRawHeader("authorization", QString("bearer %1").arg(m_apiKeys[keyIndex]).toUtf8());
+    request.setRawHeader("Content-Type", "application/json");
+    request.setUrl(QUrl(url));
+    pNetworkManager->post(request, data);
+}
