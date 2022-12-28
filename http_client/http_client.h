@@ -13,6 +13,7 @@ enum class LostarkApi
     Engraves,
     Cards,
     Gems,
+    AuctionOptions,
     Auction,
 };
 

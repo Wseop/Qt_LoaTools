@@ -5,4 +5,5 @@ https://developer-lostark.game.onstove.com/armories/characters/%1/combat-skills
 https://developer-lostark.game.onstove.com/armories/characters/%1/engravings
 https://developer-lostark.game.onstove.com/armories/characters/%1/cards
 https://developer-lostark.game.onstove.com/armories/characters/%1/gems
+https://developer-lostark.game.onstove.com/auctions/options
 https://developer-lostark.game.onstove.com/auctions/items
