@@ -1,23 +1,18 @@
 #include "loatools.h"
 #include "db/db.h"
 #include "http_client/http_client.h"
+#include "tools/accessory_searcher/auction_options.h"
 
 #include <QApplication>
-#include <QThread>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    // run database
-    QThread* dbThread = new QThread();
-    DB::getInstance()->moveToThread(dbThread);
-    dbThread->start();
-
-    // run http_client
-    QThread* httpThread = new QThread();
-    HttpClient::getInstance()->moveToThread(httpThread);
-    httpThread->start();
+    // pre-load
+    DB::getInstance();
+    HttpClient::getInstance();
+    AuctionOptions::getInstance();
 
     // run main widget
     LoaTools w;

@@ -7,6 +7,7 @@
 #include "tools/ranking_board/ranking_board.h"
 #include "tools/character_search/character_search.h"
 #include "tools/spec_checker/spec_checker.h"
+#include "tools/accessory_searcher/accessory_searcher.h"
 #include "font/font_manager.h"
 
 LoaTools::LoaTools(QWidget *parent)
@@ -35,6 +36,7 @@ void LoaTools::initConnect()
     connect(ui->pbSettingAdviser, SIGNAL(pressed()), this, SLOT(slotOpenSettingAdviser()));
     connect(ui->pbRankingBoard, SIGNAL(pressed()), this, SLOT(slotOpenRankingBoard()));
     connect(ui->pbSpecChecker, SIGNAL(pressed()), this, SLOT(slotOpenSpecChecker()));
+    connect(ui->pbAccessorySearcher, SIGNAL(pressed()), this, SLOT(slotOpenAccessorySearcher()));
 }
 
 void LoaTools::initFont()
@@ -50,9 +52,11 @@ void LoaTools::initFont()
     ui->pbSettingAdviser->setFont(fontNanumExtraBold16);
     ui->pbRankingBoard->setFont(fontNanumExtraBold16);
     ui->pbSpecChecker->setFont(fontNanumExtraBold16);
+    ui->pbAccessorySearcher->setFont(fontNanumExtraBold16);
 
     ui->groupCharacter->setFont(fontNanumRegular10);
     ui->groupRaid->setFont(fontNanumRegular10);
+    ui->groupMarketAuction->setFont(fontNanumRegular10);
 }
 
 void LoaTools::initAlignment()
@@ -60,6 +64,7 @@ void LoaTools::initAlignment()
     ui->hLayoutCharacter1->setAlignment(Qt::AlignLeft);
     ui->hLayoutCharacter2->setAlignment(Qt::AlignLeft);
     ui->hLayoutGroupRaid->setAlignment(Qt::AlignLeft);
+    ui->hLayoutMarketAuction->setAlignment(Qt::AlignLeft);
 }
 
 void LoaTools::slotOpenMeteorTimer()
@@ -95,4 +100,9 @@ void LoaTools::slotOpenRankingBoard()
 void LoaTools::slotOpenSpecChecker()
 {
     SpecChecker::getInstance()->show();
+}
+
+void LoaTools::slotOpenAccessorySearcher()
+{
+    AccessorySearcher::getInstance()->show();
 }

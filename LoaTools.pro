@@ -31,6 +31,10 @@ SOURCES += \
     http_client/http_client.cpp \
     main.cpp \
     loatools.cpp \
+    tools/accessory_searcher/accessory_searcher.cpp \
+    tools/accessory_searcher/auction_options.cpp \
+    tools/accessory_searcher/ui/engrave_selector.cpp \
+    tools/accessory_searcher/ui/penalty_selector.cpp \
     tools/auction_calc/auction_calc.cpp \
     tools/character_search/character_search.cpp \
     tools/character_search/ui/abilitystone_widget.cpp \
@@ -82,6 +86,10 @@ HEADERS += \
     game_data/skill/skillrune_manager.h \
     http_client/http_client.h \
     loatools.h \
+    tools/accessory_searcher/accessory_searcher.h \
+    tools/accessory_searcher/auction_options.h \
+    tools/accessory_searcher/ui/engrave_selector.h \
+    tools/accessory_searcher/ui/penalty_selector.h \
     tools/auction_calc/auction_calc.h \
     tools/character_search/character_search.h \
     tools/character_search/ui/abilitystone_widget.h \
@@ -107,6 +115,9 @@ HEADERS += \
 
 FORMS += \
     loatools.ui \
+    tools/accessory_searcher/accessory_searcher.ui \
+    tools/accessory_searcher/ui/engrave_selector.ui \
+    tools/accessory_searcher/ui/penalty_selector.ui \
     tools/auction_calc/auctioncalc.ui \
     tools/character_search/character_search.ui \
     tools/character_search/ui/abilitystone_widget.ui \
