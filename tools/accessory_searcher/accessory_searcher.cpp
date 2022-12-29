@@ -177,6 +177,7 @@ void AccessorySearcher::initConnects()
         updateSearchFilter();
         qDebug() << m_pSearchFilter->getFilterObj();
     });
+    connect(ui->pbClear, &QPushButton::pressed, this, &AccessorySearcher::initFilter);
 }
 
 void AccessorySearcher::setFonts()
@@ -316,6 +317,26 @@ void AccessorySearcher::updateSearchFilter()
     engraving = ui->pbPenaltySelect->text();
     if (engraving != "각인 선택")
         m_pSearchFilter->setPenalty(m_penaltyToCode[engraving]);
+}
+
+void AccessorySearcher::initFilter()
+{
+    delete m_pSearchFilter;
+    m_pSearchFilter = new SearchFilter();
+
+    ui->pbEngraving1Select->setText("각인 선택");
+    ui->pbEngraving2Select->setText("각인 선택");
+    ui->pbPenaltySelect->setText("각인 선택");
+    ui->leAbilityMinValue1->clear();
+    ui->leAbilityMaxValue1->clear();
+    ui->leAbilityMinValue2->clear();
+    ui->leAbilityMaxValue2->clear();
+    ui->leEngravingMinValue1->clear();
+    ui->leEngravingMaxValue1->clear();
+    ui->leEngravingMinValue2->clear();
+    ui->leEngravingMaxValue2->clear();
+    ui->lePenaltyMinValue->clear();
+    ui->lePenaltyMaxValue->clear();
 }
 
 QPushButton* AccessorySearcher::createButton(QString text)

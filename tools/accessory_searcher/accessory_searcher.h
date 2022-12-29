@@ -30,6 +30,7 @@ private:
     void setFonts();
     void setAlignments();
     void updateSearchFilter();
+    void initFilter();
 
     QPushButton* createButton(QString text);
 
