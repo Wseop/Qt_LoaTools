@@ -33,6 +33,7 @@ SOURCES += \
     loatools.cpp \
     tools/accessory_searcher/accessory_searcher.cpp \
     tools/accessory_searcher/auction_options.cpp \
+    tools/accessory_searcher/search_filter.cpp \
     tools/accessory_searcher/ui/engrave_selector.cpp \
     tools/accessory_searcher/ui/penalty_selector.cpp \
     tools/auction_calc/auction_calc.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     loatools.h \
     tools/accessory_searcher/accessory_searcher.h \
     tools/accessory_searcher/auction_options.h \
+    tools/accessory_searcher/search_filter.h \
     tools/accessory_searcher/ui/engrave_selector.h \
     tools/accessory_searcher/ui/penalty_selector.h \
     tools/auction_calc/auction_calc.h \

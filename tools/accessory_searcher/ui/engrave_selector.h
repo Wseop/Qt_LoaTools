@@ -20,7 +20,7 @@ class EngraveSelector : public QWidget
     Q_OBJECT
 
 public:
-    EngraveSelector();
+    EngraveSelector(int buttonIndex);
     ~EngraveSelector();
 
 private:
@@ -32,6 +32,7 @@ private:
 private:
     Ui::EngraveSelector *ui;
 
+    int m_buttonIndex;
     QStringList m_engravings;
     QStringList m_classEngravings;
     QList<QPushButton*> m_btns;

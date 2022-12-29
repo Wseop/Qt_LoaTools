@@ -2,12 +2,14 @@
 #include "ui_engrave_selector.h"
 #include "game_data/engrave/engrave_manager.h"
 #include "font/font_manager.h"
+#include "tools/accessory_searcher/accessory_searcher.h"
 
 #include <functional>
 #include <QPushButton>
 
-EngraveSelector::EngraveSelector() :
+EngraveSelector::EngraveSelector(int buttonIndex) :
     ui(new Ui::EngraveSelector),
+    m_buttonIndex(buttonIndex),
     m_pos({0, 0})
 {
     ui->setupUi(this);
@@ -55,7 +57,10 @@ void EngraveSelector::setEngravingButtons()
     for (const QString& engraving : m_engravings)
     {
         QPushButton* pButton = createButton(engraving);
-        // TODO. connect
+        connect(pButton, &QPushButton::pressed, this, [&, engraving](){
+            AccessorySearcher::getInstance()->setEngraving(m_buttonIndex, engraving);
+            this->close();
+        });
         ui->gridEngraving->addWidget(pButton, m_pos.row, m_pos.col);
         movePos();
     }
@@ -64,7 +69,10 @@ void EngraveSelector::setEngravingButtons()
     for (const QString& engraving : m_classEngravings)
     {
         QPushButton* pButton = createButton(engraving);
-        // TODO. connect
+        connect(pButton, &QPushButton::pressed, this, [&, engraving](){
+            AccessorySearcher::getInstance()->setEngraving(m_buttonIndex, engraving);
+            this->close();
+        });
         ui->gridClassEngraving->addWidget(pButton, m_pos.row, m_pos.col);
         movePos();
     }

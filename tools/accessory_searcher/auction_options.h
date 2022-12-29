@@ -20,6 +20,7 @@ public:
     QList<int> getItemGradeQualities();
     QList<int> getAbilityCodes();
     QMap<QString, int> getEngravingCodes();
+    QMap<QString, int> getPenaltyCodes();
     QList<int> getAccessoryCodes();
 
     static AuctionOptions* getInstance();

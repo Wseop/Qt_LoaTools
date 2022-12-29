@@ -27,7 +27,7 @@
      </property>
      <layout class="QVBoxLayout" name="vLayoutSelector">
       <property name="spacing">
-       <number>12</number>
+       <number>10</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -140,7 +140,7 @@
         <item>
          <layout class="QHBoxLayout" name="hLayoutAbilityValue1">
           <item>
-           <widget class="QLineEdit" name="leAbility1MinValue">
+           <widget class="QLineEdit" name="leAbilityMinValue1">
             <property name="minimumSize">
              <size>
               <width>50</width>
@@ -184,7 +184,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="leAbility1MaxValue">
+           <widget class="QLineEdit" name="leAbilityMaxValue1">
             <property name="minimumSize">
              <size>
               <width>50</width>
@@ -239,7 +239,7 @@
         <item>
          <layout class="QHBoxLayout" name="hLayoutAbilityValue2">
           <item>
-           <widget class="QLineEdit" name="leAbility2MinValue">
+           <widget class="QLineEdit" name="leAbilityMinValue2">
             <property name="minimumSize">
              <size>
               <width>50</width>
@@ -283,7 +283,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="leAbility2MaxValue">
+           <widget class="QLineEdit" name="leAbilityMaxValue2">
             <property name="minimumSize">
              <size>
               <width>50</width>
@@ -352,7 +352,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leEngraving1MinValue">
+         <widget class="QLineEdit" name="leEngravingMinValue1">
           <property name="minimumSize">
            <size>
             <width>50</width>
@@ -396,7 +396,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leEngraving1MaxValue">
+         <widget class="QLineEdit" name="leEngravingMaxValue1">
           <property name="minimumSize">
            <size>
             <width>50</width>
@@ -463,7 +463,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leEngraving2MinValue">
+         <widget class="QLineEdit" name="leEngravingMinValue2">
           <property name="minimumSize">
            <size>
             <width>50</width>
@@ -507,7 +507,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leEngraving2MaxValue">
+         <widget class="QLineEdit" name="leEngravingMaxValue2">
           <property name="minimumSize">
            <size>
             <width>50</width>

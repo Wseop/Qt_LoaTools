@@ -69,6 +69,24 @@ QMap<QString, int> AuctionOptions::getEngravingCodes()
     return engravingCodes;
 }
 
+QMap<QString, int> AuctionOptions::getPenaltyCodes()
+{
+    const QJsonArray& etcOptions = m_auctionOptions.find("EtcOptions")->toArray();
+    const QJsonArray& etcSubs = etcOptions[2].toObject().find("EtcSubs")->toArray();
+    QMap<QString, int> penaltyCodes;
+
+    for (const QJsonValue& etcSub : etcSubs)
+    {
+        const QJsonObject& etcSubObj = etcSub.toObject();
+        int penaltyCode = etcSubObj.find("Value")->toInt();
+        QString penalty = etcSubObj.find("Text")->toString();
+
+        penaltyCodes[penalty] = penaltyCode;
+    }
+
+    return penaltyCodes;
+}
+
 QList<int> AuctionOptions::getAccessoryCodes()
 {
     const QJsonObject& categoriesObj = m_auctionOptions.find("Categories")->toArray()[2].toObject();

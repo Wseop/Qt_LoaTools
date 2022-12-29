@@ -2,6 +2,7 @@
 #include "ui_penalty_selector.h"
 #include "game_data/engrave/engrave_manager.h"
 #include "font/font_manager.h"
+#include "tools/accessory_searcher/accessory_searcher.h"
 
 #include <QPushButton>
 
@@ -37,7 +38,10 @@ void PenaltySelector::setPenaltyButtons()
     for (const QString& penalty : m_penalties)
     {
         QPushButton* pButton = createButton(penalty);
-        // TODO. connect
+        connect(pButton, &QPushButton::pressed, this, [&, penalty](){
+            AccessorySearcher::getInstance()->setPenalty(penalty);
+            this->close();
+        });
         ui->hLayoutPenalty->addWidget(pButton);
     }
 }
