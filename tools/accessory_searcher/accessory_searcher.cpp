@@ -140,7 +140,7 @@ void AccessorySearcher::initAbilityBtns()
 
         int abilityCode = abilityCodes[i];
         connect(pButton, &QPushButton::pressed, this, [&, abilityCode](){
-            m_pSearchFilter->setAbilityCode1(abilityCode);
+            m_pSearchFilter->setAbilityCode2(abilityCode);
             // TODO. ui
         });
     }
@@ -257,7 +257,7 @@ void AccessorySearcher::updateSearchFilter()
     else
         m_pSearchFilter->setAbilityMinValue2(value.toInt());
 
-    value = ui->leAbilityMaxValue1->text();
+    value = ui->leAbilityMaxValue2->text();
     if (value == "")
         m_pSearchFilter->setAbilityMaxValue2();
     else

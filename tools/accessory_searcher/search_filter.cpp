@@ -143,8 +143,12 @@ QJsonObject SearchFilter::getFilterObj()
     }
     if (m_penaltyCode != -1)
     {
-        QJsonObject etcOption = buildEtcOption(6, m_engravingCode1, m_engravingMinValue1, m_engravingMaxValue1);
+        QJsonObject etcOption = buildEtcOption(6, m_penaltyCode, m_penaltyMinValue, m_penaltyMaxValue);
         etcOptions.append(etcOption);
+    }
+    if (etcOptions.size() != 0)
+    {
+        filterObj.insert("EtcOptions", etcOptions);
     }
 
     // Sort
