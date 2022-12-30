@@ -54,6 +54,15 @@ void EngraveSelector::setEngravings()
 
 void EngraveSelector::setEngravingButtons()
 {
+    {
+        QPushButton* pButton = createButton("선택 안함");
+        connect(pButton, &QPushButton::pressed, this, [&](){
+            AccessorySearcher::getInstance()->setEngraving(m_buttonIndex, "");
+            this->close();
+        });
+        ui->gridCancle->addWidget(pButton, 0, 0);
+    }
+
     for (const QString& engraving : m_engravings)
     {
         QPushButton* pButton = createButton(engraving);

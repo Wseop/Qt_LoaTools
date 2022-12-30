@@ -11,10 +11,17 @@
 #include <QPushButton>
 #include <QIntValidator>
 
+const QString STYLE_SELECTED_BUTTON = "QPushButton { border: 2px solid rgb(58, 134, 255); border-radius: 5px; background-color: rgb(225, 225, 225); }";
+
 AccessorySearcher* AccessorySearcher::m_pInstance = nullptr;
 
 AccessorySearcher::AccessorySearcher() :
     ui(new Ui::AccessorySearcher),
+    m_pSelectedQualityBtn(nullptr),
+    m_pSelectedItemGradeBtn(nullptr),
+    m_pSelectedAccessoryPartBtn(nullptr),
+    m_pSelectedAbilityBtn1(nullptr),
+    m_pSelectedAbilityBtn2(nullptr),
     m_pPenaltySelector(new PenaltySelector()),
     m_pSearchFilter(new SearchFilter()),
     m_engravingToCode(AuctionOptions::getInstance()->getEngravingCodes()),
@@ -64,21 +71,50 @@ void AccessorySearcher::initQualityBtns()
     QList<int> qualities = AuctionOptions::getInstance()->getItemGradeQualities();
     QString btnText = "%1 이상";
 
+    {
+        QPushButton* pButton = createButton("전체 품질");
+        m_qualityBtns.append(pButton);
+        ui->hLayoutQuality->addWidget(pButton);
+        connect(pButton, &QPushButton::pressed, this, [&, pButton](){
+            m_pSearchFilter->setQuality(-1);
+            m_pSelectedQualityBtn->setStyleSheet("");
+            m_pSelectedQualityBtn = pButton;
+            m_pSelectedQualityBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+        });
+    }
+
     for (const int& quality : qualities)
     {
         QPushButton* pButton = createButton(btnText.arg(quality));
         m_qualityBtns.append(pButton);
         ui->hLayoutQuality->addWidget(pButton);
-        connect(pButton, &QPushButton::pressed, this, [&, quality](){
+        connect(pButton, &QPushButton::pressed, this, [&, quality, pButton](){
             m_pSearchFilter->setQuality(quality);
-            // TODO. ui
+            m_pSelectedQualityBtn->setStyleSheet("");
+            m_pSelectedQualityBtn = pButton;
+            m_pSelectedQualityBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
         });
     }
+
+    m_pSelectedQualityBtn = m_qualityBtns[0];
+    m_pSelectedQualityBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
 }
 
 void AccessorySearcher::initItemGradeBtns()
 {
     QString colorStyle = "QPushButton { color: %1 }";
+
+    {
+        QPushButton* pButton = createButton("전체 등급");
+        m_itemGradeBtns.append(pButton);
+        ui->hLayoutItemGrade->addWidget(pButton);
+        connect(pButton, &QPushButton::pressed, this, [&, pButton](){
+            m_pSearchFilter->setItemGrade("");
+            m_pSelectedItemGradeBtn->setStyleSheet("");
+            m_pSelectedItemGradeBtn = pButton;
+            m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+        });
+    }
 
     for (int i = static_cast<int>(ItemGrade::일반); i <= static_cast<int>(ItemGrade::에스더); i++)
     {
@@ -87,11 +123,16 @@ void AccessorySearcher::initItemGradeBtns()
         pButton->setStyleSheet(colorStyle.arg(colorCode(itemGrade)));
         m_itemGradeBtns.append(pButton);
         ui->hLayoutItemGrade->addWidget(pButton);
-        connect(pButton, &QPushButton::pressed, this, [&, itemGrade](){
+        connect(pButton, &QPushButton::pressed, this, [&, itemGrade, pButton](){
             m_pSearchFilter->setItemGrade(itemGradeToStr(itemGrade));
-            // TODO. ui
+            m_pSelectedItemGradeBtn->setStyleSheet("");
+            m_pSelectedItemGradeBtn = pButton;
+            m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
         });
     }
+
+    m_pSelectedItemGradeBtn = m_itemGradeBtns[0];
+    m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
 }
 
 void AccessorySearcher::initAccessoryPartBtns()
@@ -106,11 +147,16 @@ void AccessorySearcher::initAccessoryPartBtns()
         ui->hLayoutAccessoryPart->addWidget(pButton);
 
         int accessoryCode = accessoryCodes[i];
-        connect(pButton, &QPushButton::pressed, this, [&, accessoryCode](){
+        connect(pButton, &QPushButton::pressed, this, [&, accessoryCode, pButton](){
             m_pSearchFilter->setCategory(accessoryCode);
-            // TODO. ui
+            m_pSelectedAccessoryPartBtn->setStyleSheet("");
+            m_pSelectedAccessoryPartBtn = pButton;
+            m_pSelectedAccessoryPartBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
         });
     }
+
+    m_pSelectedAccessoryPartBtn = m_accessoryPartBtns[0];
+    m_pSelectedAccessoryPartBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
 }
 
 void AccessorySearcher::initAbilityBtns()
@@ -126,9 +172,21 @@ void AccessorySearcher::initAbilityBtns()
         ui->hLayoutAbilitySelect1->addWidget(pButton);
 
         int abilityCode = abilityCodes[i];
-        connect(pButton, &QPushButton::pressed, this, [&, abilityCode](){
-            m_pSearchFilter->setAbilityCode1(abilityCode);
-            // TODO. ui
+        connect(pButton, &QPushButton::pressed, this, [&, abilityCode, pButton](){
+            if (m_pSelectedAbilityBtn1 == pButton)
+            {
+                m_pSearchFilter->setAbilityCode1(-1);
+                m_pSelectedAbilityBtn1->setStyleSheet("");
+                m_pSelectedAbilityBtn1 = nullptr;
+            }
+            else
+            {
+                m_pSearchFilter->setAbilityCode1(abilityCode);
+                if (m_pSelectedAbilityBtn1 != nullptr)
+                    m_pSelectedAbilityBtn1->setStyleSheet("");
+                m_pSelectedAbilityBtn1 = pButton;
+                m_pSelectedAbilityBtn1->setStyleSheet(STYLE_SELECTED_BUTTON);
+            }
         });
     }
     // Ability2
@@ -139,9 +197,21 @@ void AccessorySearcher::initAbilityBtns()
         ui->hLayoutAbilitySelect2->addWidget(pButton);
 
         int abilityCode = abilityCodes[i];
-        connect(pButton, &QPushButton::pressed, this, [&, abilityCode](){
-            m_pSearchFilter->setAbilityCode2(abilityCode);
-            // TODO. ui
+        connect(pButton, &QPushButton::pressed, this, [&, abilityCode, pButton](){
+            if (m_pSelectedAbilityBtn2 == pButton)
+            {
+                m_pSearchFilter->setAbilityCode2(-1);
+                m_pSelectedAbilityBtn2->setStyleSheet("");
+                m_pSelectedAbilityBtn2 = nullptr;
+            }
+            else
+            {
+                m_pSearchFilter->setAbilityCode2(abilityCode);
+                if (m_pSelectedAbilityBtn2 != nullptr)
+                    m_pSelectedAbilityBtn2->setStyleSheet("");
+                m_pSelectedAbilityBtn2 = pButton;
+                m_pSelectedAbilityBtn2->setStyleSheet(STYLE_SELECTED_BUTTON);
+            }
         });
     }
 }
@@ -309,14 +379,20 @@ void AccessorySearcher::updateSearchFilter()
     engraving = ui->pbEngraving1Select->text();
     if (engraving != "각인 선택")
         m_pSearchFilter->setEngraving1(m_engravingToCode[engraving]);
+    else
+        m_pSearchFilter->setEngraving1(-1);
 
     engraving = ui->pbEngraving2Select->text();
     if (engraving != "각인 선택")
         m_pSearchFilter->setEngraving2(m_engravingToCode[engraving]);
+    else
+        m_pSearchFilter->setEngraving2(-1);
 
     engraving = ui->pbPenaltySelect->text();
     if (engraving != "각인 선택")
         m_pSearchFilter->setPenalty(m_penaltyToCode[engraving]);
+    else
+        m_pSearchFilter->setPenalty(-1);
 }
 
 void AccessorySearcher::initFilter()
@@ -324,9 +400,35 @@ void AccessorySearcher::initFilter()
     delete m_pSearchFilter;
     m_pSearchFilter = new SearchFilter();
 
+    m_pSelectedQualityBtn->setStyleSheet("");
+    m_pSelectedQualityBtn = m_qualityBtns[0];
+    m_pSelectedQualityBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+
+    m_pSelectedItemGradeBtn->setStyleSheet("");
+    m_pSelectedItemGradeBtn = m_itemGradeBtns[0];
+    m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+
+    m_pSelectedAccessoryPartBtn->setStyleSheet("");
+    m_pSelectedAccessoryPartBtn = m_accessoryPartBtns[0];
+    m_pSelectedAccessoryPartBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+
+    if (m_pSelectedAbilityBtn1 != nullptr)
+    {
+        m_pSelectedAbilityBtn1->setStyleSheet("");
+        m_pSelectedAbilityBtn1 = nullptr;
+    }
+    if (m_pSelectedAbilityBtn2 != nullptr)
+    {
+        m_pSelectedAbilityBtn2->setStyleSheet("");
+        m_pSelectedAbilityBtn2 = nullptr;
+    }
+
     ui->pbEngraving1Select->setText("각인 선택");
+    ui->pbEngraving1Select->setStyleSheet("");
     ui->pbEngraving2Select->setText("각인 선택");
+    ui->pbEngraving2Select->setStyleSheet("");
     ui->pbPenaltySelect->setText("각인 선택");
+    ui->pbPenaltySelect->setStyleSheet("");
     ui->leAbilityMinValue1->clear();
     ui->leAbilityMaxValue1->clear();
     ui->leAbilityMinValue2->clear();
@@ -350,14 +452,45 @@ QPushButton* AccessorySearcher::createButton(QString text)
 void AccessorySearcher::setEngraving(int buttonIndex, QString engraving)
 {
     if (buttonIndex == 0)
-        ui->pbEngraving1Select->setText(engraving);
+    {
+        if (engraving == "")
+        {
+            ui->pbEngraving1Select->setText("각인 선택");
+            ui->pbEngraving1Select->setStyleSheet("");
+        }
+        else
+        {
+            ui->pbEngraving1Select->setText(engraving);
+            ui->pbEngraving1Select->setStyleSheet(STYLE_SELECTED_BUTTON);
+        }
+    }
     else if (buttonIndex == 1)
-        ui->pbEngraving2Select->setText(engraving);
+    {
+        if (engraving == "")
+        {
+            ui->pbEngraving2Select->setText("각인 선택");
+            ui->pbEngraving2Select->setStyleSheet("");
+        }
+        else
+        {
+            ui->pbEngraving2Select->setText(engraving);
+            ui->pbEngraving2Select->setStyleSheet(STYLE_SELECTED_BUTTON);
+        }
+    }
 }
 
 void AccessorySearcher::setPenalty(QString penalty)
 {
-    ui->pbPenaltySelect->setText(penalty);
+    if (penalty == "")
+    {
+        ui->pbPenaltySelect->setText("각인 선택");
+        ui->pbPenaltySelect->setStyleSheet("");
+    }
+    else
+    {
+        ui->pbPenaltySelect->setText(penalty);
+        ui->pbPenaltySelect->setStyleSheet(STYLE_SELECTED_BUTTON);
+    }
 }
 
 AccessorySearcher* AccessorySearcher::getInstance()

@@ -50,6 +50,12 @@ private:
     QList<QPushButton*> m_abilityBtns1;
     QList<QPushButton*> m_abilityBtns2;
 
+    QPushButton* m_pSelectedQualityBtn;
+    QPushButton* m_pSelectedItemGradeBtn;
+    QPushButton* m_pSelectedAccessoryPartBtn;
+    QPushButton* m_pSelectedAbilityBtn1;
+    QPushButton* m_pSelectedAbilityBtn2;
+
     QList<EngraveSelector*> m_engraveSelectors;
     PenaltySelector* m_pPenaltySelector;
 

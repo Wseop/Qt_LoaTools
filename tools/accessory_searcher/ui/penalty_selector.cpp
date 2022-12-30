@@ -35,6 +35,15 @@ void PenaltySelector::setPenalties()
 
 void PenaltySelector::setPenaltyButtons()
 {
+    {
+        QPushButton* pButton = createButton("선택 안함");
+        connect(pButton, &QPushButton::pressed, this, [&](){
+            AccessorySearcher::getInstance()->setPenalty("");
+            this->close();
+        });
+        ui->hLayoutCancle->addWidget(pButton);
+    }
+
     for (const QString& penalty : m_penalties)
     {
         QPushButton* pButton = createButton(penalty);
