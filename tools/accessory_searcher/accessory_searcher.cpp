@@ -11,7 +11,10 @@
 #include <QPushButton>
 #include <QIntValidator>
 
-const QString STYLE_SELECTED_BUTTON = "QPushButton { border: 2px solid rgb(58, 134, 255); border-radius: 5px; background-color: rgb(225, 225, 225); }";
+const QString STYLE_SELECTED_BUTTON = "QPushButton { "
+                                      "border: 2px solid rgb(58, 134, 255); "
+                                      "border-radius: 5px; "
+                                      "background-color: rgb(225, 225, 225); }";
 
 AccessorySearcher* AccessorySearcher::m_pInstance = nullptr;
 
@@ -102,15 +105,21 @@ void AccessorySearcher::initQualityBtns()
 
 void AccessorySearcher::initItemGradeBtns()
 {
-    QString colorStyle = "QPushButton { color: %1 }";
+    QString selectedStyle = "QPushButton { "
+                            "color: %1; "
+                            "border: 2px solid rgb(58, 134, 255);"
+                            "border-radius: 5px;"
+                            "background-color: rgb(225, 225, 225);}";
+
+    QString unselectedStyle = "QPushButton { color: %1 }";
 
     {
         QPushButton* pButton = createButton("전체 등급");
         m_itemGradeBtns.append(pButton);
         ui->hLayoutItemGrade->addWidget(pButton);
-        connect(pButton, &QPushButton::pressed, this, [&, pButton](){
+        connect(pButton, &QPushButton::pressed, this, [&, pButton, unselectedStyle](){
             m_pSearchFilter->setItemGrade("");
-            m_pSelectedItemGradeBtn->setStyleSheet("");
+            m_pSelectedItemGradeBtn->setStyleSheet(unselectedStyle.arg(colorCode(strToItemGrade(m_pSelectedItemGradeBtn->text()))));
             m_pSelectedItemGradeBtn = pButton;
             m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
         });
@@ -120,14 +129,14 @@ void AccessorySearcher::initItemGradeBtns()
     {
         ItemGrade itemGrade = static_cast<ItemGrade>(i);
         QPushButton* pButton = createButton(itemGradeToStr(itemGrade));
-        pButton->setStyleSheet(colorStyle.arg(colorCode(itemGrade)));
+        pButton->setStyleSheet(unselectedStyle.arg(colorCode(itemGrade)));
         m_itemGradeBtns.append(pButton);
         ui->hLayoutItemGrade->addWidget(pButton);
-        connect(pButton, &QPushButton::pressed, this, [&, itemGrade, pButton](){
+        connect(pButton, &QPushButton::pressed, this, [&, itemGrade, pButton, unselectedStyle, selectedStyle](){
             m_pSearchFilter->setItemGrade(itemGradeToStr(itemGrade));
-            m_pSelectedItemGradeBtn->setStyleSheet("");
+            m_pSelectedItemGradeBtn->setStyleSheet(unselectedStyle.arg(colorCode(strToItemGrade(m_pSelectedItemGradeBtn->text()))));
             m_pSelectedItemGradeBtn = pButton;
-            m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
+            m_pSelectedItemGradeBtn->setStyleSheet(selectedStyle.arg(colorCode(itemGrade)));
         });
     }
 
@@ -404,7 +413,8 @@ void AccessorySearcher::initFilter()
     m_pSelectedQualityBtn = m_qualityBtns[0];
     m_pSelectedQualityBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
 
-    m_pSelectedItemGradeBtn->setStyleSheet("");
+    ItemGrade itemGrade = strToItemGrade(m_pSelectedItemGradeBtn->text());
+    m_pSelectedItemGradeBtn->setStyleSheet(QString("QPushButton { color: %1 }").arg(colorCode(itemGrade)));
     m_pSelectedItemGradeBtn = m_itemGradeBtns[0];
     m_pSelectedItemGradeBtn->setStyleSheet(STYLE_SELECTED_BUTTON);
 
