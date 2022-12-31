@@ -13,6 +13,8 @@
 #include "tools/character_search/ui/quality_color.h"
 #include "tools/character_search/ui/engrave_widget.h"
 
+const QString STYLE_UNDER_LEVEL = "QLabel { color: red }";
+
 SpecWidget::SpecWidget() :
     ui(new Ui::SpecWidget),
     m_pCharacter(nullptr),
@@ -50,6 +52,7 @@ void SpecWidget::setFonts()
 {
     FontManager* pFontManager = FontManager::getInstance();
     QFont nanumBold10 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 10);
+    QFont nanumBold12 = pFontManager->getFont(FontFamily::NanumSquareNeoBold, 12);
     QFont nanumRegular10 = pFontManager->getFont(FontFamily::NanumSquareNeoRegular, 10);
 
     ui->lbTitle->setFont(nanumBold10);
@@ -57,7 +60,7 @@ void SpecWidget::setFonts()
     ui->lbClass->setFont(nanumBold10);
     ui->lbExpedition->setFont(nanumBold10);
     ui->lbBattleLevel->setFont(nanumBold10);
-    ui->lbItemLevel->setFont(nanumBold10);
+    ui->lbItemLevel->setFont(nanumBold12);
     ui->lbCritical->setFont(nanumBold10);
     ui->lbSpecification->setFont(nanumBold10);
     ui->lbSwiftness->setFont(nanumBold10);
@@ -68,10 +71,11 @@ void SpecWidget::setFonts()
     ui->lbGemHong->setFont(nanumBold10);
     ui->lbTripodLevel4->setFont(nanumBold10);
     ui->lbTripodLevel5->setFont(nanumBold10);
-    ui->lbWeaponLevel->setFont(nanumBold10);
+    ui->lbWeaponLevel->setFont(nanumBold12);
     ui->lbWeaponGrade->setFont(nanumBold10);
     ui->lbWeaponQual->setFont(nanumBold10);
     ui->lbAccQual->setFont(nanumBold10);
+    ui->lbAccQualAvg->setFont(nanumBold10);
     ui->lbSetEffect->setFont(nanumBold10);
     ui->lbCard->setFont(nanumBold10);
 
@@ -84,7 +88,7 @@ void SpecWidget::setFonts()
 
 void SpecWidget::setAlignments()
 {
-
+    ui->hLayoutAcc->setAlignment(Qt::AlignHCenter);
 }
 
 void SpecWidget::setConnects()
@@ -116,10 +120,13 @@ void SpecWidget::setProfileData()
     int critical = abilityToValue[Ability::치명];
     int specification = abilityToValue[Ability::특화];
     int swiftness = abilityToValue[Ability::신속];
+    int sumOfAbilities = critical + specification + swiftness;
     ui->lbCritical->setText(QString("치명 %1").arg(critical));
     ui->lbSpecification->setText(QString("특화 %1").arg(specification));
     ui->lbSwiftness->setText(QString("신속 %1").arg(swiftness));
-    ui->lbAbilitySum->setText(QString("특성합 %1").arg(critical + specification + swiftness));
+    ui->lbAbilitySum->setText(QString("특성합 %1").arg(sumOfAbilities));
+    if (sumOfAbilities < 2100)
+        ui->lbAbilitySum->setStyleSheet(STYLE_UNDER_LEVEL);
 }
 
 void SpecWidget::setEngravingData()
@@ -159,8 +166,10 @@ void SpecWidget::setGemData()
     const auto& gems = m_pCharacter->getGems();
     int myulCount = 0;
     int sumOfMyulLevel = 0;
+    double avgOfMyulLevel = 0;
     int hongCount = 0;
     int sumOfHongLevel = 0;
+    double avgOfHongLevel = 0;
 
     for (const auto* pGem : gems)
     {
@@ -177,19 +186,26 @@ void SpecWidget::setGemData()
         }
     }
 
+    QString underLevelStyle = "QLabel { color: red }";
     QString myulText = QString("%1 멸화").arg(myulCount);
     if (myulCount != 0)
     {
-        myulText += QString(" (평균 Lv. %1)").arg(sumOfMyulLevel / (double)myulCount, 0, 'f', 2, QChar(' '));
+        avgOfMyulLevel = sumOfMyulLevel / (double)myulCount;
+        myulText += QString(" (평균 Lv. %1)").arg(avgOfMyulLevel, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemMyul->setText(myulText);
+    if (!isSupporter(m_pCharacter->getProfile()->getClass()) && avgOfMyulLevel < 7)
+        ui->lbGemMyul->setStyleSheet(STYLE_UNDER_LEVEL);
 
     QString hongText = QString("%1 홍염").arg(hongCount);
     if (hongCount != 0)
     {
-        hongText += QString(" (평균 Lv. %1)").arg(sumOfHongLevel / (double)hongCount, 0, 'f', 2, QChar(' '));
+        avgOfHongLevel = sumOfHongLevel / (double)hongCount;
+        hongText += QString(" (평균 Lv. %1)").arg(avgOfHongLevel, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemHong->setText(hongText);
+    if (avgOfHongLevel < 7)
+        ui->lbGemHong->setStyleSheet(STYLE_UNDER_LEVEL);
 }
 
 void SpecWidget::setTripodData()
@@ -213,6 +229,13 @@ void SpecWidget::setTripodData()
 
     ui->lbTripodLevel4->setText(QString("Lv.4 %1개").arg(tripodLevel4Count));
     ui->lbTripodLevel5->setText(QString("Lv.5 %1개").arg(tripodLevel5Count));
+    ui->groupTripod->setTitle(QString("트라이포드 (%1/18)").arg(tripodLevel4Count + tripodLevel5Count));
+
+    if ((tripodLevel4Count + tripodLevel5Count) < 15 && !isSupporter(m_pCharacter->getProfile()->getClass()))
+    {
+        ui->lbTripodLevel4->setStyleSheet(STYLE_UNDER_LEVEL);
+        ui->lbTripodLevel5->setStyleSheet(STYLE_UNDER_LEVEL);
+    }
 }
 
 void SpecWidget::setWeaponData()
@@ -293,8 +316,13 @@ void SpecWidget::setAccData()
         }
     }
 
-    accQualText += QString("(평균 %1)").arg(sumOfQualities / (double)5, 0, 'f', 2, QChar(' '));
+    double accQualAvg = sumOfQualities / (double)5;
+    QString accQualAvgText = QString("(평균 %1)").arg(accQualAvg, 0, 'f', 2, QChar(' '));
     ui->lbAccQual->setText(accQualText);
+    ui->lbAccQualAvg->setText(accQualAvgText);
+
+    QString colorStyle = QString("QLabel { color: %1 }").arg(getQualityColor(static_cast<int>(accQualAvg)));
+    ui->lbAccQualAvg->setStyleSheet(colorStyle);
 }
 
 void SpecWidget::setSetEffectData()
@@ -302,6 +330,7 @@ void SpecWidget::setSetEffectData()
     const Equip* pEquip = nullptr;
     QList<int> setEffectCounts(static_cast<int>(SetEffect::Size), 0);
     QString setLevel;
+    bool bFullSetEnabled = true;
 
     for (int i = static_cast<int>(ItemType::무기); i <= static_cast<int>(ItemType::어깨); i++)
     {
@@ -318,7 +347,10 @@ void SpecWidget::setSetEffectData()
 
         SetEffect setEffect = pEquip->getSetEffect();
         if (setEffect == SetEffect::Size)
+        {
+            bFullSetEnabled = false;
             continue;
+        }
         setEffectCounts[static_cast<int>(setEffect)]++;
         setLevel += QString::number(pEquip->getSetLevel());
     }
@@ -334,6 +366,8 @@ void SpecWidget::setSetEffectData()
     setEffectText += QString(" (%1)").arg(setLevel);
 
     ui->lbSetEffect->setText(setEffectText);
+    if (!bFullSetEnabled)
+        ui->lbSetEffect->setStyleSheet(STYLE_UNDER_LEVEL);
 }
 
 void SpecWidget::setCardData()
@@ -368,4 +402,12 @@ void SpecWidget::setCardData()
     }
 
     ui->lbCard->setText(cardText);
+}
+
+bool SpecWidget::isSupporter(Class cls)
+{
+    if (cls == Class::바드 || cls == Class::홀리나이트 || cls == Class::도화가)
+        return true;
+    else
+        return false;
 }

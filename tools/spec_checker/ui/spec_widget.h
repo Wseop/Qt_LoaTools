@@ -1,6 +1,8 @@
 #ifndef SPEC_WIDGET_H
 #define SPEC_WIDGET_H
 
+#include "game_data/profile/enum/class.h"
+
 #include <QWidget>
 
 class Character;
@@ -33,6 +35,8 @@ private:
     void setAccData();
     void setSetEffectData();
     void setCardData();
+
+    bool isSupporter(Class cls);
 
 private:
     Ui::SpecWidget *ui;
