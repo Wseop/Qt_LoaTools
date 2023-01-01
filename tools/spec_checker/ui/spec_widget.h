@@ -36,8 +36,6 @@ private:
     void setSetEffectData();
     void setCardData();
 
-    bool isSupporter(Class cls);
-
 private:
     Ui::SpecWidget *ui;
 

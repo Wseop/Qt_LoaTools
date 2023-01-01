@@ -136,4 +136,12 @@ static inline Class strToClass(QString cls)
         return Class::기상술사;
 }
 
+static inline bool isSupporter(Class cls)
+{
+    if (cls == Class::바드 || cls == Class::홀리나이트 || cls == Class::도화가)
+        return true;
+    else
+        return false;
+}
+
 #endif // CLASS_H

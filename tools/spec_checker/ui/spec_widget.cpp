@@ -14,6 +14,9 @@
 #include "tools/character_search/ui/engrave_widget.h"
 
 const QString STYLE_UNDER_LEVEL = "QLabel { color: red }";
+const int SPEC_CUT_ABILITY = 2100;
+const int SPEC_CUT_GEM_AVG = 7;
+const int SPEC_CUT_TRIPOD_ENABLED = 10;
 
 SpecWidget::SpecWidget() :
     ui(new Ui::SpecWidget),
@@ -125,7 +128,7 @@ void SpecWidget::setProfileData()
     ui->lbSpecification->setText(QString("특화 %1").arg(specification));
     ui->lbSwiftness->setText(QString("신속 %1").arg(swiftness));
     ui->lbAbilitySum->setText(QString("특성합 %1").arg(sumOfAbilities));
-    if (sumOfAbilities < 2100)
+    if (sumOfAbilities < SPEC_CUT_ABILITY)
         ui->lbAbilitySum->setStyleSheet(STYLE_UNDER_LEVEL);
 }
 
@@ -194,7 +197,7 @@ void SpecWidget::setGemData()
         myulText += QString(" (평균 Lv. %1)").arg(avgOfMyulLevel, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemMyul->setText(myulText);
-    if (!isSupporter(m_pCharacter->getProfile()->getClass()) && avgOfMyulLevel < 7)
+    if (!isSupporter(m_pCharacter->getProfile()->getClass()) && avgOfMyulLevel < SPEC_CUT_GEM_AVG)
         ui->lbGemMyul->setStyleSheet(STYLE_UNDER_LEVEL);
 
     QString hongText = QString("%1 홍염").arg(hongCount);
@@ -204,7 +207,7 @@ void SpecWidget::setGemData()
         hongText += QString(" (평균 Lv. %1)").arg(avgOfHongLevel, 0, 'f', 2, QChar(' '));
     }
     ui->lbGemHong->setText(hongText);
-    if (avgOfHongLevel < 7)
+    if (avgOfHongLevel < SPEC_CUT_GEM_AVG)
         ui->lbGemHong->setStyleSheet(STYLE_UNDER_LEVEL);
 }
 
@@ -231,7 +234,7 @@ void SpecWidget::setTripodData()
     ui->lbTripodLevel5->setText(QString("Lv.5 %1개").arg(tripodLevel5Count));
     ui->groupTripod->setTitle(QString("트라이포드 (%1/18)").arg(tripodLevel4Count + tripodLevel5Count));
 
-    if ((tripodLevel4Count + tripodLevel5Count) < 15 && !isSupporter(m_pCharacter->getProfile()->getClass()))
+    if ((tripodLevel4Count + tripodLevel5Count) < SPEC_CUT_TRIPOD_ENABLED && !isSupporter(m_pCharacter->getProfile()->getClass()))
     {
         ui->lbTripodLevel4->setStyleSheet(STYLE_UNDER_LEVEL);
         ui->lbTripodLevel5->setStyleSheet(STYLE_UNDER_LEVEL);
@@ -402,12 +405,4 @@ void SpecWidget::setCardData()
     }
 
     ui->lbCard->setText(cardText);
-}
-
-bool SpecWidget::isSupporter(Class cls)
-{
-    if (cls == Class::바드 || cls == Class::홀리나이트 || cls == Class::도화가)
-        return true;
-    else
-        return false;
 }
