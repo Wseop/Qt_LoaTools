@@ -5,11 +5,19 @@
 #include "tools/accessory_searcher/search_filter.h"
 #include "tools/accessory_searcher/ui/engrave_selector.h"
 #include "tools/accessory_searcher/ui/penalty_selector.h"
+#include "tools/accessory_searcher/ui/search_result.h"
 #include "game_data/item/enum/item_grade.h"
 #include "game_data/profile/enum/ability.h"
+#include "http_client/http_client.h"
 
 #include <QPushButton>
 #include <QIntValidator>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMessageBox>
 
 const QString STYLE_SELECTED_BUTTON = "QPushButton { "
                                       "border: 2px solid rgb(58, 134, 255); "
@@ -28,7 +36,8 @@ AccessorySearcher::AccessorySearcher() :
     m_pPenaltySelector(new PenaltySelector()),
     m_pSearchFilter(new SearchFilter()),
     m_engravingToCode(AuctionOptions::getInstance()->getEngravingCodes()),
-    m_penaltyToCode(AuctionOptions::getInstance()->getPenaltyCodes())
+    m_penaltyToCode(AuctionOptions::getInstance()->getPenaltyCodes()),
+    m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
@@ -65,6 +74,7 @@ AccessorySearcher::~AccessorySearcher()
     for (auto* pEngraveSelector : m_engraveSelectors)
         delete pEngraveSelector;
     delete m_pPenaltySelector;
+    delete m_pNetworkManager;
 
     delete ui;
 }
@@ -253,10 +263,15 @@ void AccessorySearcher::initConnects()
         m_pPenaltySelector->show();
     });
     connect(ui->pbSearch, &QPushButton::pressed, this, [&](){
+        for (SearchResult* pResult : m_searchResults)
+            delete pResult;
+        m_searchResults.clear();
+
         updateSearchFilter();
-        qDebug() << m_pSearchFilter->getFilterObj();
+        sendPostRequest();
     });
     connect(ui->pbClear, &QPushButton::pressed, this, &AccessorySearcher::initFilter);
+    connect(m_pNetworkManager, &QNetworkAccessManager::finished, this, &AccessorySearcher::handleSearchResult);
 }
 
 void AccessorySearcher::setFonts()
@@ -311,6 +326,9 @@ void AccessorySearcher::setAlignments()
     ui->hLayoutEngraving2->setAlignment(Qt::AlignLeft);
     ui->hLayoutPenalty->setAlignment(Qt::AlignLeft);
     ui->hLayoutSearchClear->setAlignment(Qt::AlignHCenter);
+    ui->vLayoutScrollArea->setAlignment(Qt::AlignTop);
+    ui->vLayoutPickedItems->setAlignment(Qt::AlignTop);
+    ui->vLayoutItems->setAlignment(Qt::AlignTop);
 }
 
 void AccessorySearcher::updateSearchFilter()
@@ -451,12 +469,53 @@ void AccessorySearcher::initFilter()
     ui->lePenaltyMaxValue->clear();
 }
 
+void AccessorySearcher::sendPostRequest()
+{
+    const QByteArray& data = QJsonDocument(m_pSearchFilter->getFilterObj()).toJson();
+    HttpClient::getInstance()->sendPostRequest(m_pNetworkManager, LostarkApi::Auction, 2, data);
+}
+
+void AccessorySearcher::handleSearchResult(QNetworkReply* pReply)
+{
+    const QJsonArray& items = QJsonDocument::fromJson(pReply->readAll()).object().find("Items")->toArray();
+
+    if (items.size() == 0)
+    {
+        QMessageBox msgBox;
+        msgBox.setText("매물이 존재하지 않습니다.");
+        msgBox.exec();
+        return;
+    }
+
+    for (const QJsonValue& item : items)
+    {
+        const QJsonObject& itemObj = item.toObject();
+        SearchResult* pResult = createSearchResult(itemObj);
+        ui->vLayoutItems->addWidget(pResult);
+    }
+}
+
 QPushButton* AccessorySearcher::createButton(QString text)
 {
     QPushButton* pButton = new QPushButton(text);
     pButton->setFixedSize(100, 35);
     pButton->setFont(FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10));
     return pButton;
+}
+
+SearchResult* AccessorySearcher::createSearchResult(const QJsonObject& itemObj)
+{
+    SearchResult* pResult = new SearchResult();
+    pResult->setItemName(itemObj.find("Name")->toString());
+    pResult->setItemGrade(itemObj.find("Grade")->toString());
+    pResult->setItemQuality(itemObj.find("GradeQuality")->toInt());
+
+    const QJsonObject& auctionInfoObj = itemObj.find("AuctionInfo")->toObject();
+    pResult->setRemainTime(auctionInfoObj.find("EndDate")->toString());
+    pResult->setBuyPrice(auctionInfoObj.find("BuyPrice")->toInt());
+
+    m_searchResults.append(pResult);
+    return pResult;
 }
 
 void AccessorySearcher::setEngraving(int buttonIndex, QString engraving)
@@ -501,6 +560,21 @@ void AccessorySearcher::setPenalty(QString penalty)
         ui->pbPenaltySelect->setText(penalty);
         ui->pbPenaltySelect->setStyleSheet(STYLE_SELECTED_BUTTON);
     }
+}
+
+void AccessorySearcher::moveToPickedList(SearchResult* pPicked)
+{
+    if (m_searchResults.removeOne(pPicked))
+    {
+        m_pickedResults.append(pPicked);
+        ui->vLayoutItems->removeWidget(pPicked);
+        ui->vLayoutPickedItems->addWidget(pPicked);
+    }
+}
+
+void AccessorySearcher::deleteFromPickedList(SearchResult* pResult)
+{
+    m_pickedResults.removeOne(pResult);
 }
 
 AccessorySearcher* AccessorySearcher::getInstance()

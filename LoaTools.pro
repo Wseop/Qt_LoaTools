@@ -36,6 +36,7 @@ SOURCES += \
     tools/accessory_searcher/search_filter.cpp \
     tools/accessory_searcher/ui/engrave_selector.cpp \
     tools/accessory_searcher/ui/penalty_selector.cpp \
+    tools/accessory_searcher/ui/search_result.cpp \
     tools/auction_calc/auction_calc.cpp \
     tools/character_search/character_search.cpp \
     tools/character_search/ui/abilitystone_widget.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     tools/accessory_searcher/search_filter.h \
     tools/accessory_searcher/ui/engrave_selector.h \
     tools/accessory_searcher/ui/penalty_selector.h \
+    tools/accessory_searcher/ui/search_result.h \
     tools/auction_calc/auction_calc.h \
     tools/character_search/character_search.h \
     tools/character_search/ui/abilitystone_widget.h \
@@ -120,6 +122,7 @@ FORMS += \
     tools/accessory_searcher/accessory_searcher.ui \
     tools/accessory_searcher/ui/engrave_selector.ui \
     tools/accessory_searcher/ui/penalty_selector.ui \
+    tools/accessory_searcher/ui/search_result.ui \
     tools/auction_calc/auctioncalc.ui \
     tools/character_search/character_search.ui \
     tools/character_search/ui/abilitystone_widget.ui \

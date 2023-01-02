@@ -7,7 +7,10 @@ class AuctionOptions;
 class EngraveSelector;
 class PenaltySelector;
 class SearchFilter;
+class SearchResult;
 class QPushButton;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 namespace Ui {
 class AccessorySearcher;
@@ -31,12 +34,18 @@ private:
     void setAlignments();
     void updateSearchFilter();
     void initFilter();
+    void sendPostRequest();
+    void handleSearchResult(QNetworkReply* pReply);
 
     QPushButton* createButton(QString text);
+    SearchResult* createSearchResult(const QJsonObject& itemObj);
 
 public:
     void setEngraving(int buttonIndex, QString engraving);
     void setPenalty(QString penalty);
+
+    void moveToPickedList(SearchResult* pPicked);
+    void deleteFromPickedList(SearchResult* pResult);
 
     static AccessorySearcher* getInstance();
     static void destroyInstance();
@@ -62,6 +71,10 @@ private:
     SearchFilter* m_pSearchFilter;
     QMap<QString, int> m_engravingToCode;
     QMap<QString, int> m_penaltyToCode;
+
+    QNetworkAccessManager* m_pNetworkManager;
+    QList<SearchResult*> m_searchResults;
+    QList<SearchResult*> m_pickedResults;
 
     static AccessorySearcher* m_pInstance;
 };

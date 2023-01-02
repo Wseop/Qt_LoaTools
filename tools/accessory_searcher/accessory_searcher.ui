@@ -27,7 +27,7 @@
      </property>
      <layout class="QVBoxLayout" name="vLayoutSelector">
       <property name="spacing">
-       <number>10</number>
+       <number>6</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -688,6 +688,38 @@
        </layout>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1186</width>
+        <height>277</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="vLayoutScrollArea">
+       <item>
+        <layout class="QVBoxLayout" name="vLayoutPickedItems"/>
+       </item>
+       <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="vLayoutItems"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
