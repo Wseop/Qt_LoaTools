@@ -33,6 +33,13 @@ SettingCode = A121111S222222C044CL3N002004029032034NL13333
 #### [군장 검사](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/spec_checker)
 * 캐릭터 조회의 간소화 버전, 정보를 간소화하여 동시에 여러 캐릭터를 등록시켜 비교할 수 있도록 구현
 * 캐릭터 정보 중 레이드 관련 정보만 가공하여 제공
+* 기준 스펙 미달일 경우 빨간색으로 표기하여 알려주도록 구현
+```c++
+const int SPEC_CUT_ABILITY = 2100;
+const int SPEC_CUT_GEM_AVG = 7;
+const int SPEC_CUT_TRIPOD_ENABLED = 10;
+const int SPEC_CUT_ENGRAVING = 15;
+```
 #### [각인 시뮬레이터](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/engrave_simulator)
 * 아이템의 각인 수치에 따라 가능한 각인 값을 시각화하여 제공
 ### 레이드
@@ -41,7 +48,11 @@ SettingCode = A121111S222222C044CL3N002004029032034NL13333
 #### [경매 손익 계산](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/auction_calc)
 * 경매 아이템의 적정 분배금 제공
 * 4인 레이드는 거래소 가격의 65%, 8인 레이드는 76%로 설정되어있음
-
+### 거래소 / 경매장
+#### [악세 검색기](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/accessory_searcher)
+* 경매장에 존재하는 악세를 간편하게 검색할 수 있는 기능
+* 검색필터를 클릭으로 간편하게 설정할 수 있도록 구현
+* 선택한 아이템 상단 고정 기능 구현
 ## [Database](https://github.com/Wseop/Qt_LoaTools/tree/master/db)
 * MongoDB 사용
 * `캐릭터 조회`기능 에서 캐릭터 조회시 DB에 캐릭터 정보 저장
