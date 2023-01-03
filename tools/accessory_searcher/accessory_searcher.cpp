@@ -295,12 +295,10 @@ void AccessorySearcher::setFonts()
     ui->leEngravingMinValue1->setFont(nanumBold10);
     ui->leEngravingMaxValue1->setFont(nanumBold10);
     ui->lbEngraving1Tilde->setFont(nanumBold10);
-    ui->lbEngraving2->setFont(nanumBold10);
     ui->pbEngraving2Select->setFont(nanumBold10);
     ui->leEngravingMinValue2->setFont(nanumBold10);
     ui->leEngravingMaxValue2->setFont(nanumBold10);
     ui->lbEngraving2Tilde->setFont(nanumBold10);
-    ui->lbPenalty->setFont(nanumBold10);
     ui->pbPenaltySelect->setFont(nanumBold10);
     ui->lePenaltyMinValue->setFont(nanumBold10);
     ui->lePenaltyMaxValue->setFont(nanumBold10);
@@ -322,13 +320,11 @@ void AccessorySearcher::setAlignments()
     ui->hLayoutAbility2->setAlignment(Qt::AlignLeft);
     ui->hLayoutAbilitySelect2->setAlignment(Qt::AlignLeft);
     ui->hLayoutAbilityValue2->setAlignment(Qt::AlignLeft);
-    ui->hLayoutEngraving1->setAlignment(Qt::AlignLeft);
-    ui->hLayoutEngraving2->setAlignment(Qt::AlignLeft);
-    ui->hLayoutPenalty->setAlignment(Qt::AlignLeft);
+    ui->hLayoutEngraving->setAlignment(Qt::AlignLeft);
     ui->hLayoutSearchClear->setAlignment(Qt::AlignHCenter);
     ui->vLayoutScrollArea->setAlignment(Qt::AlignTop);
-    ui->vLayoutPickedItems->setAlignment(Qt::AlignTop);
-    ui->vLayoutItems->setAlignment(Qt::AlignTop);
+    ui->vLayoutPickedItems->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->vLayoutItems->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 }
 
 void AccessorySearcher::updateSearchFilter()
@@ -404,19 +400,19 @@ void AccessorySearcher::updateSearchFilter()
     QString engraving;
 
     engraving = ui->pbEngraving1Select->text();
-    if (engraving != "각인 선택")
+    if (engraving != "각인1 선택")
         m_pSearchFilter->setEngraving1(m_engravingToCode[engraving]);
     else
         m_pSearchFilter->setEngraving1(-1);
 
     engraving = ui->pbEngraving2Select->text();
-    if (engraving != "각인 선택")
+    if (engraving != "각인2 선택")
         m_pSearchFilter->setEngraving2(m_engravingToCode[engraving]);
     else
         m_pSearchFilter->setEngraving2(-1);
 
     engraving = ui->pbPenaltySelect->text();
-    if (engraving != "각인 선택")
+    if (engraving != "감소 각인 선택")
         m_pSearchFilter->setPenalty(m_penaltyToCode[engraving]);
     else
         m_pSearchFilter->setPenalty(-1);
@@ -451,11 +447,11 @@ void AccessorySearcher::initFilter()
         m_pSelectedAbilityBtn2 = nullptr;
     }
 
-    ui->pbEngraving1Select->setText("각인 선택");
+    ui->pbEngraving1Select->setText("각인1 선택");
     ui->pbEngraving1Select->setStyleSheet("");
-    ui->pbEngraving2Select->setText("각인 선택");
+    ui->pbEngraving2Select->setText("각인2 선택");
     ui->pbEngraving2Select->setStyleSheet("");
-    ui->pbPenaltySelect->setText("각인 선택");
+    ui->pbPenaltySelect->setText("감소 각인 선택");
     ui->pbPenaltySelect->setStyleSheet("");
     ui->leAbilityMinValue1->clear();
     ui->leAbilityMaxValue1->clear();
@@ -514,6 +510,28 @@ SearchResult* AccessorySearcher::createSearchResult(const QJsonObject& itemObj)
     pResult->setRemainTime(auctionInfoObj.find("EndDate")->toString());
     pResult->setBuyPrice(auctionInfoObj.find("BuyPrice")->toInt());
 
+    QMap<QString, int> abilities;
+    QMap<QString, int> engravings;
+    const QJsonArray& options = itemObj.find("Options")->toArray();
+    for (const QJsonValue& option : options)
+    {
+        const QJsonObject& optionObj = option.toObject();
+        const QString& type = optionObj.find("Type")->toString();
+        const QString& optionName = optionObj.find("OptionName")->toString();
+        int optionValue = optionObj.find("Value")->toInt();
+
+        if (type == "STAT")
+        {
+            abilities[optionName] = optionValue;
+        }
+        else if (type == "ABILITY_ENGRAVE")
+        {
+            engravings[optionName] = optionValue;
+        }
+    }
+    pResult->setAbility(abilities);
+    pResult->setEngraving(engravings);
+
     m_searchResults.append(pResult);
     return pResult;
 }
@@ -524,7 +542,7 @@ void AccessorySearcher::setEngraving(int buttonIndex, QString engraving)
     {
         if (engraving == "")
         {
-            ui->pbEngraving1Select->setText("각인 선택");
+            ui->pbEngraving1Select->setText("각인1 선택");
             ui->pbEngraving1Select->setStyleSheet("");
         }
         else
@@ -537,7 +555,7 @@ void AccessorySearcher::setEngraving(int buttonIndex, QString engraving)
     {
         if (engraving == "")
         {
-            ui->pbEngraving2Select->setText("각인 선택");
+            ui->pbEngraving2Select->setText("각인2 선택");
             ui->pbEngraving2Select->setStyleSheet("");
         }
         else
@@ -552,7 +570,7 @@ void AccessorySearcher::setPenalty(QString penalty)
 {
     if (penalty == "")
     {
-        ui->pbPenaltySelect->setText("각인 선택");
+        ui->pbPenaltySelect->setText("감소 각인 선택");
         ui->pbPenaltySelect->setStyleSheet("");
     }
     else

@@ -309,7 +309,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="hLayoutEngraving1">
+       <layout class="QHBoxLayout" name="hLayoutEngraving">
         <item>
          <widget class="QLabel" name="lbEngraving1">
           <property name="minimumSize">
@@ -325,7 +325,7 @@
            </size>
           </property>
           <property name="text">
-           <string>각인1</string>
+           <string>각인</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -347,7 +347,7 @@
            </size>
           </property>
           <property name="text">
-           <string>각인 선택</string>
+           <string>각인1 선택</string>
           </property>
          </widget>
         </item>
@@ -417,29 +417,13 @@
           </property>
          </widget>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="hLayoutEngraving2">
         <item>
-         <widget class="QLabel" name="lbEngraving2">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
+         <widget class="Line" name="line_3">
+          <property name="lineWidth">
+           <number>1</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>각인2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
@@ -458,7 +442,7 @@
            </size>
           </property>
           <property name="text">
-           <string>각인 선택</string>
+           <string>각인2 선택</string>
           </property>
          </widget>
         </item>
@@ -528,29 +512,10 @@
           </property>
          </widget>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="hLayoutPenalty">
         <item>
-         <widget class="QLabel" name="lbPenalty">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>감소</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+         <widget class="Line" name="line_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
@@ -569,7 +534,7 @@
            </size>
           </property>
           <property name="text">
-           <string>각인 선택</string>
+           <string>감소 각인 선택</string>
           </property>
          </widget>
         </item>
@@ -701,7 +666,7 @@
         <x>0</x>
         <y>0</y>
         <width>1186</width>
-        <height>277</height>
+        <height>363</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="vLayoutScrollArea">

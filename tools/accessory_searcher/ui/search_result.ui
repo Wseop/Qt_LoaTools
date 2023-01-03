@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>649</width>
+    <width>911</width>
     <height>90</height>
    </rect>
   </property>
@@ -46,13 +46,13 @@
        <widget class="QLabel" name="lbItemGrade">
         <property name="minimumSize">
          <size>
-          <width>75</width>
+          <width>50</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>75</width>
+          <width>50</width>
           <height>16777215</height>
          </size>
         </property>
@@ -84,6 +84,53 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupAbility">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>특성</string>
+        </property>
+        <layout class="QVBoxLayout" name="vLayoutAbility"/>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupEngraving">
+        <property name="minimumSize">
+         <size>
+          <width>125</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>125</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>각인</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QVBoxLayout" name="vLayoutEngraving"/>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="vLayoutPenalty"/>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
