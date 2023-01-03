@@ -17,6 +17,7 @@ const QString STYLE_UNDER_LEVEL = "QLabel { color: red }";
 const int SPEC_CUT_ABILITY = 2100;
 const int SPEC_CUT_GEM_AVG = 7;
 const int SPEC_CUT_TRIPOD_ENABLED = 10;
+const int SPEC_CUT_ENGRAVING = 15;
 
 SpecWidget::SpecWidget() :
     ui(new Ui::SpecWidget),
@@ -140,10 +141,15 @@ void SpecWidget::setEngravingData()
 
     const auto& engravings = pEngrave->getEngraves();
     QString engravingLevels = "각인 ";
+    int sumOfLevels = 0;
     for (const auto& engraving : engravings)
     {
-        engravingLevels += QString::number(engraving.second);
+        int level = engraving.second;
+        sumOfLevels += level;
+        engravingLevels += QString::number(level);
     }
+    if (sumOfLevels < SPEC_CUT_ENGRAVING)
+        ui->pbEngraving->setStyleSheet("QPushButton { color: red }");
     ui->pbEngraving->setText(engravingLevels);
 
     const auto& penalties = pEngrave->getPenalties();
@@ -158,6 +164,7 @@ void SpecWidget::setEngravingData()
         {
             penaltyLevels += QString::number(penalty.second);
         }
+        ui->lbPenalty->setStyleSheet(STYLE_UNDER_LEVEL);
     }
     ui->lbPenalty->setText(penaltyLevels);
 
