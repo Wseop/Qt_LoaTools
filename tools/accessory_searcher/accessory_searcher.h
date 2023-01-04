@@ -71,6 +71,7 @@ private:
     SearchFilter* m_pSearchFilter;
     QMap<QString, int> m_engravingToCode;
     QMap<QString, int> m_penaltyToCode;
+    int m_pageNo;
 
     QNetworkAccessManager* m_pNetworkManager;
     QList<SearchResult*> m_searchResults;

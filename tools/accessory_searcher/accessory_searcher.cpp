@@ -37,9 +37,11 @@ AccessorySearcher::AccessorySearcher() :
     m_pSearchFilter(new SearchFilter()),
     m_engravingToCode(AuctionOptions::getInstance()->getEngravingCodes()),
     m_penaltyToCode(AuctionOptions::getInstance()->getPenaltyCodes()),
+    m_pageNo(1),
     m_pNetworkManager(new QNetworkAccessManager())
 {
     ui->setupUi(this);
+    ui->pbShowMore->hide();
     this->setWindowIcon(QIcon(":/resources/Home.ico"));
     this->setWindowTitle("악세 검색기");
     this->showMaximized();
@@ -267,6 +269,12 @@ void AccessorySearcher::initConnects()
             delete pResult;
         m_searchResults.clear();
 
+        m_pageNo = 1;
+        updateSearchFilter();
+        sendPostRequest();
+    });
+    connect(ui->pbShowMore, &QPushButton::pressed, this, [&](){
+        m_pageNo++;
         updateSearchFilter();
         sendPostRequest();
     });
@@ -325,6 +333,7 @@ void AccessorySearcher::setAlignments()
     ui->vLayoutScrollArea->setAlignment(Qt::AlignTop);
     ui->vLayoutPickedItems->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     ui->vLayoutItems->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    ui->hLayoutShowMore->setAlignment(Qt::AlignHCenter);
 }
 
 void AccessorySearcher::updateSearchFilter()
@@ -416,6 +425,9 @@ void AccessorySearcher::updateSearchFilter()
         m_pSearchFilter->setPenalty(m_penaltyToCode[engraving]);
     else
         m_pSearchFilter->setPenalty(-1);
+
+    // pageNo
+    m_pSearchFilter->setPageNo(m_pageNo);
 }
 
 void AccessorySearcher::initFilter()
@@ -477,12 +489,17 @@ void AccessorySearcher::handleSearchResult(QNetworkReply* pReply)
 
     if (items.size() == 0)
     {
-        QMessageBox msgBox;
-        msgBox.setText("매물이 존재하지 않습니다.");
-        msgBox.exec();
+        ui->pbShowMore->hide();
+        if (m_pageNo == 1)
+        {
+            QMessageBox msgBox;
+            msgBox.setText("매물이 존재하지 않습니다.");
+            msgBox.exec();
+        }
         return;
     }
 
+    ui->pbShowMore->show();
     for (const QJsonValue& item : items)
     {
         const QJsonObject& itemObj = item.toObject();
