@@ -2,6 +2,7 @@
 
 Equip::Equip(ItemType type) :
     Item(type),
+    m_setEffect(SetEffect::Size),
     m_setLevel(0),
     m_bElla(false)
 {
