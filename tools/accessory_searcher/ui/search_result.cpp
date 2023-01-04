@@ -160,7 +160,7 @@ QLabel* SearchResult::createLabel(QString text)
 {
     QLabel* pLabel = new QLabel(text);
     pLabel->setFont(FontManager::getInstance()->getFont(FontFamily::NanumSquareNeoBold, 10));
-    pLabel->setFixedWidth(100);
+    pLabel->setFixedWidth(125);
     m_labels.append(pLabel);
     return pLabel;
 }
