@@ -1,6 +1,6 @@
 # LoaTools
 ## 프로젝트 설명
-* 로스트아크 플레이시 유저들이 주로 사용하는 보조 기능들을 하나의 프로그램으로 제공
+* 로스트아크 OpenAPI와 MongoDB를 활용하여 로스트아크 관련 편의 기능을 제공
 ## 주요 기능
 ### 캐릭터
 #### [캐릭터 조회](https://github.com/Wseop/Qt_LoaTools/tree/master/tools/character_search)
