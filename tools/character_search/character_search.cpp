@@ -450,6 +450,7 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
         QString name = pInstance->ui->leCharacterName->text();
         pInstance->m_pDbRequest->deleteDocument(Collection::CharacterV2, "Name", name);
         pInstance->m_pDbRequest->deleteDocument(Collection::SettingV2, "Name", name);
+        return;
     }
 
     const QJsonObject& profileObj = response.object();
