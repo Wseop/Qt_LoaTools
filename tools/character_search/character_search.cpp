@@ -158,7 +158,6 @@ void CharacterSearch::sendRequests()
 
     QStringList params;
     params << ui->leCharacterName->text();
-    ui->leCharacterName->clear();
 
     for (int i = 0; i < NETWORK_POOL_COUNT; i++)
     {
@@ -172,6 +171,7 @@ void CharacterSearch::updateStatus(uint8_t statusBit)
     m_replyHandleStatus |= statusBit;
     if (m_replyHandleStatus == REPLY_HANDLE_FINISHED)
     {
+        ui->leCharacterName->clear();
         ui->groupCharacter->show();
 
         m_pOthers = new Others(this, m_pCharacter->getOthers());
@@ -404,20 +404,7 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
 
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
-    {
-        pInstance->ui->groupCharacter->hide();
-
-        QMessageBox msgBox;
-        msgBox.setText("존재하지 않는 캐릭터입니다.");
-        msgBox.exec();
-        pInstance->ui->pbSearch->setEnabled(true);
-
-        // delete if data exist
-        QString name = pInstance->m_pCharacter->getProfile()->getCharacterName();
-        pInstance->m_pDbRequest->deleteDocument(Collection::CharacterV2, "Name", name);
-        pInstance->m_pDbRequest->deleteDocument(Collection::SettingV2, "Name", name);
         return;
-    }
 
     const QJsonArray& characters = response.array();
     QList<Other> others;
@@ -447,9 +434,23 @@ void CharacterSearch::handleCharacters(QNetworkReply* reply)
 
 void CharacterSearch::handleProfiles(QNetworkReply* reply)
 {
+    CharacterSearch* pInstance = CharacterSearch::getInstance();
+
     QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
     if (response.isNull())
-        return;
+    {
+        pInstance->ui->groupCharacter->hide();
+
+        QMessageBox msgBox;
+        msgBox.setText("존재하지 않는 캐릭터입니다.");
+        msgBox.exec();
+        pInstance->ui->pbSearch->setEnabled(true);
+
+        // delete old data
+        QString name = pInstance->ui->leCharacterName->text();
+        pInstance->m_pDbRequest->deleteDocument(Collection::CharacterV2, "Name", name);
+        pInstance->m_pDbRequest->deleteDocument(Collection::SettingV2, "Name", name);
+    }
 
     const QJsonObject& profileObj = response.object();
     Profile* profile = new Profile();
@@ -475,7 +476,6 @@ void CharacterSearch::handleProfiles(QNetworkReply* reply)
         }
     }
 
-    CharacterSearch* pInstance = CharacterSearch::getInstance();
     pInstance->m_pCharacter->setProfile(profile);
     pInstance->updateStatus(1 << 1);
 }
